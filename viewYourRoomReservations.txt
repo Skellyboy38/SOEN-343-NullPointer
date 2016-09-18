@@ -1,0 +1,12 @@
+Use case UCX:	View list of room reservations
+Primary Actor:	Student
+Stakeholder and interests: Students who wants the complete list of rooms they have reserved to. Each room contains reservation dates and location. 
+Precondition:	Student selected view reserved rooms. Student is identified and authenticated.
+Success Guarantee (Postconditions): The rooms which have been reserved by the student are displayed with the correct times and locations.
+Main success scenarios:
+1)	From the student’s home page, the student selects the view reservations button from the menu options and then selects view list of rooms reserved.
+2)	The system displays a table listing the rooms the student has reserved. 
+3)	The student can select a room from the given list. The system will then show the reservation times for that room.
+4)	The student can select a reservation time and the system will show a calendar of that week showing all of the student’s reservations for that week. 
+
+Extensions:	If a student has not made any reservations a message is shown indicating that there are no rooms. 
