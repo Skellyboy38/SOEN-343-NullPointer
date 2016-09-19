@@ -1,0 +1,15 @@
+UC4: Log out
+Primary Actior: User
+Stakeholders and Interests: User: Wants to log out and to end his session with
+the system.
+Admin: Wants user to log out and for their session with the system to finish.
+Preconditions: User must have already been logged in. System must be online.
+Success Guarantee(Postconditions):
+User is logged out and session is over.
+Main Success Scenario (or basic flow):
+1.	At any moment user can click on loggout button.
+2.	System logs user out and ends the session.
+3.	User is redirected to login page.
+Special Requirements: web UI
+Technology and Data Variations List: N/A
+Open Issues:

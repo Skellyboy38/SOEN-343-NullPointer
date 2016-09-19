@@ -1,0 +1,22 @@
+UC3: Log in
+Primary Actor: User
+Stakeholders and Interests: User: Wants to log in and to be recognized by the
+system.
+Admin: Wants user to log in and for the system to recognize the user.
+Preconditions: User must have an accounts. System must be online.
+Success Guarantee(Postconditions):
+User is logged in and recognized.
+Main Success Scenario (or basic flow):
+1. 	The user arrives at the computer and accesses it.
+2.	The user is presented with a login page.
+3. 	The user inputs their credentials (username, password) into the login screen
+	and their appropriate fields.
+4. 	The login credentials are correct and the user successfully logs in.
+
+Extensions (or alternate flows):
+	If the credentials are incorrect the system presents the user with a login 
+	failed message while keeping the user on the same login page.
+
+Special Requirements: web UI
+Technology and Data Variations List: N/A
+Open Issues: 
