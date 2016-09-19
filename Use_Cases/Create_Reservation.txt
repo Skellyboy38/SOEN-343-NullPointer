@@ -1,0 +1,49 @@
+UC1:					Make a reservation
+Primary actor:				User
+Stakeholders and interests:		
+					1) User: wants to book a room.
+Preconditions:
+					1) A user is registered into the system.
+					2) A user is logged into the system
+Postconditions:
+					1) A room is successfully booked for an allotted period of time.
+					2) The system is updated to display this information.
+					3) The user is removed from all waiting lists for the same time slot.
+Scenario 01: Main success scenario
+					1) A user navigates to the "make a reservation" page.
+					2) They select a room.
+					3) They select a time slot.
+					4) A confirmation message is displayed.
+
+Scenario 02: Failure to book a room (time unavailable)
+					1) A user navigates to the "make a reservation" page.
+					2) They select a room.
+					3) They select a time slot.
+					4) An error message appears stating that the time is unavailable.
+
+Scenario 03: Failure to book a room (exceeded maximum number of bookings)					
+					1) A user navigates to the "make a reservation" page.
+					2) They select a room.
+					3) They select a time slot.
+					4) An error message appears stating that they have 5 reservations already.
+
+Scenario 04: Making a reservation after waiting for the room to be accessible
+					1) A user navigates to the "make a reservation" page.
+					2) They select a room.
+					3) A message appears stating the room is already being accessed.
+					4) The user is placed on the waiting queue
+					5) After some time the user can view the availabilities
+					6) They select a time slot
+					7) A confirmation message is displayed.
+
+Scenario 05: Being placed on the waiting list
+					1) A user navigates to the "make a reservation" page.
+					2) They select a room.
+					3) They select a time slot that is already reserved.
+					4) A message appears stating that they are placed on a waiting list.
+
+Special requirements:			
+					1) Access to a computer
+					2) Web access
+					3) Having an ENCS account (being registered into the system)
+					
