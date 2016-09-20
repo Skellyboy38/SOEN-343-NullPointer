@@ -1,12 +1,12 @@
-Use case: View student’s reservations for a given week
+UC5: View student's reservations for a given week
 Primary Actor:	Student
 Stakeholder and interests: Students who want to view a weekly calendar containing their reserved rooms for that week.
 Precondition: Student selected view reservations for a given week. Student is identified and authenticated.The student selects a valid day from the calendar.
 Success Guarantee (Postconditions): The rooms which have been reserved by the student are displayed on a weekly calendar from the selected week. 
 				    The displayed week contains the day the student selected from the monthly calendar.
 Main success scenarios:
-1)	From the student’s home page, the student selects the view reservations button from the menu options and then selects view reservations for a given week.
-2)	The student will then be shown a monthly calendar where they will be given the option to select a day.
-3)	The system will then display a weekly calendar displaying blocks. Each block represents a reservation from the student. The block will contain the room location as well as the start and end reservation times. 
+	1)	From the student's home page, the student selects the view reservations button from the menu options and then selects view reservations for a given week.
+	2)	The student will then be shown a monthly calendar where they will be given the option to select a day.
+	3)	The system will then display a weekly calendar displaying blocks. Each block represents a reservation from the student. The block will contain the room location as well as the start and end reservation times. 
 
 Extensions:	If a student has not made any reservations the calendar will be blank.
