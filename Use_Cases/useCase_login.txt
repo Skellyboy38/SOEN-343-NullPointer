@@ -3,7 +3,7 @@ Primary Actor: User
 Stakeholders and Interests: User: Wants to log in and to be recognized by the
 system.
 Admin: Wants user to log in and for the system to recognize the user.
-Preconditions: User must have an accounts. System must be online.
+Preconditions: User must have an account. System must be online.
 Success Guarantee(Postconditions):
 User is logged in and recognized.
 Main Success Scenario (or basic flow):
