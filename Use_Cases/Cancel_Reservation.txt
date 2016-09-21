@@ -1,0 +1,32 @@
+UC7:                                    Cancel a Reservation
+Primary Actor:		                    User
+Stakeholders and Interests:		
+					                    1) User: Wants to cancel a room reservation.
+Preconditions:
+                                        1) User is registered into the system.
+                                        2) User is identified and authenticated into the system.
+Postconditions (Success Guarantee):
+                                        1) The existing room reservation is successfully unbooked and available for a new reservation.
+                                        2) The system is updated and displays the cancelation of the reservation.
+
+Main Success Scenario (or basic flow):
+                                        1)	The user selects an existing reservation that belongs to them.
+                                        2)	An option to modify the reservation is displayed by the system.
+                                        3)	The user selects the "CANCEL" option.
+                                        4)	The system displays a prompt message confirming that the user wants to cancel a reservation.
+                                        6)	The user confirms the cancelation.
+                                        7)	The system displays that the room rservation has been successfully canceled.
+Extensions (or alternative flows):
+                                        1)	The user selects an existing reservation that belongs to them.
+                                        2)	An option to modify the reservation is displayed by the system.
+                                        3)	The user selects the "CANCEL" option.
+                                        4)	The system displays a prompt message confirming that the user wants to cancel a reservation.
+                                        6)  The user confirms the cancelation.
+                                        7)	The system displays that the modifications were not successful because the reservation start time has already passed.
+
+Special Requirements:                   1) System Web User Interface
+                                        2) Access to a computer with a modern web browser
+                                    
+Technology and Data Variations List:    N/A
+Open Issues:                            Concurrency Issues: Multiple users that own the same reservation and attempt to cancel the reservation simultanesouly. 
+					
