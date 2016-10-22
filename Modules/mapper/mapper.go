@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-func Insert(object interface{}) {
+func Insert(object interface{}) error {
 	query := "INSERT INTO " + strings.TrimPrefix(reflect.TypeOf(object).String(), "*main.") + " ("
 	val := reflect.Indirect(reflect.ValueOf(object))
 	numfields := val.NumField()
@@ -55,5 +55,12 @@ func Insert(object interface{}) {
 
 	fmt.Println(query)
 
-	dB.Insert(query)
+	return dB.Insert(query)
+}
+
+func GetAll(object interface{}) ([][]string, error) {
+	// val := reflect.Indirect(reflect.ValueOf(object))
+	query := "SELECT * FROM " + strings.TrimPrefix(reflect.TypeOf(object).String(), "*main.") + " ;"
+
+	return dB.GetAll(query)
 }
