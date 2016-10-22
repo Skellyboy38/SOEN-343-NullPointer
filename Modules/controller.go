@@ -16,9 +16,8 @@ func main() {
 	// dB.Init("postgres", "user=soen343 password=soen343 sslmode=disable dbname=registry")
 	// defer dB.Db.Close()
 	router := mux.NewRouter()
+	router.PathPrefix("/js/").Handler(http.StripPrefix("/js/", http.FileServer(http.Dir("./js"))))
 	router.HandleFunc("/login", handler.LoginGet)
-	router.HandleFunc("/js/alert.js", handler.Alert) /* seems like we need a route to the js files too
-	which sucks. im sure there is a different way to do this and i found one but its crap */
 	http.Handle("/", router)
 	log.Fatal(http.ListenAndServe(":9000", nil))
 

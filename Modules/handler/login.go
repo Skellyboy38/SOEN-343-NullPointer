@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"fmt"
+	// "fmt"
 	"html/template"
 	"net/http"
 	"path/filepath"
