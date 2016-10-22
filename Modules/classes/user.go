@@ -5,5 +5,5 @@ import (
 )
 
 type User struct {
-	studentId int
+	StudentId int
 }
