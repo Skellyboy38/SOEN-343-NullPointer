@@ -5,6 +5,6 @@ import (
 )
 
 type Room struct {
-	RoomNumber     string
-	Availabilities []TimeSlot
+	RoomId     int
+	RoomNumber string
 }

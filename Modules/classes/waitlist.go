@@ -3,5 +3,6 @@ package classes
 import ()
 
 type Waitlist struct {
-	Capasity int
+	WaitlistId int
+	Capasity   int
 }

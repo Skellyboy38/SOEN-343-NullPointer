@@ -6,6 +6,7 @@ import (
 )
 
 type TimeSlot struct {
-	Time string
-	Date string
+	TimeSlotId int
+	Time       string
+	Date       string
 }

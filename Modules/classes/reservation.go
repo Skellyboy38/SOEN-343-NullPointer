@@ -5,6 +5,8 @@ import (
 )
 
 type Reservation struct {
-	Room Room
-	Time TimeSlot
+	ReservationId int
+	Room          Room
+	User          User
+	Time          TimeSlot
 }
