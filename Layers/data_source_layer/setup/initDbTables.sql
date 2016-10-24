@@ -5,7 +5,8 @@ CREATE TABLE userTable (
 
 CREATE TABLE room (
 	roomId	SERIAL UNIQUE PRIMARY KEY,
-	roomNumber TEXT UNIQUE
+	roomNumber TEXT UNIQUE,
+	
 );
 
 CREATE TABLE timeSlot (
