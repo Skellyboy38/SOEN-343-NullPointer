@@ -17,7 +17,8 @@ func main() {
 	// defer dB.Db.Close()
 	router := mux.NewRouter()
 	router.PathPrefix("/js/").Handler(http.StripPrefix("/js/", http.FileServer(http.Dir("./js"))))
-	router.HandleFunc("/login", handler.LoginGet)
+	router.HandleFunc("/login", handler.LoginGet).Methods("GET")
+	router.HandleFunc("/login", handler.LoginForm).Methods("POST")
 	http.Handle("/", router)
 	log.Fatal(http.ListenAndServe(":9000", nil))
 
