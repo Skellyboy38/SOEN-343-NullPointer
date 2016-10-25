@@ -1,12 +1,12 @@
 package classes
 
 import (
-// "fmt"
-// "time"
+	// "fmt"
+	"time"
 )
 
 type TimeSlot struct {
 	TimeSlotId int
-	Time       string
-	Date       string
+	start      time.Time
+	end        time.Time
 }

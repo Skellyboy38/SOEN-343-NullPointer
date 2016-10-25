@@ -21,6 +21,8 @@ func main() {
 	router.HandleFunc("/login", handler.LoginForm).Methods("POST")
 	router.HandleFunc("/jsonexample", handler.ReturnJson).Methods("GET")
 	router.HandleFunc("/testDbConnection", handler.TestDb).Methods("GET")
+	router.HandleFunc("/testcookie", handler.TestCookie).Methods("GET")
+	router.HandleFunc("/getcookie", handler.GetCookie).Methods("GET")
 	http.Handle("/", router)
 	log.Fatal(http.ListenAndServe(":9000", nil))
 
