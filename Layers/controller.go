@@ -16,7 +16,7 @@ func main() {
 	dB.Init("postgres", "user=soen343 password=soen343 sslmode=disable dbname=registry")
 	defer dB.Db.Close()
 	router := mux.NewRouter()
-	router.PathPrefix("/prpesentation_layer/js/").Handler(http.StripPrefix("/presentation_layer/js/", http.FileServer(http.Dir("./presentation_layer/js"))))
+	router.PathPrefix("/js/").Handler(http.StripPrefix("/js/", http.FileServer(http.Dir("./presentation_layer/js"))))
 	router.HandleFunc("/login", handler.LoginGet).Methods("GET")
 	router.HandleFunc("/login", handler.LoginForm).Methods("POST")
 	router.HandleFunc("/jsonexample", handler.ReturnJson).Methods("GET")
