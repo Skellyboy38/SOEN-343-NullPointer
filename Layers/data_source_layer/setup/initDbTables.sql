@@ -5,14 +5,13 @@ CREATE TABLE userTable (
 
 CREATE TABLE room (
 	roomId	SERIAL UNIQUE PRIMARY KEY,
-	roomNumber TEXT UNIQUE,
-	
+	roomNumber TEXT UNIQUE
 );
 
 CREATE TABLE timeSlot (
 		timeSlotId SERIAL UNIQUE PRIMARY KEY,
-		time TEXT,
-		date TEXT
+		startTime TIMESTAMP,
+		endTime TIMESTAMP
 );
 
 CREATE TABLE reservation (

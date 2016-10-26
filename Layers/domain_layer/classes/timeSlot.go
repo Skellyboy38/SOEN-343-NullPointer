@@ -7,6 +7,6 @@ import (
 
 type TimeSlot struct {
 	TimeSlotId int
-	start      time.Time
-	end        time.Time
+	StartTime  time.Time
+	Endtime    time.Time
 }
