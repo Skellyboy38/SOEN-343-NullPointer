@@ -16,11 +16,13 @@ func TestDb(rw http.ResponseWriter, req *http.Request) {
 
 	rows, err := db.Query("SELECT EXISTS (SELECT 1 FROM accounts WHERE username=$1 LIMIT 1);", 1234)
 	var userId int
+	var name string
+	var pass string
 	for rows.Next() {
-		err := rows.Scan(&userId)
+		err := rows.Scan(&userId, &name, &pass)
 		if err != nil {
 			fmt.Println(err)
 		}
 	}
-	fmt.Println(classes.User{userId})
+	fmt.Println(classes.User{userId, name, pass})
 }

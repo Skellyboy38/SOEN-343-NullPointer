@@ -1,7 +1,14 @@
 
 CREATE TABLE userTable (
-	studentId SERIAL UNIQUE PRIMARY KEY
+	studentId SERIAL UNIQUE PRIMARY KEY,
+	name	TEXT NOT NULL,
+	password TEXT NOT NULL
 );
+
+CREATE TABLE session {
+	sessionId SERIAL UNIQUE PRIMARY KEY,
+	studentId SERIAL references userTable	
+};
 
 CREATE TABLE room (
 	roomId	SERIAL UNIQUE PRIMARY KEY,
