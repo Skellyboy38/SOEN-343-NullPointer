@@ -1,14 +1,13 @@
-
 CREATE TABLE userTable (
-	studentId SERIAL UNIQUE PRIMARY KEY,
-	name	TEXT NOT NULL,
+	studentId INTEGER UNIQUE PRIMARY KEY,
+	username TEXT NOT NULL,
 	password TEXT NOT NULL
 );
 
-CREATE TABLE session {
+CREATE TABLE session (
 	sessionId SERIAL UNIQUE PRIMARY KEY,
-	studentId SERIAL references userTable	
-};
+	studentId INTEGER references userTable
+);
 
 CREATE TABLE room (
 	roomId	SERIAL UNIQUE PRIMARY KEY,
@@ -16,15 +15,15 @@ CREATE TABLE room (
 );
 
 CREATE TABLE timeSlot (
-		timeSlotId SERIAL UNIQUE PRIMARY KEY,
-		startTime TIMESTAMP,
-		endTime TIMESTAMP
+	timeSlotId SERIAL UNIQUE PRIMARY KEY,
+	startTime TIMESTAMP,
+	endTime TIMESTAMP
 );
 
 CREATE TABLE reservation (
 	reservationId SERIAL UNIQUE PRIMARY KEY,
 	roomId SERIAL references room,
-	studentId SERIAL references userTable,
+	studentId INTEGER references userTable,
 	timeSlotId SERIAL references timeSlot
 );
 
@@ -34,7 +33,7 @@ CREATE TABLE waitlist (
 );
 
 CREATE TABLE waitlistcontract (
-	studentId SERIAL references userTable,
+	studentId INTEGER references userTable,
 	waitlistId SERIAL references waitlist,
 	PRIMARY KEY (studentId,waitlistId)
 );

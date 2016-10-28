@@ -1,28 +1,26 @@
 package handler
 
 import (
-	"fmt"
-	"github.com/Skellyboy38/SOEN-343-NullPointer/layers/data_source_layer/dB"
-	"github.com/Skellyboy38/SOEN-343-NullPointer/layers/domain_layer/classes"
+	//"fmt"
 	"net/http"
+	"github.com/Skellyboy38/SOEN-343-NullPointer/Layers/data_source_layer/dB"
+	//"github.com/Skellyboy38/SOEN-343-NullPointer/Layers/domain_layer/classes"
+	//"fmt"
 )
 
 func TestDb(rw http.ResponseWriter, req *http.Request) {
-	db := dB.Db
-	_, err := db.Exec("INSERT INTO user (studentId) VALUES ('1234') ;")
-	if err != nil {
-		fmt.Println(err)
-	}
+	db := dB.GetConnection()
 
-	rows, err := db.Query("SELECT EXISTS (SELECT 1 FROM accounts WHERE username=$1 LIMIT 1);", 1234)
+	rows, _ := db.Query("SELECT * FROM userTable WHERE studentId=$1;", 1111111)
 	var userId int
 	var name string
 	var pass string
 	for rows.Next() {
 		err := rows.Scan(&userId, &name, &pass)
 		if err != nil {
-			fmt.Println(err)
+			//fmt.Println(err)
 		}
 	}
-	fmt.Println(classes.User{userId, name, pass})
+	dB.CloseConnection(db)
+	//fmt.Println(classes.User{userId, name, pass})
 }

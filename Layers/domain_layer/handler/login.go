@@ -19,11 +19,7 @@ func LoginGet(rw http.ResponseWriter, req *http.Request) {
 	// tmpl["login.html"].ExecuteTemplate(rw, "base", nil)
 	login := filepath.Join("presentation_layer", "template", "login.html")
 	base := filepath.Join("presentation_layer", "template", "base.html")
-	t, err := (template.ParseFiles(base, login))
-	fmt.Println("yup")
-	if err != nil {
-		fmt.Println("t is an error")
-	}
+	t := (template.Must(template.ParseFiles(base, login)))
 	t.ExecuteTemplate(rw, "base", nil)
 
 }

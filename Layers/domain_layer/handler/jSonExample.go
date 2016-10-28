@@ -3,8 +3,8 @@ package handler
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/Skellyboy38/SOEN-343-NullPointer/layers/domain_layer/classes"
 	"net/http"
+	"github.com/Skellyboy38/SOEN-343-NullPointer/Layers/domain_layer/classes"
 )
 
 func ReturnJson(rw http.ResponseWriter, req *http.Request) {
