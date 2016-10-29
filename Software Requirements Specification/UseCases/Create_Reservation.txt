@@ -9,6 +9,7 @@ Postconditions:
 					1) A room is successfully booked for an allotted period of time.
 					2) The system is updated to display this information.
 					3) The user is removed from all waiting lists for the same time slot.
+					
 Scenario 01: Main success scenario
 					1) A user navigates to the "make a reservation" page.
 					2) They select a room.
