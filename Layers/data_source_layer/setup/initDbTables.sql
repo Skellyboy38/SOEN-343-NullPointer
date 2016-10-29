@@ -1,6 +1,6 @@
 CREATE TABLE userTable (
 	studentId INTEGER UNIQUE PRIMARY KEY,
-	username TEXT NOT NULL,
+	username TEXT UNIQUE NOT NULL,
 	password TEXT NOT NULL
 );
 

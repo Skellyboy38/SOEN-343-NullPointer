@@ -5,28 +5,46 @@ import (
 	"html/template"
 	"net/http"
 	"path/filepath"
+	"github.com/Skellyboy38/SOEN-343-NullPointer/Layers/domain_layer/mappers"
+	"strconv"
+	"github.com/Skellyboy38/SOEN-343-NullPointer/Layers/domain_layer/tdg"
+	"github.com/Skellyboy38/SOEN-343-NullPointer/Layers/data_source_layer/dB"
+	"github.com/Skellyboy38/SOEN-343-NullPointer/Layers/domain_layer/classes"
 )
 
 func LoginGet(rw http.ResponseWriter, req *http.Request) {
-
-	// t := template.New("login") // can be anything
-	// t = template.Must(template.ParseFiles(filepath.Join("presentation_layer", "template", "login.html")))
-	// t.Execute(rw, "The sly red fox jumped over the fence") // the second inout can be any type of data, this is whet is passed to the html page or "template"
-	// tmpl := make(map[string]*template.Template)
-	// login := filepath.Join("presentation_layer", "template", "login.html")
-	// base := filepath.Join("presentation_layer", "template", "base.html")
-	// tmpl["login.html"] = template.Must(template.ParseFiles(login, base))
-	// tmpl["login.html"].ExecuteTemplate(rw, "base", nil)
+	if cookie, noCookie := req.Cookie("sessionId"); noCookie == nil{
+		cookieIntVal, _ := strconv.Atoi(cookie.Value)
+		if mappers.MapperBundle.SessionMapper.InMemory(cookieIntVal){
+			http.Redirect(rw,req,"/jsonexample",200) // Change to main calendar page
+		}
+	}
 	login := filepath.Join("presentation_layer", "template", "login.html")
 	base := filepath.Join("presentation_layer", "template", "base.html")
 	t := (template.Must(template.ParseFiles(base, login)))
 	t.ExecuteTemplate(rw, "base", nil)
-
 }
 
 func LoginForm(rw http.ResponseWriter, req *http.Request) {
+	db := dB.GetConnection()
 	req.ParseForm()
+	username := req.Form["username"]
+	password := req.Form["password"]
+	user , err := mappers.MapperBundle.UserMapper.Get(username,password)
+	if err != nil{
+		sessionId, studentId, err := tdg.SessionTdg{}.FindByStudentId(db,user.StudentId)
+		if err != nil{// no session found, create one
+
+		}else{
+			newSession := classes.Session{sessionId,studentId}
+			mappers.MapperBundle.SessionMapper.AddToMap(newSession)
+		}
+	}else{// incorrect name and password
+
+	}
+
 	fmt.Println(req.Form)
-	fmt.Println(req.Form["username"])
-	fmt.Println(req.Form["password"])
+	fmt.Println(username)
+	fmt.Println(password)
+
 }

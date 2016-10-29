@@ -1,11 +1,10 @@
 package handler
 
 import (
-	//"fmt"
 	"net/http"
 	"github.com/Skellyboy38/SOEN-343-NullPointer/Layers/data_source_layer/dB"
-	//"github.com/Skellyboy38/SOEN-343-NullPointer/Layers/domain_layer/classes"
-	//"fmt"
+	"fmt"
+	"github.com/Skellyboy38/SOEN-343-NullPointer/Layers/domain_layer/classes"
 )
 
 func TestDb(rw http.ResponseWriter, req *http.Request) {
@@ -16,11 +15,9 @@ func TestDb(rw http.ResponseWriter, req *http.Request) {
 	var name string
 	var pass string
 	for rows.Next() {
-		err := rows.Scan(&userId, &name, &pass)
-		if err != nil {
-			//fmt.Println(err)
-		}
+		rows.Scan(&userId, &name, &pass)
 	}
 	dB.CloseConnection(db)
-	//fmt.Println(classes.User{userId, name, pass})
+	fmt.Println(classes.User{userId, name, pass})
+	rw.Write([]byte("Check terminal for result"))
 }
