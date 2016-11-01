@@ -6,6 +6,5 @@ import (
 
 type User struct {
 	StudentId int
-	Name      string
 	Password  string
 }

@@ -5,6 +5,8 @@ import (
 	"github.com/Skellyboy38/SOEN-343-NullPointer/Layers/data_source_layer/dB"
 )
 
+type abstractTdg struct {
+}
 type TDG interface {
 	Create()
 	Remove()
