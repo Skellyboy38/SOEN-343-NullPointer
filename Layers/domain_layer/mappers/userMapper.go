@@ -8,7 +8,7 @@ import (
 
 type UserMapper struct {
 	users   map[int]classes.User
-	userTdg tdg.UserTdg
+	UserTdg tdg.UserTdg
 }
 
 func InitUserMapper() *UserMapper {
@@ -28,7 +28,7 @@ func (userMap *UserMapper) Get(id int, password string) (classes.User, error) {
 	if userMap.InMemory(id) {
 		return userMap.users[id], nil
 	} else {
-		studentId, _, err := userMap.userTdg.GetByIdAndPass(id, password)
+		studentId, _, err := userMap.UserTdg.GetByIdAndPass(id, password)
 		if err != nil {
 			return classes.User{}, errors.New("User not in Memory")
 		}

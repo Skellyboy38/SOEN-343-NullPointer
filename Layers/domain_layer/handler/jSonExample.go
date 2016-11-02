@@ -8,7 +8,7 @@ import (
 )
 
 func ReturnJson(rw http.ResponseWriter, req *http.Request) {
-	user := classes.User{27192223, "NAME", "PASS"}
+	user := classes.User{27192223, "PASS"}
 
 	rw.WriteHeader(http.StatusOK)
 

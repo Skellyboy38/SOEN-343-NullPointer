@@ -2,10 +2,8 @@ package handler
 
 import (
 	"fmt"
-	"github.com/Skellyboy38/SOEN-343-NullPointer/Layers/data_source_layer/dB"
 	"github.com/Skellyboy38/SOEN-343-NullPointer/Layers/domain_layer/classes"
 	"github.com/Skellyboy38/SOEN-343-NullPointer/Layers/domain_layer/mappers"
-	"github.com/Skellyboy38/SOEN-343-NullPointer/Layers/domain_layer/tdg"
 	"html/template"
 	"net/http"
 	"path/filepath"
@@ -26,17 +24,19 @@ func LoginGet(rw http.ResponseWriter, req *http.Request) {
 }
 
 func LoginForm(rw http.ResponseWriter, req *http.Request) {
-	db := dB.GetConnection()
+	mappers.MapperBundle.SessionMapper.SessionTdg.AbstractTdg.GetConnection()
+	defer mappers.MapperBundle.SessionMapper.SessionTdg.AbstractTdg.CloseConnection()
 	req.ParseForm()
-	username := req.Form["username"]
-	password := req.Form["password"]
-	user, err := mappers.MapperBundle.UserMapper.Get(username, password)
+	id , _:= strconv.Atoi(req.FormValue("id"))
+	password := req.FormValue("password")
+	user, err := mappers.MapperBundle.UserMapper.Get(id, password)
 	if err != nil {
-		sessionId, studentId, err := tdg.SessionTdg{}.FindByStudentId(db, user.StudentId)
+		sessionId, studentId, err := mappers.MapperBundle.SessionMapper.SessionTdg.Read(user.StudentId)
 		if err != nil { // no session found, create one
 
 		} else {
-			newSession := classes.Session{sessionId, studentId}
+			student ,_ := mappers.MapperBundle.UserMapper.Get(studentId,password)
+			newSession := classes.Session{sessionId, student}
 			mappers.MapperBundle.SessionMapper.AddToMap(newSession)
 		}
 	} else { // incorrect name and password
@@ -44,7 +44,7 @@ func LoginForm(rw http.ResponseWriter, req *http.Request) {
 	}
 
 	fmt.Println(req.Form)
-	fmt.Println(username)
+	fmt.Println(id)
 	fmt.Println(password)
 
 }

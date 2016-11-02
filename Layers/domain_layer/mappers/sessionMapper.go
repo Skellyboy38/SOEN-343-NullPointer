@@ -8,7 +8,7 @@ import (
 
 type SessionMapper struct {
 	sessions   map[int]classes.Session
-	sessionTdg tdg.SessionTdg
+	SessionTdg tdg.SessionTdg
 }
 
 func InitSessionMapper() *SessionMapper {

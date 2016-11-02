@@ -5,20 +5,22 @@ import (
 	"github.com/Skellyboy38/SOEN-343-NullPointer/Layers/data_source_layer/dB"
 )
 
-type abstractTdg struct {
+type AbstractTdg struct {
 }
+
+var DB *sql.DB
+
 type TDG interface {
 	Create()
-	Remove()
+	Read()
 	Update()
 	Delete()
 }
 
-func (tdg *TDG) GetConnection() *sql.DB {
-	dbConn := dB.GetConnection()
-	return dbConn
+func (tdg *AbstractTdg) GetConnection() {
+	DB = dB.GetConnection()
 }
 
-func (tdg *TDG) CloseConnection(conn *sql.DB) {
-	dB.CloseConnection(conn)
+func (tdg *AbstractTdg) CloseConnection() {
+	dB.CloseConnection(DB)
 }

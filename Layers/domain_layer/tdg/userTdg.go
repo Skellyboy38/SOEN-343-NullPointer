@@ -1,20 +1,21 @@
 package tdg
 
 import (
-	"database/sql"
 	"fmt"
 	"github.com/Skellyboy38/SOEN-343-NullPointer/Layers/domain_layer/classes"
+	"strconv"
 )
 
 type UserTdg struct {
+	AbstractTdg AbstractTdg
 }
 
-func (tdg *UserTdg) Update(dbConn *sql.DB, user classes.User) {
-	dbConn.Exec("UPDATE userTable set")
+func (tdg *UserTdg) Update( user classes.User) {
+	DB.Exec("UPDATE userTable set")
 }
 
-func (tdg *UserTdg) GetByIdAndPass(dbConn *sql.DB, id int, password string) (int, string, error) {
-	rows, err := dbConn.Query("SELECT * FROM userTable WHERE studentId='" + id + "' and password='" + password + "'")
+func (tdg *UserTdg) GetByIdAndPass( id int, password string) (int, string, error) {
+	rows, err := DB.Query("SELECT * FROM userTable WHERE studentId='" + strconv.Itoa(id) + "' and password='" + password + "'")
 	if err != nil {
 		fmt.Println(err)
 	}

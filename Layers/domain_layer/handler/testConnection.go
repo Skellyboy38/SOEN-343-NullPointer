@@ -12,12 +12,11 @@ func TestDb(rw http.ResponseWriter, req *http.Request) {
 
 	rows, _ := db.Query("SELECT * FROM userTable WHERE studentId=$1;", 1111111)
 	var userId int
-	var name string
 	var pass string
 	for rows.Next() {
-		rows.Scan(&userId, &name, &pass)
+		rows.Scan(&userId, &pass)
 	}
-	dB.CloseConnection(db)
-	fmt.Println(classes.User{userId, name, pass})
+	defer dB.CloseConnection(db)
+	fmt.Println(classes.User{userId, pass})
 	rw.Write([]byte("Check terminal for result"))
 }
