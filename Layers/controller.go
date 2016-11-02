@@ -16,6 +16,7 @@ func main() {
 	router.PathPrefix("/js/").Handler(http.StripPrefix("/js/", http.FileServer(http.Dir("./presentation_layer/js"))))
 	router.HandleFunc("/login", handler.LoginGet).Methods("GET")
 	router.HandleFunc("/login", handler.LoginForm).Methods("POST")
+	router.HandleFunc("/home", handler.Home).Methods("GET")
 	router.HandleFunc("/jsonexample", handler.ReturnJson).Methods("GET")
 	router.HandleFunc("/testDbConnection", handler.TestDb).Methods("GET")
 	router.HandleFunc("/testcookie", handler.TestCookie).Methods("GET")

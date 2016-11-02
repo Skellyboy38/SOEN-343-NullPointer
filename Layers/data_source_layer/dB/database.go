@@ -2,7 +2,7 @@ package dB
 
 import (
 	"database/sql"
-	_ "github.com/lib/pq"
+	_"github.com/lib/pq"
 )
 
 var driverName = "postgres"
