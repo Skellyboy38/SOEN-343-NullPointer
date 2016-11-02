@@ -6,7 +6,7 @@ import (
 )
 
 type SessionTdg struct {
-	AbstractTdg AbstractTdg
+	AbstractTDG AbstractTDG
 }
 
 func (tdg SessionTdg) Read(studentId int) (int, int, error) {
@@ -20,13 +20,13 @@ func (tdg SessionTdg) Read(studentId int) (int, int, error) {
 	return sessionId, studentId, nil
 }
 
-func (tdg SessionTdg) Create(studentId int) (int, error){
+func (tdg SessionTdg) Create(studentId int) (int, error) {
 	dbConn := DB
-	result,err := dbConn.Exec("INSERT INTO session VALUES ('"+strconv.Itoa(studentId)+"';")
-	if err != nil{
-		id , _ := result.LastInsertId()
-		return int(id) , nil
-	}else{
-		return 0 , errors.New("Could not create a new session")
+	result, err := dbConn.Exec("INSERT INTO session VALUES ('" + strconv.Itoa(studentId) + "';")
+	if err != nil {
+		id, _ := result.LastInsertId()
+		return int(id), nil
+	} else {
+		return 0, errors.New("Could not create a new session")
 	}
 }

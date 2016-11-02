@@ -6,16 +6,17 @@ import (
 )
 
 type SessionMapper struct {
-	sessions   map[int]classes.Session
-	SessionTdg tdg.SessionTdg
+	sessions        map[int]classes.Session
+	usersToSessions map[int]classes.Session
+	SessionTdg      tdg.SessionTdg
 }
 
 func InitSessionMapper() *SessionMapper {
-	return &SessionMapper{make(map[int]classes.Session), tdg.SessionTdg{}}
+	return &SessionMapper{make(map[int]classes.Session), make(map[int]classes.Session), tdg.SessionTdg{}}
 }
 
-func (sessionMap *SessionMapper) InMemory(id int) bool {
-	_, ok := sessionMap.sessions[id]
+func (sessionMap *SessionMapper) InMemoryByUser(user classes.User) bool {
+	_, ok := sessionMap.usersToSessions[user.StudentId]
 	if ok {
 		return true
 	} else {
@@ -23,20 +24,29 @@ func (sessionMap *SessionMapper) InMemory(id int) bool {
 	}
 }
 
-func (sessionMap *SessionMapper) Get(id int) (classes.Session, error) {
-	if sessionMap.InMemory(id) {
-		return sessionMap.sessions[id], nil
+func (sessionMap *SessionMapper) InMemoryBySessionId(sessionId int) bool {
+	_, ok := sessionMap.sessions[sessionId]
+	if ok {
+		return true
 	} else {
-		sessionId, _, err := MapperBundle.SessionMapper.SessionTdg.Read(id)
-		if err == nil{
-			student := MapperBundle.UserMapper.users[id]
-			currentSession := classes.Session{sessionId,student}
+		return false
+	}
+}
+
+func (sessionMap *SessionMapper) Get(user classes.User) (classes.Session, error) {
+	if sessionMap.InMemoryByUser(user) {
+		return sessionMap.usersToSessions[user.StudentId], nil
+	} else {
+		sessionId, _, err := MapperBundle.SessionMapper.SessionTdg.Read(user.StudentId)
+		if err == nil {
+			student := MapperBundle.UserMapper.users[user.StudentId]
+			currentSession := classes.Session{sessionId, student}
 			sessionMap.AddToMap(currentSession)
 			return currentSession, nil
 		}
-		sessionId, err = createSession(id)
-		student := MapperBundle.UserMapper.users[id]
-		currentSession := classes.Session{sessionId,student}
+		sessionId, err = createSession(user.StudentId)
+		student := MapperBundle.UserMapper.users[user.StudentId]
+		currentSession := classes.Session{sessionId, student}
 		sessionMap.AddToMap(currentSession)
 
 		return currentSession, nil
@@ -44,9 +54,10 @@ func (sessionMap *SessionMapper) Get(id int) (classes.Session, error) {
 }
 
 func (sessionMap *SessionMapper) AddToMap(session classes.Session) {
-	sessionMap.sessions[session.User.StudentId] = session
+	sessionMap.usersToSessions[session.User.StudentId] = session
+	sessionMap.sessions[session.SessionId] = session
 }
 
-func createSession(studentId int) (int, error){
+func createSession(studentId int) (int, error) {
 	return tdg.SessionTdg{}.Create(studentId)
 }

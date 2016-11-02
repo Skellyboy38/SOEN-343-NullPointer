@@ -6,11 +6,6 @@ import (
 )
 
 type AbstractTDG struct {
-
-}
-
-type ReservationTDG struct {
-
 }
 
 var DB *sql.DB
@@ -28,20 +23,4 @@ func (tdg *AbstractTDG) GetConnection() {
 
 func (tdg *AbstractTDG) CloseConnection() {
 	dB.CloseConnection(DB)
-}
-
-func (r *ReservationTDG) Create() {
-
-}
-
-func (r *ReservationTDG) Read() {
-
-}
-
-func (r *ReservationTDG) Update() {
-
-}
-
-func (r *ReservationTDG) Delete() {
-
 }

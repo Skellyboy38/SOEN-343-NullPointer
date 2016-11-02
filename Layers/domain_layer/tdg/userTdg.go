@@ -7,14 +7,14 @@ import (
 )
 
 type UserTdg struct {
-	AbstractTdg AbstractTdg
+	AbstractTdg AbstractTDG
 }
 
-func (tdg *UserTdg) Update( user classes.User) {
+func (tdg *UserTdg) Update(user classes.User) {
 	DB.Exec("UPDATE userTable set")
 }
 
-func (tdg *UserTdg) GetByIdAndPass( id int, password string) (int, string, error) {
+func (tdg *UserTdg) GetByIdAndPass(id int, password string) (int, string, error) {
 	rows, err := DB.Query("SELECT * FROM userTable WHERE studentId='" + strconv.Itoa(id) + "' and password='" + password + "'")
 	if err != nil {
 		fmt.Println(err)
