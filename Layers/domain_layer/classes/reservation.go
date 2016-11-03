@@ -7,6 +7,6 @@ type Reservation struct {
 	ReservationId int
 	Room          Room
 	User          User
-	StartTime     time.Duration
-	EndTime       time.Duration
+	StartTime     time.Time
+	EndTime       time.Time
 }

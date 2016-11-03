@@ -12,7 +12,8 @@ type ReservationTDG struct {
 
 func (r *ReservationTDG) Create(reservation classes.Reservation) {
 	_ , err :=	DB.Exec("INSERT INTO reservation (reservationId, roomId, studentId, startTime, endTime)" + 
-		"VALUES ('"+strconv.Itoa(reservation.ReservationId) + "," + reservation.Room.RoomId + "," + reservation.User.StudentId + "," + reservation.StartTime + "," + reservation.EndTime + "');")
+		"VALUES ('" + strconv.Itoa(reservation.ReservationId) + "," + strconv.Itoa(reservation.Room.RoomId) + "," + strconv.Itoa(reservation.User.StudentId) + "," + reservation.StartTime.String() + "," + reservation.EndTime.String() + "');")
+	fmt.Println(err)
 }
 
 func (r *ReservationTDG) ReadByRoom() {
