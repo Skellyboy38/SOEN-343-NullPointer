@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"path/filepath"
 	"strconv"
+	"time"
 )
 
 func LoginGet(rw http.ResponseWriter, req *http.Request) {
@@ -17,15 +18,31 @@ func LoginGet(rw http.ResponseWriter, req *http.Request) {
 }
 
 func LoginForm(rw http.ResponseWriter, req *http.Request) {
-	mappers.MapperBundle.UserMapper.UserTdg.AbstractTdg.GetConnection()
-	defer mappers.MapperBundle.UserMapper.UserTdg.AbstractTdg.CloseConnection()
+
+	abstractTdg := mappers.MapperBundle.UserMapper.UserTdg.AbstractTdg
+
+	// abstractTdg.GetConnection()
+	// defer abstractTdg.CloseConnection()
+
 	req.ParseForm()
 	studentId, _ := strconv.Atoi(req.FormValue("id"))
 	password := req.FormValue("password")
-	http.Redirect(rw, req, "/home" ,303)
+
+	userMapper := mappers.MapperBundle.UserMapper
+
+	verifiedUser, err := userMapper.Get(studentId, password)
+
+	if err != nil { // return error
+		rw.Write("Invalid id and password")
+		return
+	}
+	expire := time.Now().Add(time.Hour * 45)
+	cookie := http.Cookie{"studentId", verifiedUser.StudentId, "/", "localhost", expire, expire.Format(time.UnixDate), 86000, false, true, "studentId=" + strconv(verifiedUser.StudentId), []string{"studentId=" + strconv(verifiedUser.StudentId)}}
+	http.SetCookie(rw, &cookie)
+	http.Redirect(rw, req, "/home", 303)
 	//user, err := mappers.MapperBundle.UserMapper.Get(studentId, password)
-	mappers.MapperBundle.UserMapper.Create(studentId,password)
-	mappers.MapperBundle.UserMapper.Commit()
+	// mappers.MapperBundle.UserMapper.Create(studentId, password)
+	// mappers.MapperBundle.UserMapper.Commit()
 	fmt.Println(req.Form)
 	fmt.Println(studentId)
 	fmt.Println(password)
