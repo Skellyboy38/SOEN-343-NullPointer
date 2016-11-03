@@ -22,9 +22,10 @@ func LoginForm(rw http.ResponseWriter, req *http.Request) {
 	req.ParseForm()
 	studentId, _ := strconv.Atoi(req.FormValue("id"))
 	password := req.FormValue("password")
+
 	//user, err := mappers.MapperBundle.UserMapper.Get(studentId, password)
-
-
+	mappers.MapperBundle.UserMapper.Create(1234567,"mypass")
+	mappers.MapperBundle.UserMapper.Commit()
 	fmt.Println(req.Form)
 	fmt.Println(studentId)
 	fmt.Println(password)
