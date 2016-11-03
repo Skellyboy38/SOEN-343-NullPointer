@@ -6,7 +6,25 @@
     <!-- add the jQuery script -->
     <script type="text/javascript" src="../js/jq/scripts/jquery-1.11.1.min.js"></script>
     <!-- add the jQWidgets framework -->
-    <!-- TODO -->
+    <script type="text/javascript" src="../js/jq/jqwidgets/jqxcore.js"></script>
+    <script type="text/javascript" src="../js/jq/jqwidgets/jqxbuttons.js"></script>
+    <script type="text/javascript" src="../js/jq/jqwidgets/jqxscrollbar.js"></script>
+    <script type="text/javascript" src="../js/jq/jqwidgets/jqxdata.js"></script>
+    <script type="text/javascript" src="../js/jq/jqwidgets/jqxdate.js"></script>
+    <script type="text/javascript" src="../js/jq/jqwidgets/jqxscheduler.js"></script>
+    <script type="text/javascript" src="../js/jq/jqwidgets/jqxscheduler.api.js"></script>
+    <script type="text/javascript" src="../js/jq/jqwidgets/jqxdatetimeinput.js"></script>
+    <script type="text/javascript" src="../js/jq/jqwidgets/jqxmenu.js"></script>
+    <script type="text/javascript" src="../js/jq/jqwidgets/jqxcalendar.js"></script>
+    <script type="text/javascript" src="../js/jq/jqwidgets/jqxtooltip.js"></script>
+    <script type="text/javascript" src="../js/jq/jqwidgets/jqxwindow.js"></script>
+    <script type="text/javascript" src="../js/jq/jqwidgets/jqxcheckbox.js"></script>
+    <script type="text/javascript" src="../js/jq/jqwidgets/jqxlistbox.js"></script>
+    <script type="text/javascript" src="../js/jq/jqwidgets/jqxdropdownlist.js"></script>
+    <script type="text/javascript" src="../js/jq/jqwidgets/jqxnumberinput.js"></script>
+    <script type="text/javascript" src="../js/jq/jqwidgets/jqxradiobutton.js"></script>
+    <script type="text/javascript" src="../js/jq/jqwidgets/jqxinput.js"></script>
+    <script type="text/javascript" src="../js/jq/jqwidgets/globalization/globalize.js"></script>
 {{end}}
 
 {{define "app"}}
@@ -19,6 +37,7 @@
 <body>
     {{template "menu"}}
     Hello World!
+    {{template "roomScheduler"}}
     {{template "footer"}}
 </body>
 </html>
