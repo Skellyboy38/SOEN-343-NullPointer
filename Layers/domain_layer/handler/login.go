@@ -24,7 +24,7 @@ func LoginForm(rw http.ResponseWriter, req *http.Request) {
 	password := req.FormValue("password")
 
 	//user, err := mappers.MapperBundle.UserMapper.Get(studentId, password)
-	mappers.MapperBundle.UserMapper.Create(1234567,"mypass")
+	mappers.MapperBundle.UserMapper.Create(studentId,password)
 	mappers.MapperBundle.UserMapper.Commit()
 	fmt.Println(req.Form)
 	fmt.Println(studentId)
