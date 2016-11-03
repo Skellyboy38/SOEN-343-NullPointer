@@ -4,6 +4,7 @@ import (
 	"errors"
 	"github.com/Skellyboy38/SOEN-343-NullPointer/Layers/domain_layer/classes"
 	"github.com/Skellyboy38/SOEN-343-NullPointer/Layers/domain_layer/tdg"
+	"fmt"
 )
 
 type userIdentityMap map[int]classes.User
@@ -46,6 +47,7 @@ func (userMapper *UserMapper) Create(studentId int,password string) (classes.Use
 	if userMapper.InMemory(studentId){
 		return classes.User{}, errors.New("already exists")
 	}
+	fmt.Println("not in memory GOOD")
 	user := classes.User{studentId,password}
 	userMapper.users.add(user)
 	tdg.UOWSingleTon.RegisterNew(user)
