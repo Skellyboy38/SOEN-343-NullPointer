@@ -4,6 +4,7 @@ import (
 	"github.com/Skellyboy38/SOEN-343-NullPointer/Layers/domain_layer/classes"
 	"reflect"
 	"fmt"
+	"strings"
 )
 
 type user classes.User
@@ -27,11 +28,18 @@ func (uow *UOW) RegisterNew(object interface{}){
 }
 
 func (uow *UOW) Commit (){
+	fmt.Println("GOT TO COMMIT")
+	fmt.Println(uow.registeredNew)
 	for _, e := range uow.registeredNew{
-		fmt.Print(reflect.ValueOf(e))
-		//switch reflect.ValueOf(e){
-		//case
-		//}
+		objectName := reflect.TypeOf(e).String()
+		fmt.Println(objectName)
+		first :=strings.Index(objectName,".") + 1
+		objectName = objectName[first:]
+		fmt.Println(objectName)
+		switch objectName{
+		case "User":
+			UserTdg{}.Create(e.(classes.User))
+		}
 	}
 }
 
