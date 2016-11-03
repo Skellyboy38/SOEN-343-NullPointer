@@ -1,6 +1,7 @@
 package tdg
 
 import (
+	"errors"
 	"fmt"
 	"github.com/Skellyboy38/SOEN-343-NullPointer/Layers/domain_layer/classes"
 	"strconv"
@@ -21,6 +22,9 @@ func (tdg *UserTdg) GetByIdAndPass(id int, password string) (int, string, error)
 	}
 	var studentId int
 
+	if rows.Next() != true {
+		return studentId, password, errors.New("No User Found")
+	}
 	for rows.Next() {
 		err = rows.Scan(&studentId, &password)
 	}
