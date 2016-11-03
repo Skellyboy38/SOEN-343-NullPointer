@@ -12,7 +12,7 @@ type RoomTDG struct {
 
 func (r *RoomTDG) Create(room classes.Room) {
 	_ , err :=	DB.Exec("INSERT INTO room (roomId, roomNumber)" + 
-		"VALUES ('"+strconv.Itoa(room.RoomId) + "," + room.RoomNumber + "');")
+		"VALUES ('"+ strconv.Itoa(room.RoomId) + "," + room.RoomNumber + "');")
     fmt.Println(err)
 }
 
