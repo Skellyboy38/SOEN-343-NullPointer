@@ -6,8 +6,10 @@ import (
 	"github.com/Skellyboy38/SOEN-343-NullPointer/Layers/domain_layer/tdg"
 )
 
+type userIdentityMap map[int]classes.User
+
 type UserMapper struct {
-	users   map[int]classes.User
+	users   userIdentityMap
 	UserTdg tdg.UserTdg
 }
 
@@ -34,4 +36,17 @@ func (userMap *UserMapper) Get(id int, password string) (classes.User, error) {
 		}
 		return classes.User{studentId, password}, nil
 	}
+}
+
+func (userMap userIdentityMap) add(user classes.User) {
+	userMap[user.StudentId] = user
+}
+
+func (userMapper *UserMapper) Create(studentId int,password string) (classes.User, error){
+	if userMapper.InMemory(studentId){
+		return classes.User{}, errors.New("already exists")
+	}
+	user := classes.User{studentId,password}
+	userMapper.users.add(user)
+	return user, nil
 }

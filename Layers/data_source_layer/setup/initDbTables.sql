@@ -3,11 +3,6 @@ CREATE TABLE userTable (
 	password TEXT NOT NULL
 );
 
-CREATE TABLE session (
-	sessionId SERIAL UNIQUE PRIMARY KEY,
-	studentId INTEGER references userTable
-);
-
 CREATE TABLE room (
 	roomId	SERIAL UNIQUE PRIMARY KEY,
 	roomNumber TEXT UNIQUE
