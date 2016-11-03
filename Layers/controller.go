@@ -20,6 +20,8 @@ func main() {
 	router.HandleFunc("/login", handler.LoginForm).Methods("POST")
 	router.HandleFunc("/home", handler.Home).Methods("GET")
 	router.HandleFunc("/jsonexample", handler.ReturnJson).Methods("GET")
+	// GET all /reservation BY room id
+	// GET user's /reservation BY user id and room id
 	router.HandleFunc("/testDbConnection", handler.TestDb).Methods("GET")
 	router.HandleFunc("/testcookie", handler.TestCookie).Methods("GET")
 	router.HandleFunc("/getcookie", handler.GetCookie).Methods("GET")

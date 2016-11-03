@@ -19,6 +19,7 @@ func (tdg *UserTdg) GetByIdAndPass(id int, password string) (int, string, error)
 	if err != nil {
 		fmt.Println(err)
 	}
+	
 	var studentId int
 
 	for rows.Next() {

@@ -4,6 +4,8 @@
 <script type="text/javascript">
         $(document).ready(function () {
             init();
+            getAllReservationsByRoom();
+            getUserReservationsByRoom();
         });
 
         function init(){
@@ -69,6 +71,30 @@
                     'weekView',
                     'monthView'
                 ]
+            });
+        }
+
+        function getAllReservations(){
+            $.ajax({ 
+                url: '/jsonexample',
+                type: 'GET',
+                dataType: "json",
+                error: function(error) {},
+                success: function(data) {
+                    console.log(data);
+                }
+            });
+        }
+
+        function getUserReservationsByRoom(){
+            $.ajax({ 
+                url: '/jsonexample',
+                type: 'GET',
+                dataType: "json",
+                error: function(error) {},
+                success: function(data) {
+                    console.log(data);
+                }
             });
         }
     </script>
