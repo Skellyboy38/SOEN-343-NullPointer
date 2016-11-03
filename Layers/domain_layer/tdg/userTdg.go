@@ -11,24 +11,27 @@ type UserTdg struct {
 	AbstractTdg AbstractTDG
 }
 
-func (tdg *UserTdg) Update(user classes.User) {
-	DB.Exec("UPDATE userTable set")
+func (tdg UserTdg) Update(user classes.User) {
+	DB.Exec("UPDATE userTable set studentId = '$1',  password = '$2' WHERE studentId = '$3';",
+		user.StudentId, user.Password, user.StudentId)
 }
 
 func (tdg *UserTdg) GetByIdAndPass(id int, password string) (int, string, error) {
-	rows, err := DB.Query("SELECT * FROM userTable WHERE studentId='" + strconv.Itoa(id) + "' and password='" + password + "'")
+	studentIdString := strconv.Itoa(id)
+	rows, err := DB.Query("SELECT * FROM userTable WHERE studentId='$1' and password='$2'",
+		studentIdString, password)
 	if err != nil {
 		fmt.Println(err)
 	}
-	
+
 	var studentId int
 
 	if rows.Next() != true {
 		return studentId, password, errors.New("No User Found")
 	}
-	for rows.Next() {
-		err = rows.Scan(&studentId, &password)
-	}
+
+	err = rows.Scan(&studentId, &password)
+
 	if err != nil {
 		return studentId, password, nil
 	} else {
@@ -38,6 +41,8 @@ func (tdg *UserTdg) GetByIdAndPass(id int, password string) (int, string, error)
 
 func (tdg UserTdg) Create(user classes.User) {
 	fmt.Println(user)
-	_, err := DB.Exec("INSERT INTO usertable (studentId, password) VALUES ('" + strconv.Itoa(user.StudentId) + "','" + user.Password + "');")
+	studentIdString := strconv.Itoa(user.StudentId)
+	_, err := DB.Exec("INSERT INTO usertable (studentId, password) VALUES ('$1','$2');",
+		studentIdString, user.Password)
 	fmt.Println(err)
 }

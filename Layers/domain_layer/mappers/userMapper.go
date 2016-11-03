@@ -45,6 +45,9 @@ func (userMap userIdentityMap) add(user classes.User) {
 	userMap[user.StudentId] = user
 }
 
+func (userMapper *UserMapper) SaveNewUsers(userArray []classes.User) {
+
+}
 func (userMapper *UserMapper) Create(studentId int, password string) (classes.User, error) {
 	if userMapper.InMemory(studentId) {
 		return classes.User{}, errors.New("already exists")
