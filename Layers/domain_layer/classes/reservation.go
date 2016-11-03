@@ -1,10 +1,12 @@
 package classes
 
 import ()
+import "time"
 
 type Reservation struct {
 	ReservationId int
 	Room          Room
 	User          User
-	Time          TimeSlot
+	StartTime     time.Duration
+	EndTime       time.Duration
 }

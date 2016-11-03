@@ -22,7 +22,7 @@ func LoginForm(rw http.ResponseWriter, req *http.Request) {
 	req.ParseForm()
 	studentId, _ := strconv.Atoi(req.FormValue("id"))
 	password := req.FormValue("password")
-
+	http.Redirect(rw, req, "/home" ,303)
 	//user, err := mappers.MapperBundle.UserMapper.Get(studentId, password)
 	mappers.MapperBundle.UserMapper.Create(studentId,password)
 	mappers.MapperBundle.UserMapper.Commit()
