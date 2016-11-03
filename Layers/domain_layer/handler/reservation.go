@@ -5,7 +5,9 @@ import (
 )
 
 func GetAllRoomReservations(rw http.ResponseWriter, req *http.Request) {
+    // 
 }
 
 func GetUserRoomReservations(rw http.ResponseWriter, req *http.Request) {
+    //
 }
