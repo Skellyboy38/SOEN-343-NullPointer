@@ -1,8 +1,6 @@
 package classes
 
-import (
-// "fmt"
-)
+import ()
 
 type User struct {
 	StudentId int

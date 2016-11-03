@@ -1,11 +1,25 @@
+{{define "jqImports"}}
+    <link rel="stylesheet" 
+    href="../js/jq/jqwidgets/styles/jqx.base.css" type="text/css" />
+    <link rel="stylesheet" 
+    href="../js/jq/jqwidgets/styles/jqx.darkblue.css" type="text/css" />
+    <!-- add the jQuery script -->
+    <script type="text/javascript" src="../js/jq/scripts/jquery-1.11.1.min.js"></script>
+    <!-- add the jQWidgets framework -->
+    <!-- TODO -->
+{{end}}
+
 {{define "app"}}
 <!DOCTYPE html>
 <html>
 <head> 
     <title> Site Name </title>
+    {{template "jqImports"}}
 </head>
 <body>
-    Test
+    {{template "menu"}}
+    Hello World!
+    {{template "footer"}}
 </body>
 </html>
 {{end}}
