@@ -3,6 +3,11 @@
 
 <script type="text/javascript">
         $(document).ready(function () {
+            init();
+        });
+
+        function init(){
+
             // TEST DATA
             var appointments = new Array();
             var appointment1 = {
@@ -16,7 +21,6 @@
             }
             appointments.push(appointment1);
 
-            // Prepare JQScheduler
             var source =
             {
                 dataType: "array",
@@ -66,6 +70,6 @@
                     'monthView'
                 ]
             });
-        });
+        }
     </script>
 {{end}}

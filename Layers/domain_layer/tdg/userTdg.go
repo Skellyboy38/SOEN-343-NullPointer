@@ -33,6 +33,6 @@ func (tdg *UserTdg) GetByIdAndPass(id int, password string) (int, string, error)
 
 func (tdg UserTdg) Create(user classes.User){
 	fmt.Println(user)
-	_ , err :=	DB.Exec("INSERT INTO usertable (studentId, password) VALUES ('"+strconv.Itoa(user.StudentId)+"','"+user.Password+"');")
+	_ , err :=	DB.Exec("INSERT INTO usertable (studentId, password) VALUES ('" + strconv.Itoa(user.StudentId) + "','"+user.Password+"');")
 	fmt.Println(err)
 }
