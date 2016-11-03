@@ -48,5 +48,6 @@ func (userMapper *UserMapper) Create(studentId int,password string) (classes.Use
 	}
 	user := classes.User{studentId,password}
 	userMapper.users.add(user)
+	tdg.UOWSingleTon.RegisterNew(user)
 	return user, nil
 }
