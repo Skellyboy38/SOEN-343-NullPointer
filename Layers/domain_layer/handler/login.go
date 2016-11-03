@@ -21,8 +21,8 @@ func LoginForm(rw http.ResponseWriter, req *http.Request) {
 
 	abstractTdg := mappers.MapperBundle.UserMapper.UserTdg.AbstractTdg
 
-	// abstractTdg.GetConnection()
-	// defer abstractTdg.CloseConnection()
+	abstractTdg.GetConnection()
+	defer abstractTdg.CloseConnection()
 
 	req.ParseForm()
 	studentId, _ := strconv.Atoi(req.FormValue("id"))
@@ -33,11 +33,13 @@ func LoginForm(rw http.ResponseWriter, req *http.Request) {
 	verifiedUser, err := userMapper.Get(studentId, password)
 
 	if err != nil { // return error
-		rw.Write("Invalid id and password")
+		rw.Write([]byte("Invalid id and password"))
 		return
 	}
 	expire := time.Now().Add(time.Hour * 45)
-	cookie := http.Cookie{"studentId", verifiedUser.StudentId, "/", "localhost", expire, expire.Format(time.UnixDate), 86000, false, true, "studentId=" + strconv(verifiedUser.StudentId), []string{"studentId=" + strconv(verifiedUser.StudentId)}}
+	studentIdCookie := strconv.Itoa(verifiedUser.StudentId)
+	studentIdAndName := "studentId=" + studentIdCookie
+	cookie := http.Cookie{"studentId", studentIdCookie, "/", "localhost", expire, expire.Format(time.UnixDate), 86000, false, true, studentIdAndName, []string{studentIdAndName}}
 	http.SetCookie(rw, &cookie)
 	http.Redirect(rw, req, "/home", 303)
 	//user, err := mappers.MapperBundle.UserMapper.Get(studentId, password)

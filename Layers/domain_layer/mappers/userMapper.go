@@ -31,7 +31,7 @@ func (userMap *UserMapper) Get(id int, password string) (classes.User, error) {
 	if userMap.InMemory(id) {
 		return userMap.users[id], nil
 	} else {
-		studentId, _, err := userMap.UserTdg.GetByIdAndPass(id, password)
+		_, _, err := userMap.UserTdg.GetByIdAndPass(id, password)
 		if err != nil {
 			return classes.User{}, errors.New("User doesnt exist")
 		}
