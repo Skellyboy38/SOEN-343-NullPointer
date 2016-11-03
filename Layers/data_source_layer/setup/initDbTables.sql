@@ -8,17 +8,12 @@ CREATE TABLE room (
 	roomNumber TEXT UNIQUE
 );
 
-CREATE TABLE timeSlot (
-	timeSlotId SERIAL UNIQUE PRIMARY KEY,
-	startTime TIMESTAMP,
-	endTime TIMESTAMP
-);
-
 CREATE TABLE reservation (
 	reservationId SERIAL UNIQUE PRIMARY KEY,
 	roomId SERIAL references room,
 	studentId INTEGER references userTable,
-	timeSlotId SERIAL references timeSlot
+	startTime TIMESTAMP,
+	endTime TIMESTAMP
 );
 
 CREATE TABLE waitlist (

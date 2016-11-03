@@ -1,8 +1,6 @@
 package classes
 
-import (
-// "fmt"
-)
+import ()
 
 type Reservation struct {
 	ReservationId int
