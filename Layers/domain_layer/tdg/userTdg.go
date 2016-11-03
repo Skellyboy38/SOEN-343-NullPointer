@@ -1,6 +1,7 @@
 package tdg
 
 import (
+	"errors"
 	"fmt"
 	"github.com/Skellyboy38/SOEN-343-NullPointer/Layers/domain_layer/classes"
 	"strconv"
@@ -22,6 +23,9 @@ func (tdg *UserTdg) GetByIdAndPass(id int, password string) (int, string, error)
 	
 	var studentId int
 
+	if rows.Next() != true {
+		return studentId, password, errors.New("No User Found")
+	}
 	for rows.Next() {
 		err = rows.Scan(&studentId, &password)
 	}
@@ -32,8 +36,8 @@ func (tdg *UserTdg) GetByIdAndPass(id int, password string) (int, string, error)
 	}
 }
 
-func (tdg UserTdg) Create(user classes.User){
+func (tdg UserTdg) Create(user classes.User) {
 	fmt.Println(user)
-	_ , err :=	DB.Exec("INSERT INTO usertable (studentId, password) VALUES ('" + strconv.Itoa(user.StudentId) + "','"+user.Password+"');")
+	_, err := DB.Exec("INSERT INTO usertable (studentId, password) VALUES ('" + strconv.Itoa(user.StudentId) + "','" + user.Password + "');")
 	fmt.Println(err)
 }
