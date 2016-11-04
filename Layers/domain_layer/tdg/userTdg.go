@@ -18,7 +18,7 @@ func (tdg UserTdg) Update(user classes.User) {
 
 func (tdg *UserTdg) GetByIdAndPass(id int, password string) (int, string, error) {
 	// studentIdString := strconv.Itoa(id)
-	rows, err := DB.Query("SELECT * FROM userTable WHERE studentId='$1' and password='$2'",
+	rows, err := DB.Query("SELECT * FROM userTable WHERE studentId='%d' and password='%s'",
 		id, password)
 	if err != nil {
 		fmt.Println(err)
