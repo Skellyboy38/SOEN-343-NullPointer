@@ -16,8 +16,8 @@ func (tdg UserTdg) Update(user classes.User) {
 }
 
 func (tdg *UserTdg) GetByIdAndPass(id int, password string) (int, string, error) {
-	rows, err := DB.Query("SELECT * FROM userTable WHERE studentId=$1 and password='$2';",
-		id, password)
+	rows, err := DB.Query("SELECT * FROM userTable WHERE studentId=$1 ;",
+	id)
 	if err != nil {
 		fmt.Println(err)
 	}
