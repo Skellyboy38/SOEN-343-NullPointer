@@ -13,7 +13,7 @@ type UserTdg struct {
 
 func (tdg UserTdg) Update(user classes.User) {
 	DB.Exec("UPDATE userTable set studentId = '$1',  password = '$2' WHERE studentId = '$3';",
-		user.StudentId, user.Password, user.StudentId)
+		strconv.Itoa(user.StudentId), user.Password, strconv.Itoa(user.StudentId))
 }
 
 func (tdg *UserTdg) GetByIdAndPass(id int, password string) (int, string, error) {
