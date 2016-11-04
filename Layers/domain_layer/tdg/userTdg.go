@@ -12,13 +12,12 @@ type UserTdg struct {
 }
 
 func (tdg UserTdg) Update(user classes.User) {
-	DB.Exec("UPDATE userTable set studentId = '"++"',  password = '$2' WHERE studentId = '$3';",
-		strconv.Itoa(user.StudentId), user.Password, strconv.Itoa(user.StudentId))
+	DB.Exec("UPDATE userTable set studentId = '" + strconv.Itoa(user.StudentId) + "',  password = '" + user.Password + "' WHERE studentId = '" + strconv.Itoa(user.StudentId) + "';")
 }
 
 func (tdg *UserTdg) GetByIdAndPass(id int, password string) (int, string, error) {
 	studentIdString := strconv.Itoa(id)
-	rows, err := DB.Query("SELECT * FROM userTable WHERE studentId='"+studentIdString+"' and password='"+password+"'")
+	rows, err := DB.Query("SELECT * FROM userTable WHERE studentId='" + studentIdString + "' and password='" + password + "'")
 	if err != nil {
 		fmt.Println(err)
 	}
