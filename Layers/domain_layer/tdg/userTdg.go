@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/Skellyboy38/SOEN-343-NullPointer/Layers/domain_layer/classes"
-	"strconv"
 )
 
 type UserTdg struct {
@@ -12,15 +11,13 @@ type UserTdg struct {
 }
 
 func (tdg UserTdg) Update(user classes.User) {
-	DB.Exec("UPDATE userTable set studentId = '" + strconv.Itoa(user.StudentId) +
-		"',  password = '" + user.Password + "' WHERE studentId = '" +
-		strconv.Itoa(user.StudentId) + "';")
+	DB.Exec("UPDATE userTable set studentId = $1,  password = '$2' WHERE studentId = $3;",
+		user.StudentId, user.Password, user.StudentId)
 }
 
 func (tdg *UserTdg) GetByIdAndPass(id int, password string) (int, string, error) {
-	studentIdString := strconv.Itoa(id)
-	rows, err := DB.Query("SELECT * FROM userTable WHERE studentId='" +
-		studentIdString + "' and password='" + password + "'")
+	rows, err := DB.Query("SELECT * FROM userTable WHERE studentId=$1 and password='$2';",
+		id, password)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -40,9 +37,23 @@ func (tdg *UserTdg) GetByIdAndPass(id int, password string) (int, string, error)
 	}
 }
 
-func (tdg UserTdg) Create(user classes.User) {
-	fmt.Println(user)
-	studentIdString := strconv.Itoa(user.StudentId)
-	_, err := DB.Exec("INSERT INTO usertable (studentId, password) VALUES ('" + studentIdString + "','" + user.Password + "');")
-	fmt.Println(err)
+func (tdg UserTdg) Create(user classes.User) error {
+	_, err := DB.Exec("INSERT INTO usertable (studentId, password) VALUES ($1,'$2');",
+		user.StudentId, user.Password)
+	return err
+}
+
+func (tdg UserTdg) DeleteEach(userId int) error {
+	_, err := DB.Exec("DELETE FROM userTable WHERE studentId = $1 ;", userId)
+	return err
+}
+
+func (tdg UserTdg) Delete(userIds []int) error {
+	for x, _ := range userIds {
+		err := tdg.DeleteEach(userIds[x])
+		if err != nil {
+			return errors.New("Could not delete all")
+		}
+	}
+	return nil
 }
