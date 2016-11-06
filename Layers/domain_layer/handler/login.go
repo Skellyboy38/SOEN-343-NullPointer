@@ -7,6 +7,8 @@ import (
 	"net/http"
 	"path/filepath"
 	"strconv"
+	//"time"
+	//"os/user"	user := classes.User{studentId,password}
 	"time"
 )
 
@@ -44,10 +46,9 @@ func LoginForm(rw http.ResponseWriter, req *http.Request) {
 	http.SetCookie(rw, &cookie)
 	http.Redirect(rw, req, "/home", 303)
 	//user, err := mappers.MapperBundle.UserMapper.Get(studentId, password)
-	// mappers.MapperBundle.UserMapper.Create(studentId, password)
-	// mappers.MapperBundle.UserMapper.Commit()
+	//userMapper.Create(user.StudentId, password)
+	//userMapper.Commit()
 	fmt.Println(req.Form)
 	fmt.Println(studentId)
 	fmt.Println(password)
-
 }

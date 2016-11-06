@@ -3,14 +3,9 @@ CREATE TABLE userTable (
 	password TEXT NOT NULL
 );
 
-CREATE TABLE room (
-	roomId	SERIAL UNIQUE PRIMARY KEY,
-	roomNumber TEXT UNIQUE
-);
-
 CREATE TABLE reservation (
 	reservationId SERIAL UNIQUE PRIMARY KEY,
-	roomId SERIAL references room,
+	roomId INTEGER,
 	studentId INTEGER references userTable,
 	startTime TIMESTAMP,
 	endTime TIMESTAMP

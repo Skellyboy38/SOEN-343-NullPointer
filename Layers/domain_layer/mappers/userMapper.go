@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/Skellyboy38/SOEN-343-NullPointer/Layers/domain_layer/classes"
 	"github.com/Skellyboy38/SOEN-343-NullPointer/Layers/domain_layer/tdg"
+	"sync"
 )
 
 type userIdentityMap map[int]classes.User
@@ -41,24 +42,56 @@ func (userMap *UserMapper) Get(id int, password string) (classes.User, error) {
 	}
 }
 
+func (userMap *UserMapper) GetById(id int) (classes.User, error) { // add tdg that searches by
+	if userMap.InMemory(id) {           // only id and finish with check to db
+		return userMap.users[id], nil
+	} else{
+		return classes.User{}, errors.New("User Not in Memory")
+	}
+}
+
+
 func (userMap userIdentityMap) add(user classes.User) {
 	userMap[user.StudentId] = user
 }
 
-func (userMapper *UserMapper) SaveNewUsers(userArray []classes.User) {
-
+func (userMapper *UserMapper) SaveNewUsers(userArray []classes.User) error {
+	return userMapper.UserTdg.Create(userArray)
 }
+
+func (userMapper *UserMapper) SaveDeletedUsers(userArray []int) {
+	var wg sync.WaitGroup
+	wg.Add(2)
+	go func() {
+		defer wg.Done()
+		for _,e := range userArray{
+			delete(userMapper.users,e)
+		}
+	}()
+
+	go func(){
+		defer wg.Done()
+		tdg.UserTdg{}.Delete(userArray)
+	}()
+
+	wg.Wait()
+}
+
+func (userMapper *UserMapper) SaveDirtyUsers(users []classes.User) error {
+	return tdg.UserTdg{}.Update(users)
+}
+
 func (userMapper *UserMapper) Create(studentId int, password string) (classes.User, error) {
 	if userMapper.InMemory(studentId) {
 		return classes.User{}, errors.New("already exists")
 	}
-	fmt.Println("not in memory GOOD")
 	user := classes.User{studentId, password}
+	fmt.Println(user)
 	userMapper.users.add(user)
-	tdg.UOWSingleTon.RegisterNew(user)
+	UOWSingleTon.RegisterNewUser(user)
 	return user, nil
 }
 
 func (userMapper *UserMapper) Commit() {
-	tdg.UOWSingleTon.Commit()
+	UOWSingleTon.Commit()
 }
