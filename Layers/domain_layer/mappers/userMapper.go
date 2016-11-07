@@ -42,7 +42,7 @@ func (userMap *UserMapper) Get(id int, password string) (classes.User, error) {
 	}
 }
 
-func (userMap *UserMapper) GetUserById(id int) (classes.User, error) { // add tdg that searches by
+func (userMap *UserMapper) GetById(id int) (classes.User, error) { // add tdg that searches by
 	if userMap.InMemory(id) {           // only id and finish with check to db
 		return userMap.users[id], nil
 	} else{

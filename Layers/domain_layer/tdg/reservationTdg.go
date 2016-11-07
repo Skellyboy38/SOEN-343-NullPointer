@@ -2,8 +2,6 @@ package tdg
 
 import (
 	"fmt"
-	"github.com/Skellyboy38/SOEN-343-NullPointer/Layers/domain_layer/classes"
-	"strconv"
 	"time"
 	"errors"
 )
@@ -12,14 +10,20 @@ type ReservationTDG struct {
 	AbstractTDG AbstractTDG
 }
 
-func (r *ReservationTDG) Create(reservation classes.Reservation) {
-	_, err := DB.Exec("INSERT INTO reservation (reservationId, roomId, studentId, startTime, endTime)"+
-		"VALUES ($1, '$2', $3, '$4'. '$5' );",
-		strconv.Itoa(reservation.ReservationId),
-		strconv.Itoa(reservation.User.StudentId),
-		reservation.StartTime.String(),
-		reservation.EndTime.String())
-	fmt.Println(err)
+func (r *ReservationTDG) Create(roomId, userId []int, startTime, endTime []time.Time) []int{
+	reservationIds := []int{}
+	for i,_ := range roomId{
+		res, err := DB.Exec("INSERT INTO reservation ( roomId, studentId, startTime, endTime)"+
+			"VALUES ($1, '$2', $3, '$4');",
+			roomId[i],
+			userId[i],
+			startTime[i],
+			endTime[i])
+		fmt.Println(err)
+		id , err := res.LastInsertId()
+		reservationIds = append(reservationIds,int(id))
+	}
+	return reservationIds
 }
 
 // stopped here because i need to have a get room and get user for when i
