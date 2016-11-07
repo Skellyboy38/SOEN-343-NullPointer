@@ -75,20 +75,10 @@ function init() {
 
 function getAllReservations() {
     $.ajax({
-        url: '/jsonexample',
-        type: 'GET',
-        dataType: "json",
-        error: function (error) { },
-        success: function (data) {
-            console.log(data);
-        }
-    });
-}
-
-function getUserReservationsByRoom() {
-    $.ajax({
-        url: '/jsonexample',
-        type: 'GET',
+        type: 'POST',
+        contentType: "application/json",
+        url: '/reservations',
+        data: JSON.stringify({roomID: "123"}),
         dataType: "json",
         error: function (error) { },
         success: function (data) {

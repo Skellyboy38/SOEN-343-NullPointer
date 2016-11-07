@@ -7,6 +7,7 @@ import (
 	"github.com/Skellyboy38/SOEN-343-NullPointer/Layers/domain_layer/classes"
 	"github.com/Skellyboy38/SOEN-343-NullPointer/Layers/domain_layer/tdg"
 	"errors"
+	"fmt"
 )
 
 type reservationIdentityMap            map[int]classes.Reservation
@@ -22,22 +23,23 @@ func InitReservationMapper() *ReservationMapper{
 }
 
 
-func (reservationMapper *ReservationMapper) GetByRoomId(id int) ([]classes.Reservation, error) {
+func (reservationMapper *ReservationMapper) GetReservationsByRoomId(id int) ([]classes.Reservation, error) {
 	if reservationMapper.InMemoryByRoomId(id) {
 		return reservationMapper.reservationsByRoomId[id], nil
 	} else {
 		roomIds, studentIds, startTimes, endTimes, err := reservationMapper.reservationTDG.ReadByRoom(id)
 		if err != nil {
-			return []classes.Reservation{}, errors.New("No Reservations for that room doesnt exist")
+			return []classes.Reservation{}, errors.New(fmt.Sprintf("Reservations for room %v that room exist", id))
 		}
 		reservations := []classes.Reservation{}
 
 		for i, _ := range roomIds{
-			student,err := MapperBundle.UserMapper.GetById(studentIds[i])
+			student, err := MapperBundle.UserMapper.GetUserById(studentIds[i])
+
 			if err != nil {
-				return []classes.Reservation{}, errors.New("No Reservations for that room doesnt exist")
+				return []classes.Reservation{}, errors.New("No reservations for user.")
 			}
-			currentReservation :=classes.Reservation{id,roomIds[i],student,startTimes[i],endTimes[i]}
+			currentReservation := classes.Reservation{id,roomIds[i],student,startTimes[i],endTimes[i]}
 
 			reservations = append(reservations,currentReservation)
 		}
