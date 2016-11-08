@@ -12,9 +12,11 @@ import (
 
 type reservationIdentityMap            map[int]classes.Reservation
 type reservationByRoomIdBucketTable    map[int][]classes.Reservation
+type reservationByStudentIdBucketTable    map[int][]classes.Reservation
 type ReservationMapper struct {
 	reservations reservationIdentityMap
 	reservationsByRoomId reservationByRoomIdBucketTable
+	reservationsByStudentId reservationByStudentIdBucketTable
 	reservationTDG tdg.ReservationTDG
 }
 
@@ -46,7 +48,7 @@ func (reservationMapper *ReservationMapper) GetByRoomId(id int) ([]classes.Reser
 	if reservationMapper.InMemoryByRoomId(id) {
 		return reservationMapper.reservationsByRoomId[id], nil
 	} else {
-		roomIds, studentIds, startTimes, endTimes, err := reservationMapper.reservationTDG.ReadByRoom(id)
+		reservationIds, roomIds, studentIds, startTimes, endTimes, err := reservationMapper.reservationTDG.ReadByRoom(id)
 		if err != nil {
 			return []classes.Reservation{}, errors.New("No Reservations for that room doesnt exist")
 		}
@@ -59,20 +61,50 @@ func (reservationMapper *ReservationMapper) GetByRoomId(id int) ([]classes.Reser
 			}
 			currentReservation :=classes.Reservation{id,roomIds[i],student,startTimes[i],endTimes[i]}
 
-			reservations = append(reservations,currentReservation)
+			reservations = append(reservations,currentReservation) //TODO why do we add here
 		}
 		reservationMapper.reservationsByRoomId.add(id,reservations)
+		reservationMapper.reservations.add(reservations) //TODO and here
+		}
+
+		return reservations, nil
+	}
+}
+
+func (reservationMapper *ReservationMapper) GetByStudentId(id int) ([]classes.Reservation, error) {
+	if reservationMapper.InMemoryStudentById(id) { //check if student's reservations are in memory
+		return reservationMapper.reservationsByStudentId[id], nil
+	} else {
+		reservationIds, roomIds, studentIds, startTimes, endTimes, err := reservationMapper.reservationTDG.ReadByUser(id)
+		if err != nil {
+			return []classes.Reservation{}, errors.New("This student does not have any reservations")
+		}
+		reservations := []classes.Reservation{}
+		student,err := MapperBundle.UserMapper.GetById(studentIds[i])
+		for i, _ := range reservationIds{
+			if err != nil {
+				return []classes.Reservation{}, errors.New("This student does not have any reservations")
+			}
+			currentReservation :=classes.Reservation{reservationIds[i],roomIds[i],student,startTimes[i],endTimes[i]}
+
+			reservations = append(reservations,currentReservation) //mabye use set instead, possible repeats. 
+		}
+		reservationMapper.reservationsByStudentId.add(id,reservations)
 		reservationMapper.reservations.add(reservations)
 
 		return reservations, nil
 	}
 }
 
+func (bucketTable reservationByUserIdBucketTable) add(id int ,reservations []classes.Reservation){
+	bucketTable[id] = append(bucketTable[id],reservations...)
+}
+
 func (bucketTable reservationByRoomIdBucketTable) add(id int ,reservations []classes.Reservation){
 	bucketTable[id] = append(bucketTable[id],reservations...)
 }
 
-func (reservationMap reservationIdentityMap) add(reservations []classes.Reservation){
+func (reservationMap reservationIdentityMap) add(reservations []classes.Reservation){ 
 	for _ , e := range reservations{
 		reservationMap[e.ReservationId] = e
 	}
@@ -80,6 +112,15 @@ func (reservationMap reservationIdentityMap) add(reservations []classes.Reservat
 
 func (reservationMapper *ReservationMapper) InMemoryByRoomId(id int) bool {
 	_, ok := reservationMapper.reservationsByRoomId[id]
+	if ok {
+		return true
+	} else {
+		return false
+	}
+}
+
+func (reservationMapper *ReservationMapper) InMemoryByStudentId(id int) bool {
+	_, ok := reservationMapper.reservationsByStudentId[id]
 	if ok {
 		return true
 	} else {

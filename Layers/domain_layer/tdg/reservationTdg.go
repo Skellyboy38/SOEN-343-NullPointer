@@ -1,9 +1,11 @@
 package tdg
-
+	
 import (
 	"fmt"
 	"time"
 	"errors"
+	"github.com/Skellyboy38/SOEN-343-NullPointer/Layers/domain_layer/classes"
+
 )
 
 type ReservationTDG struct {
@@ -26,9 +28,7 @@ func (r *ReservationTDG) Create(roomId, userId []int, startTime, endTime []time.
 	return reservationIds
 }
 
-// stopped here because i need to have a get room and get user for when i
-// do my select * from reservations
-func (r *ReservationTDG) ReadByRoom(id int) ([]int, []int, []time.Time, []time.Time, error) {
+func (r *ReservationTDG) getReservedRooms(query, readError string, id int) ([]int, []int, []int, []time.Time, []time.Time, error) {
 	rows, err := DB.Query("SELECT * FROM reservation WHERE roomId=$1 ;",id)
 	if err != nil{
 		fmt.Println(err)
@@ -45,14 +45,14 @@ func (r *ReservationTDG) ReadByRoom(id int) ([]int, []int, []time.Time, []time.T
 
 	if rows.Next() == false{
 		return roomIds,studentIds,startTimes,endTimes,
-			errors.New("Could not get Reservations by RoomId")
+			errors.New("Could not get Reservations by " + readError)
 	}
 
 	err = rows.Scan(&id,&roomId,&studentId,&startTime,&endTime)
 
 	if err != nil{
 		return roomIds,studentIds,startTimes,endTimes,
-			errors.New("Could not Scan Reservation by RoomId")
+			errors.New("Could not Scan Reservation by " + readError)
 	}
 	roomIds    = append(roomIds,roomId)
 	studentIds = append(studentIds,studentId)
@@ -62,7 +62,7 @@ func (r *ReservationTDG) ReadByRoom(id int) ([]int, []int, []time.Time, []time.T
 	for rows.Next(){
 		if err != nil{
 			return roomIds,studentIds,startTimes,endTimes,
-				errors.New("Could not Scan Reservation by RoomId")
+				errors.New("Could not Scan Reservation by " +readError)
 		}
 
 		roomIds    = append(roomIds,roomId)
@@ -74,8 +74,15 @@ func (r *ReservationTDG) ReadByRoom(id int) ([]int, []int, []time.Time, []time.T
 	return roomIds,studentIds,startTimes,endTimes, nil
 }
 
-func (r *ReservationTDG) ReadByUser() {
+// stopped here because i need to have a get room and get user for when i
+// do my select * from 
+//returns reservationIds, roomIds, UserIds, startimes, endTimes
+func (r *ReservationTDG) ReadByRoom(id int) ([]int, []int, []int, []time.Time, []time.Time, error) {
+	return r.getReservedRooms("SELECT * FROM reservation WHERE roomId=$1 ;", "RoomId", id)
+}
 
+func (r *ReservationTDG) ReadByUser(studentId int) ([]int, []int, []time.Time, []time.Time, error){
+	return r.getReservedRooms("SELECT * FROM reservation WHERE studentId=$1 ;", "StudentId", studentId)
 }
 
 func (r *ReservationTDG) Update() {

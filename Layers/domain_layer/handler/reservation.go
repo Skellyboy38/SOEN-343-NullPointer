@@ -12,8 +12,24 @@ func GetAllRoomReservations(rw http.ResponseWriter, req *http.Request) {
 	//
 }
 
-func GetUserRoomReservations(rw http.ResponseWriter, req *http.Request) {
-	//
+func GetStudentRoomReservations(rw http.ResponseWriter, req *http.Request) {
+	abstractTdg := mappers.MapperBundle.UserMapper.UserTdg.AbstractTdg
+
+	abstractTdg.GetConnection()
+	defer abstractTdg.CloseConnection()
+
+	studentId,err := strconv.Atoi(req.URL.Query().Get("studentId"))
+	reservationMapper := mappers.MapperBundle.ReservationMapper
+
+	reservations, err := reservationMapper.GetByRoomId(studentId)
+
+	if err != nil {
+		rw.WriteHeader(http.StatusExpectationFailed)
+		return
+	}
+	jsonReservations , err := json.Marshal(reservations)
+
+	rw.Write(jsonReservations)
 }
 
 func ReservationByRoom(rw http.ResponseWriter, req *http.Request){
