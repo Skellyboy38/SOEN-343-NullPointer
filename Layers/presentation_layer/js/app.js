@@ -46,7 +46,7 @@ function init(reservations) {
             id: entry.id,
             description: entry.description,
             location: entry.location,
-            subject: entry.subject,
+            subject: entry.subject + "\n" + entry.start.getHours() + ":" + (entry.start.getMinutes() > 9 ? "" + entry.start.getMinutes() : "0" + entry.start.getMinutes()) + " - " + entry.end.getHours() + ":" + (entry.start.getMinutes() > 9 ? "" + entry.end.getMinutes() : "0" + entry.end.getMinutes()),
             calendar: entry.calendar,
             start: entry.start,
             end: entry.end,
