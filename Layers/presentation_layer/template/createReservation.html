@@ -1,0 +1,36 @@
+{{define "createReservation"}}
+<div id='createReservationForm'>
+	<br>
+	<h1>Create a reservation</h1>
+	<form>
+		<table>
+		<tr>
+			<td>Room number (1-5):</td>
+			<td>
+				<select>
+					<option value="1">Room 1</option>
+					<option value="2">Room 2</option>
+					<option value="3">Room 3</option>
+					<option value="4">Room 4</option>
+					<option value="5">Room 5</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td>Date (DD/MM/YYYY):</td>
+			<td><input type="text"></td>
+		</tr>
+		<tr>
+			<td>Start time (HH):</td>
+			<td><input type="text"></td>
+		</tr>
+		<tr>
+			<td>End time (HH):</td>
+			<td><input type="text"></td>
+		</tr>
+		</table>
+		<button type="submit">Submit</button>&emsp;
+		<button onclick="reset()">Reset</button>
+	</form>
+</div>
+{{end}}

@@ -1,8 +1,13 @@
 $(document).ready(function () {
     init();
-    getAllReservations();
+    updateCalendar(1);
     //getUserReservationsByRoom();
 });
+
+function updateCalendar(room_number) {
+    // update the calendar information using room_number as the room ID
+    getReservations(room_number);
+}
 
 function init() {
 
@@ -73,12 +78,12 @@ function init() {
     });
 }
 
-function getAllReservations() {
+function getReservations(room_number) {
     $.ajax({
         type: 'POST',
         contentType: "application/json",
         url: '/reservations',
-        data: JSON.stringify({roomID: "123"}),
+        data: JSON.stringify({roomID: room_number}),
         dataType: "json",
         error: function (error) { },
         success: function (data) {

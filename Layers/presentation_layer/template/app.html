@@ -29,7 +29,7 @@
 <html>
 
 <head>
-    <title> Site Name </title>
+    <title> Room Booking Application </title>
     {{template "jqImports"}}
 </head>
 
@@ -37,18 +37,20 @@
     <div class="header">
         <div class="container">
             <div class="nav">
-                <button>Room 1</button>
-                <button>Room 2</button>
-                <button>Room 3</button>
-                <button>Room 4</button>
-                <button>Room 5</button>
+                <button onclick="updateCalendar(1)">Room 1</button>
+                <button onclick="updateCalendar(2)">Room 2</button>
+                <button onclick="updateCalendar(3)">Room 3</button>
+                <button onclick="updateCalendar(4)">Room 4</button>
+                <button onclick="updateCalendar(5)">Room 5</button>
             </div>
         </div>
     </div>
     <div class="container">
         <div class="content">
-            {{template "menu"}} 
+            {{template "menu"}}
             {{template "roomScheduler"}} 
+            {{template "currentReservations"}}
+            {{template "createReservation"}}
             {{template "footer"}}
         </div>
     </div>

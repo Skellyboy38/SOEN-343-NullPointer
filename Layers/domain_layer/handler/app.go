@@ -12,6 +12,9 @@ func Home(rw http.ResponseWriter, req *http.Request) {
         filepath.Join("presentation_layer", "template", "footer.html"),
         filepath.Join("presentation_layer", "template", "roomScheduler.html"),
         filepath.Join("presentation_layer", "template", "app.html"),
+        filepath.Join("presentation_layer", "template", "currentReservations.html"),
+        filepath.Join("presentation_layer", "template", "createReservation.html"),
+
     }
 	t := (template.Must(template.ParseFiles(templates...)))
 	t.ExecuteTemplate(rw, "app", nil)
