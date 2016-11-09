@@ -1,28 +1,60 @@
 $(document).ready(function () {
-    init();
-    updateCalendar(1);
+    buildCalendar(1);
     //getUserReservationsByRoom();
 });
 
-function updateCalendar(room_number) {
+function buildCalendar(room_number) {
     // update the calendar information using room_number as the room ID
-    getReservations(room_number);
+    var request = getReservations(room_number);
+    var data = request == null ? [
+        {
+            id: "id1",
+            description: "Test Data",
+            location: "",
+            subject: "Testing",
+            calendar: "Room 1",
+            start: new Date(2016, 11, 9, 10, 0, 0),
+            end: new Date(2016, 11, 9, 19, 0, 0)
+        },
+        {
+            id: "id2",
+            description: "Test Data",
+            location: "",
+            subject: "Testing",
+            calendar: "Room 1",
+            start: new Date(2016, 11, 10, 10, 0, 0),
+            end: new Date(2016, 11, 10, 19, 0, 0)
+        },
+        {
+            id: "id3",
+            description: "Test Data",
+            location: "",
+            subject: "Testing",
+            calendar: "Room 1",
+            start: new Date(2016, 11, 11, 10, 0, 0),
+            end: new Date(2016, 11, 11, 19, 0, 0)
+        }
+    ] : request; // If the json data is null (which it shouldn't be), this default data will appear (to be removed later)
+    init(data); // Initialize the calendar with the following data
 }
 
-function init() {
-
-    // Test Data - TO BE REMOVED
-    var appointments = new Array();
-    var appointment1 = {
-        id: "id1",
-        description: "Test Data",
-        location: "",
-        subject: "Testing",
-        calendar: "Room 1",
-        start: new Date(2015, 10, 23, 9, 0, 0),
-        end: new Date(2015, 10, 23, 16, 0, 0)
-    }
-    appointments.push(appointment1);
+function init(reservations) {
+    var appointments = [];
+    var ids = [];
+    reservations.forEach(function(entry) { // For each reservation, add an appointment to the calendar
+        var appointment = {
+            id: entry.id,
+            description: entry.description,
+            location: entry.location,
+            subject: entry.subject,
+            calendar: entry.calendar,
+            start: entry.start,
+            end: entry.end,
+            readOnly: true
+        }
+        appointments.push(appointment);
+        ids.push(entry.id);
+    });
 
     var source =
         {
@@ -50,7 +82,9 @@ function init() {
         view: 'weekView',
         showLegend: true,
         ready: function () {
-            //$("#scheduler").jqxScheduler('ensureAppointmentVisible', 'id1');
+            ids.forEach(function(entry) {
+                $("#scheduler").jqxScheduler('ensureAppointmentVisible', entry);
+            });
         },
         resources:
         {
@@ -85,9 +119,12 @@ function getReservations(room_number) {
         url: '/reservations',
         data: JSON.stringify({roomID: room_number}),
         dataType: "json",
-        error: function (error) { },
+        error: function (error) {
+            return null;
+        },
         success: function (data) {
             console.log(data);
+            return data;
         }
     });
 }
