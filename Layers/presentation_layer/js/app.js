@@ -13,8 +13,8 @@ function buildCalendar(room_number) {
             location: "",
             subject: "Testing",
             calendar: "Room 1",
-            start: new Date(2016, 11, 9, 10, 0, 0),
-            end: new Date(2016, 11, 9, 19, 0, 0)
+            start: new Date(2016, 11, 9, Math.random() * (10 - 5) + 5, 0, 0),
+            end: new Date(2016, 11, 9, Math.random() * (23 - 19) + 19, 0, 0)
         },
         {
             id: "id2",
@@ -22,8 +22,8 @@ function buildCalendar(room_number) {
             location: "",
             subject: "Testing",
             calendar: "Room 1",
-            start: new Date(2016, 11, 10, 10, 0, 0),
-            end: new Date(2016, 11, 10, 19, 0, 0)
+            start: new Date(2016, 11, 10, Math.random() * (10 - 5) + 5, 0, 0),
+            end: new Date(2016, 11, 10, Math.random() * (23 - 19) + 19, 0, 0)
         },
         {
             id: "id3",
@@ -31,8 +31,8 @@ function buildCalendar(room_number) {
             location: "",
             subject: "Testing",
             calendar: "Room 1",
-            start: new Date(2016, 11, 11, 10, 0, 0),
-            end: new Date(2016, 11, 11, 19, 0, 0)
+            start: new Date(2016, 11, 11, Math.random() * (10 - 5) + 5, 0, 0),
+            end: new Date(2016, 11, 11, Math.random() * (23 - 19) + 19, 0, 0)
         }
     ] : request; // If the json data is null (which it shouldn't be), this default data will appear (to be removed later)
     init(data); // Initialize the calendar with the following data
@@ -81,11 +81,8 @@ function init(reservations) {
         theme: 'metrodark',
         view: 'weekView',
         showLegend: true,
-        ready: function () {
-            ids.forEach(function(entry) {
-                $("#scheduler").jqxScheduler('ensureAppointmentVisible', entry);
-            });
-        },
+        contextMenu: false,
+        editDialog: false,
         resources:
         {
             colorScheme: "scheme05",
@@ -109,6 +106,9 @@ function init(reservations) {
             'weekView',
             'monthView'
         ]
+    });
+    ids.forEach(function(entry) {
+        $("#scheduler").jqxScheduler('ensureAppointmentVisible', entry);
     });
 }
 
