@@ -17,6 +17,7 @@ func main() {
 	router.PathPrefix("/js/").Handler(http.StripPrefix("/js/", http.FileServer(http.Dir("./presentation_layer/js"))))
 	router.HandleFunc("/login", handler.LoginGet).Methods("GET")
 	router.HandleFunc("/login", handler.LoginForm).Methods("POST")
+	router.HandleFunc("/createReservation", handler.CreateReservation).Methods("POST")
 	router.HandleFunc("/home", handler.Home).Methods("GET")
 	router.HandleFunc("/jsonexample", handler.ReturnJson).Methods("GET")
 	router.HandleFunc("/reservations", handler.GetReservationsByRoomID).Methods("POST")
@@ -25,5 +26,4 @@ func main() {
 	router.HandleFunc("/getcookie", handler.GetCookie).Methods("GET")
 	http.Handle("/", router)
 	log.Fatal(http.ListenAndServe(":9000", nil))
-
 }
