@@ -1,39 +1,21 @@
 $(document).ready(function () {
-    getReservations(1);
-    buildCalendar(1);
-    //getUserReservationsByRoom();
+    buildCalendar(123);
 });
 
 function buildCalendar(room_number) {
     // update the calendar information using room_number as the room ID
     var request = getReservations(room_number);
+    //var userReservations = getUserReservations();
+    
     var data = request == null ? [
         {
             id: "id1",
             description: "Test Data",
             location: "",
-            subject: "Testing",
+            subject: "Testing 11",
             calendar: "Room 1",
-            start: new Date(2016, 11, 9, Math.random() * (10 - 5) + 5, 0, 0),
-            end: new Date(2016, 11, 9, Math.random() * (23 - 19) + 19, 0, 0)
-        },
-        {
-            id: "id2",
-            description: "Test Data",
-            location: "",
-            subject: "Testing",
-            calendar: "Room 1",
-            start: new Date(2016, 11, 10, Math.random() * (10 - 5) + 5, 0, 0),
-            end: new Date(2016, 11, 10, Math.random() * (23 - 19) + 19, 0, 0)
-        },
-        {
-            id: "id3",
-            description: "Test Data",
-            location: "",
-            subject: "Testing",
-            calendar: "Room 1",
-            start: new Date(2016, 11, 11, Math.random() * (10 - 5) + 5, 0, 0),
-            end: new Date(2016, 11, 11, Math.random() * (23 - 19) + 19, 0, 0)
+            start: new Date("2016-11-10T10:23:54Z"),
+            end: new Date("2016-11-10T11:30:54Z")
         }
     ] : request; // If the json data is null (which it shouldn't be), this default data will appear (to be removed later)
     init(data); // Initialize the calendar with the following data
