@@ -1,4 +1,5 @@
 $(document).ready(function () {
+    getReservations(1);
     buildCalendar(1);
     //getUserReservationsByRoom();
 });
@@ -115,15 +116,29 @@ function init(reservations) {
 function getReservations(room_number) {
     $.ajax({
         type: 'POST',
-        contentType: "application/json",
+        contentType: "application/x-www-form-urlencoded",
         url: '/reservations',
-        data: JSON.stringify({roomID: room_number}),
-        dataType: "json",
+        data: {roomID: room_number},
         error: function (error) {
             return null;
         },
         success: function (data) {
             console.log(data);
+            return data;
+        }
+    });
+}
+
+function getUserReservations(room_number) {
+    $.ajax({
+        type: 'POST',
+        contentType: "application/x-www-form-urlencoded",
+        url: '/reservations',
+        data: {roomID: room_number},
+        error: function (error) {
+            return null;
+        },
+        success: function (data) {
             return data;
         }
     });

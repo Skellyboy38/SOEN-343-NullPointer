@@ -3,37 +3,23 @@ package handler
 import (
 	"net/http"
 	"github.com/Skellyboy38/SOEN-343-NullPointer/Layers/domain_layer/mappers"
+	"fmt"
 	"strconv"
 	"encoding/json"
-	//"fmt"
 )
 
-func GetAllRoomReservations(rw http.ResponseWriter, req *http.Request) {
-	//
-}
-
-func GetUserRoomReservations(rw http.ResponseWriter, req *http.Request) {
-	//
-}
-
-func ReservationByRoom(rw http.ResponseWriter, req *http.Request){
-
+func GetReservationsByRoomID(rw http.ResponseWriter, req *http.Request) {
 	abstractTdg := mappers.MapperBundle.UserMapper.UserTdg.AbstractTdg
-
 	abstractTdg.GetConnection()
 	defer abstractTdg.CloseConnection()
-
-	roomId,err := strconv.Atoi(req.URL.Query().Get("roomId"))
-	reservationMapper := mappers.MapperBundle.ReservationMapper
-
-	reservations, err := reservationMapper.GetByRoomId(roomId)
-
-	if err != nil {
+	req.ParseForm()
+	roomID, err := strconv.Atoi(req.FormValue("roomID"))
+	reservationsMapper := mappers.MapperBundle.ReservationMapper
+	reservations, err := reservationsMapper.GetByRoomId(roomID)
+	fmt.Println(reservations)
+	if err != nil{
 		rw.WriteHeader(http.StatusExpectationFailed)
-		return
 	}
 	jsonReservations , err := json.Marshal(reservations)
-
 	rw.Write(jsonReservations)
-
 }
