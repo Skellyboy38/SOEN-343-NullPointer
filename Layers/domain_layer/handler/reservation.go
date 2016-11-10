@@ -23,3 +23,20 @@ func GetReservationsByRoomID(rw http.ResponseWriter, req *http.Request) {
 	jsonReservations , err := json.Marshal(reservations)
 	rw.Write(jsonReservations)
 }
+
+func CreateReservation(rw http.ResponseWriter, req *http.Request) {
+	//abstractTdg := mappers.MapperBundle.ReservationMapper.ReservationTdg.AbstractTdg
+
+	//abstractTdg.GetConnection()
+	//defer abstractTdg.CloseConnection()
+	req.ParseForm()
+	date := req.FormValue("date")
+	room := req.FormValue("room")
+	startTime := req.FormValue("start_time")
+	endTime := req.FormValue("end_time")
+
+	reservationMapper := mappers.MapperBundle.ReservationMapper
+
+	reservationMapper.AddReservation(1111111, date, room, startTime, endTime)
+	http.Redirect(rw, req, "/home", 303)
+}

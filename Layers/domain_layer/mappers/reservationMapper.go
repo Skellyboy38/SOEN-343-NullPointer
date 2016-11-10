@@ -8,6 +8,7 @@ import (
 	"github.com/Skellyboy38/SOEN-343-NullPointer/Layers/domain_layer/tdg"
 	"errors"
 	"time"
+	"fmt"
 )
 
 type reservationIdentityMap            map[int]classes.Reservation
@@ -70,6 +71,16 @@ func (reservationMapper *ReservationMapper) GetByRoomId(id int) ([]classes.Reser
 
 func (bucketTable reservationByRoomIdBucketTable) add(id int ,reservations []classes.Reservation){
 	bucketTable[id] = append(bucketTable[id],reservations...)
+}
+
+func (reservationMapper *ReservationMapper) AddReservation(id int, date string, room string, startTime string, endTime string) {
+	//reservation := classes.Reservation{1, id, room, date, startTime, endTime}
+
+	fmt.Println(id)
+	fmt.Println(date)
+	fmt.Println(room)
+	fmt.Println(startTime)
+	fmt.Println(endTime)
 }
 
 func (reservationMap reservationIdentityMap) add(reservations []classes.Reservation){
