@@ -1,7 +1,8 @@
 {{define "jqImports"}}
+<link rel="stylesheet" href="../js/jq/jqwidgets/styles/tabs.css" type="text/css" />
 <link rel="stylesheet" href="../js/jq/jqwidgets/styles/jqx.base.css" type="text/css" />
 <link rel="stylesheet" href="../js/jq/jqwidgets/styles/jqx.metrodark.css" type="text/css" />
-<link rel="stylesheet" href="../js/jq/jqwidgets/styles/tabs.css" type="text/css" />
+
 <script type="text/javascript" src="../js/jq/scripts/jquery-1.11.1.min.js"></script>
 <script type="text/javascript" src="../js/jq/jqwidgets/jqxcore.js"></script>
 <script type="text/javascript" src="../js/jq/jqwidgets/jqxbuttons.js"></script>
@@ -36,12 +37,12 @@
 <body>
     <div class="header">
         <div class="container">
-            <div class="nav">
-                <button onclick="buildCalendar(1)">Room 1</button>
-                <button onclick="buildCalendar(2)">Room 2</button>
-                <button onclick="buildCalendar(3)">Room 3</button>
-                <button onclick="buildCalendar(4)">Room 4</button>
-                <button onclick="buildCalendar(5)">Room 5</button>
+            <div class="roomTabs">
+                <button onclick="buildCalendar(1)" class="tab">Room 1</button>
+                <button onclick="buildCalendar(2)" class="tab">Room 2</button>
+                <button onclick="buildCalendar(3)" class="tab">Room 3</button>
+                <button onclick="buildCalendar(4)" class="tab">Room 4</button>
+                <button onclick="buildCalendar(5)" class="tab">Room 5</button>
             </div>
         </div>
     </div>

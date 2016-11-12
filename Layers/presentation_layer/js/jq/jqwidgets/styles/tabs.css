@@ -10,7 +10,7 @@ section {
   color: white;
 }
 
-button {
+button.tab {
   cursor: pointer;
   width: 199px;
   display: inline-block;
@@ -46,7 +46,7 @@ p {
 
 }
 
-.nav {
+.roomTabs {
   display: inline-block;
 }
 
