@@ -3,4 +3,5 @@ function Reservation(subject, calendar, start, end) {
     this.calendar = calendar; // Room Number
     this.start = new Date(start); // Start Time
     this.end = new Date(end); // End Time
+    this.readOnly = true
 }

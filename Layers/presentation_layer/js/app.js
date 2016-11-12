@@ -14,8 +14,6 @@ function buildCalendar(room_number) {
         } else{
             console.error("No reservations found.");
         }
-
-        console.log(result);
         roomReservations = result;
     });
     //var userReservations = getUserReservations();
@@ -24,7 +22,6 @@ function buildCalendar(room_number) {
 
 function init(reservations) {
     console.log(reservations);
-    var ids = [];
     var source =
         {
             dataType: "array",
@@ -35,7 +32,6 @@ function init(reservations) {
                 { name: 'end', type: 'date' },
                 { name: 'readOnly', type:'boolean' }
             ],
-            id: 'id',
             localData: reservations
         };
     var adapter = new $.jqx.dataAdapter(source);
@@ -69,9 +65,6 @@ function init(reservations) {
             'weekView',
             'monthView'
         ]
-    });
-    ids.forEach(function(entry) {
-        $("#scheduler").jqxScheduler('ensureAppointmentVisible', entry);
     });
 }
 
