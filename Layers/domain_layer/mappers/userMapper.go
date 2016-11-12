@@ -30,7 +30,11 @@ func (userMap *UserMapper) InMemory(id int) bool {
 
 func (userMap *UserMapper) Get(id int, password string) (classes.User, error) {
 	if userMap.InMemory(id) {
-		return userMap.users[id], nil
+		student := userMap.users[id]
+		if student.Password == password {
+			return student, nil
+		}
+		return student, errors.New("WrongPassword")
 	} else {
 		_, _, err := userMap.UserTdg.GetByIdAndPass(id, password)
 		if err != nil {
@@ -43,13 +47,12 @@ func (userMap *UserMapper) Get(id int, password string) (classes.User, error) {
 }
 
 func (userMap *UserMapper) GetById(id int) (classes.User, error) { // add tdg that searches by
-	if userMap.InMemory(id) {           // only id and finish with check to db
+	if userMap.InMemory(id) { // only id and finish with check to db
 		return userMap.users[id], nil
-	} else{
+	} else {
 		return classes.User{}, errors.New("User Not in Memory")
 	}
 }
-
 
 func (userMap userIdentityMap) add(user classes.User) {
 	userMap[user.StudentId] = user
@@ -64,12 +67,12 @@ func (userMapper *UserMapper) SaveDeletedUsers(userArray []int) {
 	wg.Add(2)
 	go func() {
 		defer wg.Done()
-		for _,e := range userArray{
-			delete(userMapper.users,e)
+		for _, e := range userArray {
+			delete(userMapper.users, e)
 		}
 	}()
 
-	go func(){
+	go func() {
 		defer wg.Done()
 		tdg.UserTdg{}.Delete(userArray)
 	}()

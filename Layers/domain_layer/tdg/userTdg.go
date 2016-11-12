@@ -22,33 +22,39 @@ func (tdg UserTdg) Update(users []classes.User) error {
 	return nil
 }
 
-func (tdg UserTdg) updateEach(user classes.User) error{
-	_ , err := DB.Exec("UPDATE userTable set studentId = $1,  password = '$2' WHERE studentId = $3;",
+func (tdg UserTdg) updateEach(user classes.User) error {
+	_, err := DB.Exec("UPDATE userTable set studentId = $1,  password = '$2' WHERE studentId = $3;",
 		user.StudentId, user.Password, user.StudentId)
 	return err
 }
 
 func (tdg *UserTdg) GetByIdAndPass(id int, password string) (int, string, error) {
-	rows, err := DB.Query("SELECT * FROM userTable WHERE studentId=$1 ;",
-	id)
+	rows, err := DB.Query("SELECT * FROM userTable WHERE studentId=$1;",
+		id)
+
 	if err != nil {
 		fmt.Println(err)
 	}
 
 	var studentId int
+	var foundPass string
 
 	if rows.Next() == false {
 		return studentId, password, errors.New("No User Found")
 	}
 
-	err = rows.Scan(&studentId, &password)
-	fmt.Println("Found studentId:"+strconv.Itoa(studentId))
-	fmt.Println("Found password:"+password)
+	err = rows.Scan(&studentId, &foundPass)
+	fmt.Println("Found studentId:" + strconv.Itoa(studentId))
+	fmt.Println("Found password:" + foundPass)
 	if err != nil {
 		return studentId, password, err
 	} else {
-		fmt.Println("Found User in db")
-		return studentId, password, nil
+		if password == foundPass {
+			fmt.Println("Found User in db")
+			return studentId, foundPass, nil
+		}
+		fmt.Println("WrongPassword")
+		return studentId, password, errors.New("WrongPassword")
 	}
 }
 
@@ -57,7 +63,7 @@ func (tdg UserTdg) Create(users []classes.User) error {
 		err := tdg.createEach(users[x])
 		if err != nil {
 			return errors.New("Could not Create all")
-		}else{
+		} else {
 
 		}
 	}
@@ -66,7 +72,7 @@ func (tdg UserTdg) Create(users []classes.User) error {
 
 func (tdg UserTdg) createEach(user classes.User) error {
 	_, err := DB.Exec("INSERT INTO usertable (studentId, password) VALUES ($1,'$2');",
-	user.StudentId, user.Password)
+		user.StudentId, user.Password)
 	fmt.Println(err)
 	return err
 }
