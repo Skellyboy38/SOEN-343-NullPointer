@@ -22,6 +22,7 @@ func main() {
 	mappers.Init()
 	mappers.InitUOW()
 	router.PathPrefix("/js/").Handler(http.StripPrefix("/js/", http.FileServer(http.Dir("./presentation_layer/js"))))
+	router.PathPrefix("/css/").Handler(http.StripPrefix("/css/", http.FileServer(http.Dir("./presentation_layer/css"))))
 	router.HandleFunc("/login", handler.LoginGet).Methods("GET")
 	router.HandleFunc("/login", handler.LoginForm).Methods("POST")
 	router.HandleFunc("/createReservation", handler.CreateReservation).Methods("POST")

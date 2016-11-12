@@ -15,7 +15,6 @@ func GetReservationsByRoomID(rw http.ResponseWriter, req *http.Request) {
 	defer req.Body.Close()
 	req.ParseForm()
 	roomID, err := strconv.Atoi(req.FormValue("dataRoom"))
-	fmt.Println(roomID)
 	reservationsMapper := mappers.MapperBundle.ReservationMapper
 	reservations, err := reservationsMapper.GetByRoomId(roomID)
 
@@ -29,6 +28,7 @@ func GetReservationsByRoomID(rw http.ResponseWriter, req *http.Request) {
 		rw.WriteHeader(http.StatusExpectationFailed)
 		fmt.Println(err)
 	}
+	rw.Header().Set("Content-Type", "application/json")
 	rw.Write(jsonReservations)
 }
 

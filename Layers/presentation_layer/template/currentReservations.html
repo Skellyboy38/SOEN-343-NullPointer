@@ -1,25 +1,43 @@
 {{define "currentReservations"}}
-<h1>Your current reservations</h1>
-<table border="1px">
-	<th>
-		Room Number
-	</th>
-	<th>
-		Date
-	</th>
-	<th>
-		Start Time
-	</th>
-	<th>
-		End Time
-	</th>
-	<tr>
-		<td>Test room</td>
-		<td>Some date</td>
-		<td>Start</td>
-		<td>End</td>
-		<td><button>Modify Reservation</button></td>
-		<td><button>Delete reservation</button></td>
-	</tr>
-</table>
+<div class="wrapper">
+
+  <div class="reservations-table">
+	  <!-- Test Data -->
+    <div class="row reservations-header">
+      <div class="cell">
+        Room Number
+      </div>
+	  <div class="cell">
+        Description
+      </div>
+      <div class="cell">
+        Date
+      </div>
+      <div class="cell">
+        Start Time
+      </div>
+      <div class="cell">
+        End Time
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="cell">
+        123
+      </div>
+      <div class="cell">
+        SOEN 343 Midterm Review
+      </div>
+	  <div class="cell">
+        Monday November 13
+      </div>
+      <div class="cell">
+        12:00
+      </div>
+      <div class="cell">
+        1:00
+      </div>
+    </div>
+  </div>
+</div>
 {{end}}

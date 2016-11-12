@@ -1,3 +1,4 @@
+/* Tabs CSS */
 * {
   box-sizing: border-box;
 }
@@ -52,6 +53,4 @@ p {
 
 div:focus {
   outline: none;
-}
-
 }
