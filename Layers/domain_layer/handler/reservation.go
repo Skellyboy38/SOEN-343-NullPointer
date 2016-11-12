@@ -1,8 +1,8 @@
 package handler
 
 import (
-	"encoding/json"
 	"fmt"
+	"github.com/Skellyboy38/SOEN-343-NullPointer/Layers/domain_layer/jsonConvert"
 	"github.com/Skellyboy38/SOEN-343-NullPointer/Layers/domain_layer/mappers"
 	"net/http"
 	"strconv"
@@ -14,15 +14,21 @@ func GetReservationsByRoomID(rw http.ResponseWriter, req *http.Request) {
 	defer abstractTdg.CloseConnection()
 	defer req.Body.Close()
 	req.ParseForm()
-	roomID, err := strconv.Atoi(req.FormValue("roomID"))
+	roomID, err := strconv.Atoi(req.FormValue("dataRoom"))
 	fmt.Println(roomID)
 	reservationsMapper := mappers.MapperBundle.ReservationMapper
 	reservations, err := reservationsMapper.GetByRoomId(roomID)
-	fmt.Println(reservations)
+
 	if err != nil {
 		rw.WriteHeader(http.StatusExpectationFailed)
+		fmt.Println(err)
 	}
-	jsonReservations, err := json.Marshal(reservations)
+
+	jsonReservations, err := jsonConvert.ReservationsJson(reservations)
+	if err != nil {
+		rw.WriteHeader(http.StatusExpectationFailed)
+		fmt.Println(err)
+	}
 	rw.Write(jsonReservations)
 }
 
