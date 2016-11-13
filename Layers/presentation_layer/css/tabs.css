@@ -1,0 +1,57 @@
+* {
+  box-sizing: border-box;
+}
+
+section {
+  position: relative;
+
+  margin: 0 auto;
+  z-index: 0;
+  color: white;
+}
+
+button {
+  cursor: pointer;
+  width: 199px;
+  display: inline-block;
+  background-color: #5E6B7F;
+  color: white;
+  text-align: center;
+  transition: .25s ease;
+  border: none;
+  padding: 10px;
+  border-radius: 12px 12px 0 0;
+}
+
+div:focus button, button:focus {
+  background-color: #8DA1BF;
+  outline: none;
+}
+
+button:focus + p, div:focus P {
+  display: block;
+  position: absolute;
+
+  left: 0;
+  z-index: 2;
+  outline: none;
+  top: 0px;
+  text-align: center;
+  padding-top: 48px;
+}
+
+p {
+  display: none;
+  font-size: 2em;
+
+}
+
+.nav {
+  display: inline-block;
+}
+
+div:focus {
+  outline: none;
+}
+
+}

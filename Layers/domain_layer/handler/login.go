@@ -15,7 +15,8 @@ import (
 func LoginGet(rw http.ResponseWriter, req *http.Request) {
 	login := filepath.Join("presentation_layer", "template", "login.html")
 	base := filepath.Join("presentation_layer", "template", "base.html")
-	t := (template.Must(template.ParseFiles(base, login)))
+	header := filepath.Join("presentation_layer", "template", "header.html")
+	t := (template.Must(template.ParseFiles(base, login, header)))
 	t.ExecuteTemplate(rw, "base", nil)
 }
 

@@ -15,6 +15,7 @@ func main() {
 	mappers.Init()
 	mappers.InitUOW()
 	router.PathPrefix("/js/").Handler(http.StripPrefix("/js/", http.FileServer(http.Dir("./presentation_layer/js"))))
+	router.PathPrefix("/images/").Handler(http.StripPrefix("/images/", http.FileServer(http.Dir("./presentation_layer/images"))))
 	router.HandleFunc("/login", handler.LoginGet).Methods("GET")
 	router.HandleFunc("/login", handler.LoginForm).Methods("POST")
 	router.HandleFunc("/home", handler.Home).Methods("GET")

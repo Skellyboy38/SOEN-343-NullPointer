@@ -1,7 +1,57 @@
 {{define "loginForm"}}
+<head>
+	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Graduate">
+	<style type="text/css">
+
+		body{
+			background-image: url("images/concordia_building_sgw.png");
+			//background-image: url("images/Concordia-College_highDef.png");
+			//background-image: url("images/concordia_nightTime.png");
+			background-repeat: no-repeat;
+			background-size: cover;
+		}
+		input{
+			padding: 2px;
+			margin: 10px;
+			float: right;
+			border-radius: 4px;
+		}
+		.container{
+			position: relative;
+			padding: 5px;
+			left: calc(33% - 75px);
+			bottom: 20%;
+			background-color: rgba(101,9,11,0.9);
+			width: 200px;
+			height: 165px;
+			border-width: 5px;
+			border-color: #580709;
+			border-style: solid;
+		}
+		a{
+			//font-family: 'Graduate', serif;
+			color: white;
+			font-size: 18px;
+		}
+		form{
+			position: relative;
+			top: 20%;
+		}
+		#loginBtn{
+			border-radius: 5px;
+			cursor: pointer;
+			color: white;
+			background-color: #580709;
+			border-color: #65090b;
+		}
+	</style>
+</head>
+
 <form action="/login" method="post">
-    User Id:<input type="text" name="id">
-    Password:<input type="password" name="password">
-    <input type="submit" value="Login">
+	<div class="container">
+	    <a>User ID:</a><input type="text" name="id"><br/>
+	    <a>Password:</a><input type="password" name="password"><br/>
+	    <input id="loginBtn" type="submit" value="Login">
+    </div>
 </form>
 {{end}}

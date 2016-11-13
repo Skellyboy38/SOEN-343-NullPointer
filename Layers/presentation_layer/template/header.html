@@ -1,0 +1,71 @@
+{{define "header"}}
+<head>
+	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Graduate">
+
+	<style type="text/css">
+		body,html{
+			height:100%;
+		}
+		body{
+			padding:0;
+			margin:0;
+		}
+		
+		.box{ 
+			position: relative;
+			border-style: solid;
+			background-color: #65090b;
+			border-color: #580709;
+			border-width: 10px;
+			padding: 20px;
+			align-items: center;
+			min-width: 1200px;
+			margin-bottom: 65px;
+		}
+
+		.bannerTriangles{
+			position: absolute;
+			border-top: 190px solid #580709;
+			border-right: 100px solid transparent;
+			border-bottom: 100px solid transparent;
+			border-left: 100px solid transparent;
+			left: calc(50% - 100px);
+			top: -5px;
+
+		}
+		.bannerTriangles .inner{
+			border-top: 170px solid #65090b;
+			border-right: 90px solid transparent;
+			border-left: 90px solid transparent;
+			top:-185px;
+  			left:-90px;
+		}
+		.headerText{
+			font-family: 'Graduate', serif;
+			font-size: 48px;
+			color: white;
+		}
+		#logo{
+			max-height: 145px;
+			position: absolute;
+			top: -180px;
+			left:-71px;
+		}
+
+	</style>
+</head>
+
+<body>
+	<div class="box">
+		
+			<a class="headerText" style="padding-left: 10%;">Concordia</a>
+			<div class="bannerTriangles">
+				<div class="bannerTriangles inner">
+					<img id="logo" src="images/CONU-logo-clr.png" alt="Gains Not Found">
+				</div>
+			</div>
+			<a class="headerText" style="float: right; padding-right: 10%;">University</a>
+		
+	</div>
+</body>
+{{end}}
