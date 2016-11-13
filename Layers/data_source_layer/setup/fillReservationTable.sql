@@ -1,3 +1,3 @@
-INSERT INTO reservation (reservationId, roomId, studentId, startTime, endTime) VALUES (1,'123', 1111111, CURRENT_TIMESTAMP, DATEADD(hour, 1, CURRENT_TIMESTAMP));
-INSERT INTO reservation (reservationId, roomId, studentId, startTime, endTime) VALUES (2,'456', 1111111, CURRENT_TIMESTAMP, DATEADD(hour, 1, CURRENT_TIMESTAMP));
-INSERT INTO reservation (reservationId, roomId, studentId, startTime, endTime) VALUES (3,'789', 2222222, CURRENT_TIMESTAMP, DATEADD(minute, 45, CURRENT_TIMESTAMP));
+INSERT INTO reservation ( roomId, studentId, startTime, endTime) VALUES (123, 1111111, '2016-11-15 08:23:54', '2016-11-15 10:23:54');
+INSERT INTO reservation ( roomId, studentId, startTime, endTime) VALUES (123, 1111111, '2016-11-16 12:23:54', '2016-11-16 13:23:54');
+INSERT INTO reservation ( roomId, studentId, startTime, endTime) VALUES (123, 2222222, '2016-11-17 15:23:54', '2016-11-17 17:23:54');
