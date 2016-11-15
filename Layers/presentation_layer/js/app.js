@@ -5,9 +5,12 @@ $(document).ready(function () {
 function buildCalendar(roomNumber) {
     var roomReservations;
     getReservations(roomNumber).success(function(data){
-        console.log(data);
         roomReservations = getReservationsSuccess(data);
         // userReservations = getUserReservationsSuccess(data) + append results to roomReservations
+    });
+    var studentId = getCookie("studentId");
+    getReservationsUser(roomNumber, studentId).success(function(data){
+        console.log(data);
     });
     init(roomReservations); // Initialize the calendar with the following data
 }
@@ -29,8 +32,8 @@ function init(reservations) {
     var adapter = new $.jqx.dataAdapter(source);
     $("#scheduler").jqxScheduler({
         date: new $.jqx.date(new Date()),
-        width: 1200,
-        height: 800,
+        width: 1000,
+        height: 600,
         source: adapter,
         theme: 'metrodark',
         view: 'weekView',
@@ -88,8 +91,8 @@ function getReservationsSuccess(data){
 }
 
 
-function getUserReservations(roomNumber, userID) {
-    $.ajax({
+function getReservationsUser(roomNumber, userID) {
+    return $.ajax({
         type: 'POST',
         contentType: "application/x-www-form-urlencoded",
         url: '/reservationsByUser',
@@ -113,4 +116,10 @@ function deleteReservation() {
         url: '/deleteReservation',
         data: {},
     });
+}
+
+function getCookie(name) {
+  var value = "; " + document.cookie;
+  var parts = value.split("; " + name + "=");
+  if (parts.length == 2) return parts.pop().split(";").shift();
 }
