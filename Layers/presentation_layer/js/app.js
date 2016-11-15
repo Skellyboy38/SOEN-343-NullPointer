@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    buildCalendar(123);
+    buildCalendar(1);
 });
 
 function buildCalendar(roomNumber) {
