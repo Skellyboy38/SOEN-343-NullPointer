@@ -42,7 +42,7 @@ func LoginForm(rw http.ResponseWriter, req *http.Request) {
 	expire := time.Now().Add(time.Hour * 45)
 	studentIdCookie := strconv.Itoa(verifiedUser.StudentId)
 	studentIdAndName := "studentId=" + studentIdCookie
-	cookie := http.Cookie{"studentId", studentIdCookie, "/", "localhost", expire, expire.Format(time.UnixDate), 86000, false, true, studentIdAndName, []string{studentIdAndName}}
+	cookie := http.Cookie{"studentId", studentIdCookie, "/", "localhost", expire, expire.Format(time.UnixDate), 86000, false, false, studentIdAndName, []string{studentIdAndName}}
 	req.AddCookie(&cookie)
 	http.SetCookie(rw, &cookie)
 	http.Redirect(rw, req, "/home", 303)
