@@ -92,6 +92,15 @@ func (r *ReservationTDG) ReadByRoom(roomId int) ([]int, []int, []int, []time.Tim
 	return reservationIds, roomIds, studentIds, startTimes, endTimes, nil
 }
 
+
+func (r *ReservationTDG) Update() {
+
+}
+
+func (r *ReservationTDG) Delete(reservationId int) {
+
+}
+
 func (r *ReservationTDG) ReadByUser(roomId, userId int) ([]int, []int, []int, []time.Time, []time.Time, error) {
 	rows, err := DB.Query("SELECT * FROM reservation WHERE roomId=$1 and studentId=$2 ;", roomId, userId)
 	if err != nil {
@@ -122,12 +131,4 @@ func (r *ReservationTDG) ReadByUser(roomId, userId int) ([]int, []int, []int, []
 	}
 
 	return reservationIds, roomIds, studentIds, startTimes, endTimes, nil
-}
-
-func (r *ReservationTDG) Update() {
-
-}
-
-func (r *ReservationTDG) Delete(reservationId int) {
-
 }

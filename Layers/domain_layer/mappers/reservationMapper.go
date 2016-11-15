@@ -46,6 +46,33 @@ func (reservationMapper *ReservationMapper) Create(roomId, userId []int, startTi
 	return nil
 }
 
+func (reservationMapper *ReservationMapper) GetByRoomAndUserId(roomId, userId int) ([]classes.Reservation, error) {
+	if reservationMapper.InMemoryByUserId(userId) {
+		return reservationMapper.reservationsByUserId[userId], nil
+	} else {
+		reservationIds, roomIds, studentIds, startTimes, endTimes, err := reservationMapper.reservationTDG.ReadByUser(roomId, userId)
+		if err != nil {
+			return []classes.Reservation{}, err
+		}
+		reservations := []classes.Reservation{}
+
+		for i, _ := range roomIds {
+			student, err := MapperBundle.UserMapper.GetById(studentIds[i])
+			if err != nil {
+				return []classes.Reservation{}, err
+			}
+			currentReservation := classes.Reservation{reservationIds[i], roomIds[i], student, startTimes[i], endTimes[i]}
+
+			reservations = append(reservations, currentReservation)
+		}
+		reservationMapper.reservationsByRoomId.add(roomId, reservations)
+		reservationMapper.reservationsByUserId.add(userId, reservations)
+		reservationMapper.reservations.add(reservations)
+
+		return reservations, nil
+	}
+}
+
 func (reservationMapper *ReservationMapper) GetByRoomId(roomId int) ([]classes.Reservation, error) {
 	if reservationMapper.InMemoryByRoomId(roomId) {
 		return reservationMapper.reservationsByRoomId[roomId], nil
@@ -78,32 +105,6 @@ func (reservationMapper *ReservationMapper) GetByRoomId(roomId int) ([]classes.R
 	}
 }
 
-func (reservationMapper *ReservationMapper) GetByRoomAndUserId(roomId, userId int) ([]classes.Reservation, error) {
-	if reservationMapper.InMemoryByUserId(userId) {
-		return reservationMapper.reservationsByUserId[userId], nil
-	} else {
-		reservationIds, roomIds, studentIds, startTimes, endTimes, err := reservationMapper.reservationTDG.ReadByUser(roomId, userId)
-		if err != nil {
-			return []classes.Reservation{}, err
-		}
-		reservations := []classes.Reservation{}
-
-		for i, _ := range roomIds {
-			student, err := MapperBundle.UserMapper.GetById(studentIds[i])
-			if err != nil {
-				return []classes.Reservation{}, err
-			}
-			currentReservation := classes.Reservation{reservationIds[i], roomIds[i], student, startTimes[i], endTimes[i]}
-
-			reservations = append(reservations, currentReservation)
-		}
-		reservationMapper.reservationsByRoomId.add(roomId, reservations)
-		reservationMapper.reservationsByUserId.add(userId, reservations)
-		reservationMapper.reservations.add(reservations)
-
-		return reservations, nil
-	}
-}
 
 func (bucketTable reservationByRoomIdBucketTable) add(id int, reservations []classes.Reservation) {
 	bucketTable[id] = append(bucketTable[id], reservations...)
