@@ -28,6 +28,25 @@ func (tdg UserTdg) updateEach(user classes.User) error {
 	return err
 }
 
+func (tdg *UserTdg) GetById(id int) (int,string,error){
+	rows, err := DB.Query("SELECT * FROM userTable WHERE studentId=$1;",
+		id)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	var studentId int
+	var foundPass string
+
+	if rows.Next() == false {
+		return studentId, foundPass, errors.New("User not found in Db")
+	}
+
+	err = rows.Scan(&studentId,&foundPass)
+	return studentId,foundPass, err
+}
+
 func (tdg *UserTdg) GetByIdAndPass(id int, password string) (int, string, error) {
 	rows, err := DB.Query("SELECT * FROM userTable WHERE studentId=$1;",
 		id)

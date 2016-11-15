@@ -43,23 +43,9 @@ func (r *ReservationTDG) ReadByRoom(id int) ([]int, []int, []time.Time, []time.T
 	var startTime  time.Time
 	var endTime time.Time
 
-	if rows.Next() == false{
-		return roomIds,studentIds,startTimes,endTimes,
-			errors.New("Could not get Reservations by RoomId")
-	}
-
-	err = rows.Scan(&id,&roomId,&studentId,&startTime,&endTime)
-
-	if err != nil{
-		return roomIds,studentIds,startTimes,endTimes,
-			errors.New("Could not Scan Reservation by RoomId")
-	}
-	roomIds    = append(roomIds,roomId)
-	studentIds = append(studentIds,studentId)
-	startTimes = append(startTimes,startTime)
-	endTimes   = append(endTimes,endTime)
 
 	for rows.Next(){
+		err = rows.Scan(&id,&roomId,&studentId,&startTime,&endTime)
 		if err != nil{
 			return roomIds,studentIds,startTimes,endTimes,
 				errors.New("Could not Scan Reservation by RoomId")

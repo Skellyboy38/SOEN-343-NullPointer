@@ -50,7 +50,13 @@ func (userMap *UserMapper) GetById(id int) (classes.User, error) { // add tdg th
 	if userMap.InMemory(id) { // only id and finish with check to db
 		return userMap.users[id], nil
 	} else {
-		return classes.User{}, errors.New("User Not in Memory")
+		studentId, password, err := userMap.UserTdg.GetById(id)
+		if err != nil{
+			return classes.User{}, err
+		}
+		student := classes.User{studentId,password}
+		userMap.users.add(student)
+		return student, nil
 	}
 }
 

@@ -10,6 +10,8 @@ import (
 
 type reservationIdentityMap map[int]classes.Reservation
 type reservationByRoomIdBucketTable map[int][]classes.Reservation
+type reservationByStudentIdBucketTable    map[int][]classes.Reservation
+
 type ReservationMapper struct {
 	reservations         reservationIdentityMap
 	reservationsByRoomId reservationByRoomIdBucketTable
