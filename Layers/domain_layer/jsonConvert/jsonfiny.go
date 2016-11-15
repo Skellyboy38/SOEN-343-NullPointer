@@ -9,6 +9,7 @@ import (
 
 type JsonReservation struct {
 	ReservationID int       `json:"reservationID"`
+	StudentId     int       `json:"studentID"`
 	RoomNumber    int       `json:"roomNumber"`
 	StartTime     time.Time `json:"startTime"`
 	EndTime       time.Time `json:"endTime"`
@@ -28,6 +29,6 @@ func ReservationsJson(reservations []classes.Reservation) ([]byte, error) {
 	return json.Marshal(formatedReservations)
 }
 
-func MessageJson(message string)([]byte, error){
+func MessageJson(message string) ([]byte, error) {
 	return json.Marshal(message)
 }

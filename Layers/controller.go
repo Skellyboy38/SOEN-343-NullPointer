@@ -26,10 +26,10 @@ func main() {
 	router.PathPrefix("/css/").Handler(http.StripPrefix("/css/", http.FileServer(http.Dir("./presentation_layer/css"))))
 	router.HandleFunc("/login", handler.LoginGet).Methods("GET")
 	router.HandleFunc("/login", handler.LoginForm).Methods("POST")
-	router.HandleFunc("/createReservation", handler.CreateReservation).Methods("POST")
+	// router.HandleFunc("/createReservation", handler.CreateReservation).Methods("POST")
 	router.HandleFunc("/reservationsByRoom", handler.GetReservationsByRoomID).Methods("POST")
 	router.HandleFunc("/reservationsByUser", handler.GetReservationsByUserID).Methods("POST")
-	router.HandleFunc("/deleteReservation",handler.DeleteReservation).Methods("POST")
+	// router.HandleFunc("/deleteReservation",handler.DeleteReservation).Methods("POST")
 	router.HandleFunc("/home", handler.Home).Methods("GET")
 	// TODO - Delete unused routes
 	router.HandleFunc("/jsonexample", handler.ReturnJson).Methods("GET")

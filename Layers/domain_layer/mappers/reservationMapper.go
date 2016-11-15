@@ -10,7 +10,7 @@ import (
 
 type reservationIdentityMap map[int]classes.Reservation
 type reservationByRoomIdBucketTable map[int][]classes.Reservation
-type reservationByUserIdBucketTable    map[int][]classes.Reservation
+type reservationByUserIdBucketTable map[int][]classes.Reservation
 
 type ReservationMapper struct {
 	reservations         reservationIdentityMap
@@ -68,7 +68,7 @@ func (reservationMapper *ReservationMapper) GetByRoomId(roomId int) ([]classes.R
 		reservationMapper.reservationsByRoomId.add(roomId, reservations)
 		reservationMapper.reservations.add(reservations)
 
-		for _, e :=range reservations{
+		for _, e := range reservations {
 			reservationMapper.reservationsByUserId[e.User.StudentId] = append(
 				reservationMapper.reservationsByUserId[e.User.StudentId],
 				e)
@@ -82,7 +82,7 @@ func (reservationMapper *ReservationMapper) GetByRoomAndUserId(roomId, userId in
 	if reservationMapper.InMemoryByUserId(userId) {
 		return reservationMapper.reservationsByUserId[userId], nil
 	} else {
-		reservationIds, roomIds, studentIds, startTimes, endTimes, err := reservationMapper.reservationTDG.ReadByUser(roomId,userId)
+		reservationIds, roomIds, studentIds, startTimes, endTimes, err := reservationMapper.reservationTDG.ReadByUser(roomId, userId)
 		if err != nil {
 			return []classes.Reservation{}, err
 		}
@@ -98,7 +98,7 @@ func (reservationMapper *ReservationMapper) GetByRoomAndUserId(roomId, userId in
 			reservations = append(reservations, currentReservation)
 		}
 		reservationMapper.reservationsByRoomId.add(roomId, reservations)
-		reservationMapper.reservationsByUserId.add(userId,reservations)
+		reservationMapper.reservationsByUserId.add(userId, reservations)
 		reservationMapper.reservations.add(reservations)
 
 		return reservations, nil
@@ -147,8 +147,7 @@ func (reservationMapper *ReservationMapper) InMemoryByUserId(id int) bool {
 	}
 }
 
-func (reservationMapper *ReservationMapper) Delete(reservationId int) error{
+// func (reservationMapper *ReservationMapper) Delete(reservationId int) error{
 
-	reservationMapper.reservationTDG.Delete(reservationId)
-}
-
+// 	reservationMapper.reservationTDG.Delete(reservationId)
+// }
