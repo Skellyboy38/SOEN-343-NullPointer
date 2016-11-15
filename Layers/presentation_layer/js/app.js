@@ -10,7 +10,7 @@ function buildCalendar(roomNumber) {
     });
     var studentId = getCookie("studentId");
     getReservationsUser(roomNumber, studentId).success(function(data){
-        console.log(data);
+    	 console.log(data);
     });
     init(roomReservations); // Initialize the calendar with the following data
 }
