@@ -131,6 +131,6 @@ func (r *ReservationTDG) Update() {
 
 }
 
-func (r *ReservationTDG) Delete() {
+func (r *ReservationTDG) Delete(reservationId int) {
 
 }

@@ -59,18 +59,39 @@ func GetReservationsByUserID(rw http.ResponseWriter, req *http.Request) {
 }
 
 func CreateReservation(rw http.ResponseWriter, req *http.Request) {
-	//abstractTdg := mappers.MapperBundle.ReservationMapper.ReservationTdg.AbstractTdg
-
-	//abstractTdg.GetConnection()
-	//defer abstractTdg.CloseConnection()
+	abstractTdg := mappers.MapperBundle.UserMapper.UserTdg.AbstractTdg
+	abstractTdg.GetConnection()
+	defer abstractTdg.CloseConnection()
 	req.ParseForm()
-	date := req.FormValue("date")
-	room := req.FormValue("room")
-	startTime := req.FormValue("start_time")
-	endTime := req.FormValue("end_time")
+	roomId := req.FormValue("dataRoom")
+	userId := req.FormValue("userID")
+	startTime := req.FormValue("startTime")
+	endTime := req.FormValue("endTime")
 
 	reservationMapper := mappers.MapperBundle.ReservationMapper
 
 	reservationMapper.AddReservation(1111111, date, room, startTime, endTime)
 	http.Redirect(rw, req, "/home", 303)
+}
+
+func DeleteReservation(rw http.ResponseWriter, req *http.Request){
+	abstractTdg := mappers.MapperBundle.UserMapper.UserTdg.AbstractTdg
+	abstractTdg.GetConnection()
+	defer abstractTdg.CloseConnection()
+	defer req.Body.Close()
+	req.ParseForm()
+	reservationID, err := strconv.Atoi(req.FormValue("reservationID"))
+
+	reservationsMapper := mappers.MapperBundle.ReservationMapper
+
+	if err := reservationsMapper.Delete(reservationID); err != nil{
+		rw.WriteHeader(http.StatusExpectationFailed)
+		bytes, _ := jsonConvert.MessageJson("Failure")
+		rw.Write(bytes)
+		return
+	}
+
+	rw.WriteHeader(http.StatusOK)
+	bytes, _ := jsonConvert.MessageJson("Success")
+	rw.Write(bytes)
 }

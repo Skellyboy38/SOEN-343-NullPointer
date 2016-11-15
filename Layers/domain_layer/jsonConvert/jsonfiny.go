@@ -19,10 +19,15 @@ func ReservationsJson(reservations []classes.Reservation) ([]byte, error) {
 	for _, i := range reservations {
 		fmt.Printf("id: %d  room: %d startTime %s endTime %s\n", i.ReservationId, i.Room, i.StartTime, i.EndTime)
 		formatedReservation := JsonReservation{i.ReservationId,
+			i.User.StudentId,
 			i.Room,
 			i.StartTime,
 			i.EndTime}
 		formatedReservations = append(formatedReservations, formatedReservation)
 	}
 	return json.Marshal(formatedReservations)
+}
+
+func MessageJson(message string)([]byte, error){
+	return json.Marshal(message)
 }

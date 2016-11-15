@@ -146,3 +146,9 @@ func (reservationMapper *ReservationMapper) InMemoryByUserId(id int) bool {
 		return false
 	}
 }
+
+func (reservationMapper *ReservationMapper) Delete(reservationId int) error{
+
+	reservationMapper.reservationTDG.Delete(reservationId)
+}
+
