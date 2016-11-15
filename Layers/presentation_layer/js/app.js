@@ -2,21 +2,13 @@ $(document).ready(function () {
     buildCalendar(123);
 });
 
-function buildCalendar(room_number) {
+function buildCalendar(roomNumber) {
     var roomReservations;
-    getReservations(room_number).success(function getReservationsSuccess(data){
-        if(data != undefined && data.length > 0){
-            var result = [];
-            data.forEach(function(reservationJSON){
-                var reservation = new Reservation(reservationJSON.subject, reservationJSON.roomNumber, reservationJSON.startTime, reservationJSON.endTime);
-                result.push(reservation)
-            })
-        } else{
-            console.error("No reservations found.");
-        }
-        roomReservations = result;
+    getReservations(roomNumber).success(function(data){
+        console.log(data);
+        roomReservations = getReservationsSuccess(data);
+        // userReservations = getUserReservationsSuccess(data) + append results to roomReservations
     });
-    //var userReservations = getUserReservations();
     init(roomReservations); // Initialize the calendar with the following data
 }
 
@@ -68,28 +60,57 @@ function init(reservations) {
     });
 }
 
-function getReservations(room_number) {
+function renderUserReservationList(){
+    // TODO
+}
+
+function getReservations(roomNumber) {
     return $.ajax({
         type: 'POST',
         contentType: "application/x-www-form-urlencoded",
         async: false, 
         url: '/reservationsByRoom',
-        data: {dataRoom: room_number},
+        data: {dataRoom: roomNumber},
     });
 }
 
+function getReservationsSuccess(data){
+    if(data != undefined && data.length > 0){
+        var result = [];
+        data.forEach(function(reservationJSON){
+            var reservation = new Reservation(reservationJSON.subject, reservationJSON.roomNumber, reservationJSON.startTime, reservationJSON.endTime);
+            result.push(reservation)
+        })
+    } else{
+        console.error("No reservations found.");
+    }
+    return result;
+}
 
-function getUserReservations(room_number) {
+
+function getUserReservations(roomNumber, userID) {
     $.ajax({
         type: 'POST',
         contentType: "application/x-www-form-urlencoded",
-        url: '/reservations',
-        data: {roomID: room_number},
-        error: function (error) {
-            return null;
-        },
-        success: function (data) {
-            return data;
-        }
+        url: '/reservationsByUser',
+        data: {roomID: roomNumber, userID: userID},
+    });
+}
+
+function createReservation() {
+    $.ajax({
+        type: 'POST',
+        contentType: "application/x-www-form-urlencoded",
+        url: '/createReservation',
+        data: {},
+    });
+}
+
+function deleteReservation() {
+    $.ajax({
+        type: 'POST',
+        contentType: "application/x-www-form-urlencoded",
+        url: '/deleteReservation',
+        data: {},
     });
 }

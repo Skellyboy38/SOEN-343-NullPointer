@@ -31,6 +31,7 @@ func main() {
 	router.HandleFunc("/reservationsByUser", handler.GetReservationsByUserID).Methods("POST")
 	router.HandleFunc("/deleteReservation",handler.DeleteReservation).Methods("POST")
 	router.HandleFunc("/home", handler.Home).Methods("GET")
+	// TODO - Delete unused routes
 	router.HandleFunc("/jsonexample", handler.ReturnJson).Methods("GET")
 	router.HandleFunc("/testDbConnection", handler.TestDb).Methods("GET")
 	router.HandleFunc("/testcookie", handler.TestCookie).Methods("GET")
