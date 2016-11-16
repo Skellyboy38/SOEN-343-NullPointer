@@ -97,8 +97,12 @@ func (r *ReservationTDG) Update() {
 
 }
 
-func (r *ReservationTDG) Delete(reservationId int) {
-
+func (r *ReservationTDG) Delete(reservationId int) error {
+	_, err := DB.Exec("DELETE * FROM reservation WHERE reservationId=$1;", reservationId)
+	if err != nil {
+		fmt.Println(err)
+	}
+	return err
 }
 
 func (r *ReservationTDG) ReadByUser(roomId, userId int) ([]int, []int, []int, []time.Time, []time.Time, error) {
