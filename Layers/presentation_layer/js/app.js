@@ -3,16 +3,20 @@ $(document).ready(function () {
 });
 
 function buildCalendar(roomNumber) {
-    var roomReservations;
+    var roomReservations = [];
+    var userRoomReservations = [];
+    var studentId = getCookie("studentId");
+
     getReservations(roomNumber).success(function(data){
         roomReservations = getReservationsSuccess(data);
-        // userReservations = getUserReservationsSuccess(data) + append results to roomReservations
     });
-    var studentId = getCookie("studentId");
     getReservationsUser(roomNumber, studentId).success(function(data){
-    	 console.log(data);
+        userRoomReservations = getReservationsUserSuccess(data);
     });
-    init(roomReservations); // Initialize the calendar with the following data
+
+    console.log(roomReservations);
+    console.log(userRoomReservations);
+    init(roomReservations);
 }
 
 function init(reservations) {
@@ -78,16 +82,11 @@ function getReservations(roomNumber) {
 }
 
 function getReservationsSuccess(data){
-    if(data != undefined && data.length > 0){
-        var result = [];
-        data.forEach(function(reservationJSON){
-            var reservation = new Reservation(reservationJSON.subject, reservationJSON.roomNumber, reservationJSON.startTime, reservationJSON.endTime);
-            result.push(reservation)
-        })
-    } else{
-        console.error("No reservations found.");
-    }
-    return result;
+    return deserializeReservation(data);
+}
+
+function getReservationsUserSuccess(data){
+    return deserializeReservation(data);
 }
 
 
@@ -95,6 +94,7 @@ function getReservationsUser(roomNumber, userID) {
     return $.ajax({
         type: 'POST',
         contentType: "application/x-www-form-urlencoded",
+        async: false, 
         url: '/reservationsByUser',
         data: {roomID: roomNumber, userID: userID},
     });
@@ -122,4 +122,18 @@ function getCookie(name) {
   var value = "; " + document.cookie;
   var parts = value.split("; " + name + "=");
   if (parts.length == 2) return parts.pop().split(";").shift();
+}
+
+function deserializeReservation(reservations){
+    if(reservations != undefined && reservations.length > 0){
+        var result = [];
+        reservations.forEach(function(reservationJSON){
+            var reservation = new Reservation(reservationJSON.subject, reservationJSON.roomNumber, reservationJSON.startTime, reservationJSON.endTime);
+            result.push(reservation)
+        })
+    } else{
+        console.error("No reservations found.");
+        return [];
+    }
+    return result;
 }
