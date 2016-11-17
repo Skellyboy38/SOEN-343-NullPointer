@@ -11,16 +11,14 @@ function buildCalendar(roomNumber) {
         roomReservations = getReservationsSuccess(data);
     });
     getReservationsUser(roomNumber, studentId).success(function(data){
+        renderUserReservationList(data);
         userRoomReservations = getReservationsUserSuccess(data);
     });
-
-    console.log(roomReservations);
-    console.log(userRoomReservations);
+    // TODO - Need to distinguish user's reservations and rest of resrvation
     init(roomReservations);
 }
 
 function init(reservations) {
-    console.log(reservations);
     var source =
         {
             dataType: "array",
@@ -67,8 +65,44 @@ function init(reservations) {
     });
 }
 
-function renderUserReservationList(){
-    // TODO
+function renderUserReservationList(reservations){
+    var reservationListHTML = $(".reservations-table");
+    reservations.forEach(function(resv){
+        var row = renderReservationRow(resv);
+        row.appendTo(reservationListHTML);
+    });
+
+    function renderReservationRow(resv){
+        var rowHTML = $("<div></div>", {
+            class: "row"
+        });
+        var roomNumberCell = $("<div></div>", {
+            text: resv.roomNumber,
+            class: "cell"
+        });
+        roomNumberCell.appendTo(rowHTML);
+        var descriptionCell = $("<div></div>", {
+            text: "TBD",
+            class: "cell"
+        });
+        descriptionCell.appendTo(rowHTML);
+        var startTimeCell = $("<div></div>", {
+            text: resv.startTime,
+            class: "cell"
+        });
+        startTimeCell.appendTo(rowHTML);
+        var endTimeCell = $("<div></div>", {
+            text: resv.endTime,
+            class: "cell"
+        });
+        endTimeCell.appendTo(rowHTML);
+        var actionsCell = $("<div></div>", {
+            text: "Save / Delete Buttons",
+            class: "cell"
+        });
+        actionsCell.appendTo(rowHTML);
+        return rowHTML;
+    }
 }
 
 function getReservations(roomNumber) {
@@ -116,12 +150,6 @@ function deleteReservation() {
         url: '/deleteReservation',
         data: {},
     });
-}
-
-function getCookie(name) {
-  var value = "; " + document.cookie;
-  var parts = value.split("; " + name + "=");
-  if (parts.length == 2) return parts.pop().split(";").shift();
 }
 
 function deserializeReservation(reservations){
