@@ -36,6 +36,7 @@ func (reservationMapper *ReservationMapper) Create(roomId, userId int, startTime
 	}
 	newReservation := classes.Reservation{0, roomId, user, startTime, endTime}
 	UOWSingleTon.RegisterNewReservation(newReservation)
+	UOWSingleTon.Commit()
 	// reservations := []classes.Reservation{}
 	// for i, _ := range roomId {
 	// 	reservations = append(reservations, classes.Reservation{reservationIds[i],
@@ -166,7 +167,7 @@ func (reservationMapper *ReservationMapper) SaveNew(reservationArray []classes.R
 		}
 		r.ReservationId = reservationid
 		reservationMapper.reservationsByRoomId.add(r.Room, []classes.Reservation{r})
-		reservationMapper.reservationsByRoomId.add(r.User.StudentId, []classes.Reservation{r})
+		reservationMapper.reservationsByUserId.add(r.User.StudentId, []classes.Reservation{r})
 	}
 	reservationMapper.reservations.add(reservationArray)
 }
