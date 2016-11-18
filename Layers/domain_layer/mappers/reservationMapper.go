@@ -144,14 +144,26 @@ func (reservationMapper *ReservationMapper) InMemoryByUserId(id int) bool {
 	}
 }
 
+func (reservationMapper *ReservationMapper) InMemoryByReservationId(id int) bool {
+	_, ok := reservationMapper.reservationIdentityMap[id]
+	if ok {
+		return true
+	} else {
+		return false
+	}
+}
+
 func (reservationMapper *ReservationMapper) Delete(id int) error {
 	delete(reservationMapper.reservations, id)
+	UOWSingleTon.RegisterDeleteReservation(object)
+
 	err := reservationMapper.reservationTDG.Delete(id)
+
 	return err
 }
 
 func (reservationMapper *ReservationMapper) SaveDeleted(reservationArray []int) {
-	tdg.UserTdg{}.Delete(userArray)
+	tdg.ReservationTDG{}.Delete(reservationArray[0])
 }
 
 func (reservationMapper *ReservationMapper) SaveNew(reservationArray []int) {
