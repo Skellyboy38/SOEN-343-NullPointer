@@ -2,7 +2,7 @@ $(document).ready(function () {
     buildCalendar(1);
 });
 
-function buildCalendar(roomNumber) {
+function buildCalendar(roomNumber, el) {
     var roomReservations = [];
     var userRoomReservations = [];
     var studentId = getCookie("studentId");
@@ -14,7 +14,11 @@ function buildCalendar(roomNumber) {
         renderUserReservationList(data);
         userRoomReservations = getReservationsUserSuccess(data);
     });
-    // TODO - Need to distinguish user's reservations and rest of resrvation
+    if(el != null){
+        $(".tab").attr("id", "");
+        $(el).attr("id", "active");
+    }
+    // TODO - Need to distinguish user's reservations and rest of reesrvation
     init(roomReservations);
 }
 
@@ -68,12 +72,15 @@ function init(reservations) {
 }
 
 function renderUserReservationList(reservations){
-    console.log(reservations);
     var reservationListHTML = $(".reservations-table");
+    var reservationHeaderHTML = renderReservationHeader();
+    reservationHeaderHTML.appendTo(reservationListHTML);
     reservations.forEach(function(resv){
         var row = renderReservationRow(resv);
         row.appendTo(reservationListHTML);
     });
+
+
 
     function renderReservationRow(resv){
         var rowHTML = $("<div></div>", {
@@ -108,6 +115,40 @@ function renderUserReservationList(reservations){
     }
 }
 
+function renderReservationHeader(){
+    //var reservationsListHTML = $(".reservations-table");
+    var header = $("<div></div>", {
+            class: "row"
+        });
+    header.addClass("row reservations-header");
+    var roomNumberCell = $("<div></div>", {
+        class:"cell",
+        text: "Room Number"
+    });
+    var descriptionCell = $("<div></div>", {
+        class:"cell",
+        text: "Description"
+    });
+    var startTimeCell = $("<div></div>",{
+        class:"cell",
+        text: "Start Time"
+    });
+    var endTimeCell = $("<div></div>",{
+        class:"cell",
+        text: "End Time"
+    });
+    var actionsCell = $("<div></div>",{
+        class:"cell",
+        text: "Actions"
+    });
+    roomNumberCell.appendTo(header);
+    descriptionCell.appendTo(header);
+    startTimeCell.appendTo(header);
+    endTimeCell.appendTo(header);
+    actionsCell.appendTo(header);
+    return header;
+}
+
 function getReservations(roomNumber) {
     return $.ajax({
         type: 'POST',
@@ -138,11 +179,17 @@ function getReservationsUser(roomNumber, userID) {
 }
 
 function createReservation() {
+	var userID = getCookie("studentId");
+	var room = $("#room").val();
+	var start = $("#start_time").val();
+	var end = $("#end_time").val();
+	//console.log(userID + " " + room + " " + date + " " + start + " " + end);
     $.ajax({
         type: 'POST',
         contentType: "application/x-www-form-urlencoded",
+        async: false,
         url: '/createReservation',
-        data: {},
+        data: {userID: userID, roomID: room, date: date, start: start, end: end},
     });
 }
 
@@ -167,4 +214,9 @@ function deserializeReservation(reservations){
         return [];
     }
     return result;
+}
+
+function changeRoom(roomNumber, el){
+    $(".reservations-table").empty();
+    buildCalendar(roomNumber, el);
 }
