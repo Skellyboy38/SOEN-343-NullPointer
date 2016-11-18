@@ -2,7 +2,7 @@ $(document).ready(function () {
     buildCalendar(1);
 });
 
-function buildCalendar(roomNumber) {
+function buildCalendar(roomNumber, el) {
     var roomReservations = [];
     var userRoomReservations = [];
     var studentId = getCookie("studentId");
@@ -14,6 +14,10 @@ function buildCalendar(roomNumber) {
         renderUserReservationList(data);
         userRoomReservations = getReservationsUserSuccess(data);
     });
+    if(el != null){
+        $(".tab").attr("id", "");
+        $(el).attr("id", "active");
+    }
     // TODO - Need to distinguish user's reservations and rest of reesrvation
     init(roomReservations);
 }
@@ -212,7 +216,7 @@ function deserializeReservation(reservations){
     return result;
 }
 
-function changeRoom(roomNumber){
+function changeRoom(roomNumber, el){
     $(".reservations-table").empty();
-    buildCalendar(roomNumber);
+    buildCalendar(roomNumber, el);
 }
