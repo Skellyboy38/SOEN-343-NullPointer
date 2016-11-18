@@ -116,10 +116,6 @@ func (bucketTable reservationByUserIdBucketTable) add(id int, reservations []cla
 	bucketTable[id] = append(bucketTable[id], reservations...)
 }
 
-func (reservationMapper *ReservationMapper) AddReservation(id string, date string, room string, startTime string, endTime string) {
-	reservation := classes.Reservation{1, id, room, date, startTime, endTime}
-}
-
 func (reservationMap reservationIdentityMap) add(reservations []classes.Reservation) {
 	for _, e := range reservations {
 		reservationMap[e.ReservationId] = e
@@ -154,8 +150,18 @@ func (reservationMapper *ReservationMapper) SaveDeleted(reservationArray []int) 
 	tdg.UserTdg{}.Delete(userArray)
 }
 
-func (reservationMapper *ReservationMapper) SaveNew(reservationArray []int) {
-	tdg.UserTdg{}.Create(userArray)
+func (reservationMapper *ReservationMapper) SaveNew(reservationArray []classes.Reservations) {
+	for _, r := range reservationArray {
+		reservationid, err := tdg.ReservationTDG{}.Create(r.Room, r.User.StudentId, r.StartTime, r.EndTime)
+		if err != nil {
+			fmt.Printf(" saveNew has a problem %v : \n", err)
+			continue
+		}
+		r.ReservationId = reservationid
+		reservationMapper.reservationsByRoomId.add(r.Room, classes.Reservation{r})
+		reservationMapper.reservationsByRoomId.add(r.User.StudentId, classes.Reservation{r})
+	}
+	reservationMapper.reservations.add(reservationArray)
 }
 
 func (reservationMapper *ReservationMapper) SaveDirty(reservationArray []int) {
