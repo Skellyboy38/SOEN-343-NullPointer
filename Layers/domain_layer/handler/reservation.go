@@ -69,7 +69,6 @@ func CreateReservation(rw http.ResponseWriter, req *http.Request) {
 	endTime := req.FormValue("endTime")
 
 	reservationMapper := mappers.MapperBundle.ReservationMapper
-
 	reservationMapper.Create(roomId, userId, startTime, endTime)
 }
 

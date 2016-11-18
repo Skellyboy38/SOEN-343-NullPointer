@@ -175,11 +175,17 @@ function getReservationsUser(roomNumber, userID) {
 }
 
 function createReservation() {
+	var userID = getCookie("studentId");
+	var room = $("#room").val();
+	var start = $("#start_time").val();
+	var end = $("#end_time").val();
+	//console.log(userID + " " + room + " " + date + " " + start + " " + end);
     $.ajax({
         type: 'POST',
         contentType: "application/x-www-form-urlencoded",
+        async: false,
         url: '/createReservation',
-        data: {},
+        data: {userID: userID, roomID: room, date: date, start: start, end: end},
     });
 }
 
