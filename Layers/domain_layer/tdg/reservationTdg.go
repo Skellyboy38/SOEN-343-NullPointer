@@ -10,22 +10,6 @@ type ReservationTDG struct {
 	AbstractTDG AbstractTDG
 }
 
-func (r *ReservationTDG) Create(roomId, userId []int, startTime, endTime []time.Time) []int {
-	reservationIds := []int{}
-	for i, _ := range roomId {
-		res, err := DB.Exec("INSERT INTO reservation ( roomId, studentId, startTime, endTime)"+
-			"VALUES ($1, '$2', $3, '$4');",
-			roomId[i],
-			userId[i],
-			startTime[i],
-			endTime[i])
-		fmt.Println(err)
-		id, err := res.LastInsertId()
-		reservationIds = append(reservationIds, int(id))
-	}
-	return reservationIds
-}
-
 func (r *ReservationTDG) ReadByRoom(roomId int) ([]int, []int, []int, []time.Time, []time.Time, error) {
 	rows, err := DB.Query("SELECT * FROM reservation WHERE roomId=$1 ;", roomId)
 	if err != nil {
@@ -62,12 +46,16 @@ func (r *ReservationTDG) Update() {
 
 }
 
-func (r *ReservationTDG) Delete(reservationId int) error {
-	_, err := DB.Exec("DELETE * FROM reservation WHERE reservationId=$1;", reservationId)
-	if err != nil {
-		fmt.Println(err)
+func (r *ReservationTDG) Delete(reservationIds []int) error {
+
+	for _, i := range reservationIds {
+		_, err := DB.Exec("DELETE * FROM reservation WHERE reservationId=$1;", i)
+		if err != nil {
+			fmt.Println(err)
+			return err
+		}
 	}
-	return err
+	return nil
 }
 
 func (r *ReservationTDG) ReadByUser(roomId, userId int) ([]int, []int, []int, []time.Time, []time.Time, error) {
@@ -102,7 +90,7 @@ func (r *ReservationTDG) ReadByUser(roomId, userId int) ([]int, []int, []int, []
 	return reservationIds, roomIds, studentIds, startTimes, endTimes, nil
 }
 
-func (r *ReservationTDG) Create(roomId, studentId, startTime, endTime) (int, error) {
+func (r *ReservationTDG) Create(roomId, studentId int, startTime, endTime time.Time) (int, error) {
 	reservationId, err := DB.Exec("INSERT into reservations (roomId, studentId, startTime, endTime) VALUES ($1,$2,$3,$4) ",
 		roomId,
 		studentId,
@@ -110,8 +98,15 @@ func (r *ReservationTDG) Create(roomId, studentId, startTime, endTime) (int, err
 		endTime)
 
 	if err != nil {
-		return nil, errors("Could not create reservation")
+		return -1, errors.New("Could not create reservation")
+	}
+	resId, err := reservationId.LastInsertId()
+
+	if err != nil {
+		fmt.Printf("Cannot get last inserted id : %v", err)
+		return -1, err
+
 	}
 
-	return reservationId, nil
+	return int(resId), nil
 }

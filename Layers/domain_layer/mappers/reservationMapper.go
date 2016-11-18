@@ -29,23 +29,22 @@ func InitReservationMapper() *ReservationMapper {
 
 func (reservationMapper *ReservationMapper) Create(roomId, userId int, startTime, endTime time.Time) error {
 	userMapper := MapperBundle.UserMapper
-	reservationTDG := reservationMapper.reservationTDGe
-	user, err := userMapper.GetById(userId[0])
+	// reservationTDG := reservationMapper.reservationTDG
+	user, err := userMapper.GetById(userId)
 	if err != nil {
 		return err
 	}
-	newReservation := classes.Reservations{0, roomId, userId, startTime, endTime}
-	UOWSingleTon.registeredNewReservations(newReservation)
-	reservationIds := reservationMapper.reservationTDG.Create(roomId, userId, startTime, endTime)
-	reservations := []classes.Reservation{}
-	for i, _ := range roomId {
-		reservations = append(reservations, classes.Reservation{reservationIds[i],
-			roomId[i],
-			user,
-			startTime[i],
-			endTime[i]})
-	}
-	reservationMapper.reservations.add(reservations)
+	newReservation := classes.Reservation{0, roomId, user, startTime, endTime}
+	UOWSingleTon.RegisterNewReservation(newReservation)
+	// reservations := []classes.Reservation{}
+	// for i, _ := range roomId {
+	// 	reservations = append(reservations, classes.Reservation{reservationIds[i],
+	// 		roomId[i],
+	// 		user,
+	// 		startTime[i],
+	// 		endTime[i]})
+	// }
+	// reservationMapper.reservations.add(reservations)
 	return nil
 }
 
@@ -142,28 +141,27 @@ func (reservationMapper *ReservationMapper) InMemoryByUserId(id int) bool {
 
 func (reservationMapper *ReservationMapper) Delete(id int) error {
 	delete(reservationMapper.reservations, id)
-	err := reservationMapper.reservationTDG.Delete(id)
-	return err
+	return nil
 }
 
 func (reservationMapper *ReservationMapper) SaveDeleted(reservationArray []int) {
-	tdg.UserTdg{}.Delete(userArray)
+	reservationMapper.reservationTDG.Delete(reservationArray)
 }
 
-func (reservationMapper *ReservationMapper) SaveNew(reservationArray []classes.Reservations) {
+func (reservationMapper *ReservationMapper) SaveNew(reservationArray []classes.Reservation) {
 	for _, r := range reservationArray {
-		reservationid, err := tdg.ReservationTDG{}.Create(r.Room, r.User.StudentId, r.StartTime, r.EndTime)
+		reservationid, err := reservationMapper.reservationTDG.Create(r.Room, r.User.StudentId, r.StartTime, r.EndTime)
 		if err != nil {
 			fmt.Printf(" saveNew has a problem %v : \n", err)
 			continue
 		}
 		r.ReservationId = reservationid
-		reservationMapper.reservationsByRoomId.add(r.Room, classes.Reservation{r})
-		reservationMapper.reservationsByRoomId.add(r.User.StudentId, classes.Reservation{r})
+		reservationMapper.reservationsByRoomId.add(r.Room, []classes.Reservation{r})
+		reservationMapper.reservationsByRoomId.add(r.User.StudentId, []classes.Reservation{r})
 	}
 	reservationMapper.reservations.add(reservationArray)
 }
 
-func (reservationMapper *ReservationMapper) SaveDirty(reservationArray []int) {
-	tdg.UserTdg{}.Update(userArray)
+func (reservationMapper *ReservationMapper) SaveDirty(reservationArray []classes.Reservation) {
+	// reservationMapper.reservationTDG.Update(reservationArray)
 }

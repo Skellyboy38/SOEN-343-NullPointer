@@ -68,16 +68,16 @@ func (uow *UOW) Commit() {
 	MapperBundle.UserMapper.SaveNew(processedRegisteredNewUsers)
 
 	processedRegisteredNewReservations := reverseReservations(reduceReservationQueue(reverseReservations(uow.registeredNewReservations)))
-	processedRegisteredDirtyReservations := reverseReservations(reduceReservationQueue(reverseReservations(uow.RegisterDirtyReservations(object))))
+	processedRegisteredDirtyReservations := reverseReservations(reduceReservationQueue(reverseReservations(uow.registeredDirtyReservations)))
 	processedRegisteredDeletedReservations := convertToReservationIdSlice(
 		reverseReservations(
 			reduceReservationQueue(
 				reverseReservations(
 					uow.registeredDeletedReservations))))
 
-	MapperBundle.ReservationMapper.SaveDeleted()
-	MapperBundle.ReservationMapper.SaveDirty()
-	MapperBundle.ReservationMapper.SaveNew()
+	MapperBundle.ReservationMapper.SaveDeleted(processedRegisteredDeletedReservations)
+	MapperBundle.ReservationMapper.SaveDirty(processedRegisteredDirtyReservations)
+	MapperBundle.ReservationMapper.SaveNew(processedRegisteredNewReservations)
 
 }
 
@@ -135,7 +135,7 @@ func convertToUserIdSlice(userSlice []classes.User) []int {
 
 func convertToReservationIdSlice(reservationSlice []classes.Reservation) []int {
 	intSlice := []int{}
-	for _, x := range userSlice {
+	for _, x := range reservationSlice {
 		intSlice = append(intSlice, x.ReservationId)
 	}
 	return intSlice
