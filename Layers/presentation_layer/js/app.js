@@ -29,6 +29,7 @@ function init(reservations) {
                 { name: 'end', type: 'date' },
                 { name: 'readOnly', type:'boolean' }
             ],
+            id: 'id',
             localData: reservations
         };
     var adapter = new $.jqx.dataAdapter(source);
@@ -52,6 +53,7 @@ function init(reservations) {
         {
             from: "start",
             to: "end",
+            id: "id",
             subject: "subject",
             resourceId: "calendar",
             readOnly: "readOnly",
@@ -66,6 +68,7 @@ function init(reservations) {
 }
 
 function renderUserReservationList(reservations){
+    console.log(reservations);
     var reservationListHTML = $(".reservations-table");
     reservations.forEach(function(resv){
         var row = renderReservationRow(resv);
@@ -156,7 +159,7 @@ function deserializeReservation(reservations){
     if(reservations != undefined && reservations.length > 0){
         var result = [];
         reservations.forEach(function(reservationJSON){
-            var reservation = new Reservation(reservationJSON.subject, reservationJSON.roomNumber, reservationJSON.startTime, reservationJSON.endTime);
+            var reservation = new Reservation(reservationJSON.reservationID, reservationJSON.subject, reservationJSON.roomNumber, reservationJSON.startTime, reservationJSON.endTime);
             result.push(reservation)
         })
     } else{

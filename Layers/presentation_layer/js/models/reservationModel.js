@@ -1,4 +1,5 @@
-function Reservation(subject, calendar, start, end) {
+function Reservation(id, subject, calendar, start, end) {
+	this.id = id;
     startDate = parseDate(start);
     endDate = parseDate(end);
     this.calendar = calendar; // Room Number
