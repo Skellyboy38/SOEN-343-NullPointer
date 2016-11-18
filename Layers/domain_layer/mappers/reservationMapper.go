@@ -27,12 +27,15 @@ func InitReservationMapper() *ReservationMapper {
 		tdg.ReservationTDG{}}
 }
 
-func (reservationMapper *ReservationMapper) Create(roomId, userId []int, startTime, endTime []time.Time) error {
+func (reservationMapper *ReservationMapper) Create(roomId, userId int, startTime, endTime time.Time) error {
 	userMapper := MapperBundle.UserMapper
+	reservationTDG := reservationMapper.reservationTDGe
 	user, err := userMapper.GetById(userId[0])
 	if err != nil {
 		return err
 	}
+	newReservation := classes.Reservations{0, roomId, userId, startTime, endTime}
+	UOWSingleTon.registeredNewReservations(newReservation)
 	reservationIds := reservationMapper.reservationTDG.Create(roomId, userId, startTime, endTime)
 	reservations := []classes.Reservation{}
 	for i, _ := range roomId {
@@ -105,7 +108,6 @@ func (reservationMapper *ReservationMapper) GetByRoomId(roomId int) ([]classes.R
 	}
 }
 
-
 func (bucketTable reservationByRoomIdBucketTable) add(id int, reservations []classes.Reservation) {
 	bucketTable[id] = append(bucketTable[id], reservations...)
 }
@@ -142,13 +144,8 @@ func (reservationMapper *ReservationMapper) InMemoryByUserId(id int) bool {
 	}
 }
 
-func (reservationMapper *ReservationMapper) Delete(id int) error{	
+func (reservationMapper *ReservationMapper) Delete(id int) error {
 	delete(reservationMapper.reservations, id)
 	err := reservationMapper.reservationTDG.Delete(id)
 	return err
 }
-
-// func (reservationMapper *ReservationMapper) Delete(reservationId int) error{
-
-// 	reservationMapper.reservationTDG.Delete(reservationId)
-// }
