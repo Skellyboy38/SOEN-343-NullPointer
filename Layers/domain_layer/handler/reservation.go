@@ -6,6 +6,7 @@ import (
 	"github.com/Skellyboy38/SOEN-343-NullPointer/Layers/domain_layer/mappers"
 	"net/http"
 	"strconv"
+	"time"
 )
 
 func GetReservationsByRoomID(rw http.ResponseWriter, req *http.Request) {
@@ -68,8 +69,12 @@ func CreateReservation(rw http.ResponseWriter, req *http.Request) {
 	startTime := req.FormValue("startTime")
 	endTime := req.FormValue("endTime")
 
+	roomIdint, _ := strconv.Atoi(roomId)
+	userIDint, _ := strconv.Atoi(userId)
+	startTimeformated, _ := time.Parse("yyyy-mm-dd hh:mm:ss", startTime)
+	endTimeformated, _ := time.Parse("yyyy-mm-dd hh:mm:ss", endTime)
 	reservationMapper := mappers.MapperBundle.ReservationMapper
-	reservationMapper.Create(roomId, userId, startTime, endTime)
+	reservationMapper.Create(roomIdint, userIDint, startTimeformated, endTimeformated)
 }
 
 // func DeleteReservation(rw http.ResponseWriter, req *http.Request) {
