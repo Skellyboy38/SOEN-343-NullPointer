@@ -1,12 +1,18 @@
 /* General CSS */
 body{
-  font-family: 'Helvetica Neue', Helvetica, Arial;
-  font-size: 14px;
-  line-height: 20px;
-  font-weight: 400;
-  color: #3b3b3b;
+	font-family: 'Helvetica Neue', Helvetica, Arial;
+	font-size: 14px;
+	line-height: 20px;
+	font-weight: 400;
+	color: #3b3b3b;
 }
 
 #scheduler{
-  margin: 0 auto;
+	margin: 0 auto;
+}
+
+.roomTabs{
+	display: block;
+	text-align: center;
+	min-width: 1050px;
 }
