@@ -140,7 +140,7 @@ func (reservationMapper *ReservationMapper) InMemoryByUserId(id int) bool {
 }
 
 func (reservationMapper *ReservationMapper) InMemoryByReservationId(id int) bool {
-	_, ok := reservationMapper.reservationIdentityMap[id]
+	_, ok := reservationMapper.reservations[id]
 	if ok {
 		return true
 	} else {
