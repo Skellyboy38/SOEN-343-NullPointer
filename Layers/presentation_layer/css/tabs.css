@@ -13,7 +13,7 @@ section {
 
 button.tab {
   cursor: pointer;
-  width: 199px;
+  width: 197px;
   display: inline-block;
   background-color: #5E6B7F;
   color: white;
@@ -49,6 +49,8 @@ p {
 
 .roomTabs {
   display: inline-block;
+  position: relative;
+  margin-top: 110px;
 }
 
 div:focus {
