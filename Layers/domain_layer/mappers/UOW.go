@@ -67,6 +67,10 @@ func (uow *UOW) Commit() {
 	MapperBundle.UserMapper.SaveDirtyUsers(processedRegisteredDirtyUsers)
 	MapperBundle.UserMapper.SaveNewUsers(processedRegisteredNewUsers)
 
+	processedRegisteredDeletedReservations := reverseReservations(reservations)
+	processedRegisteredNewReservations	   :=
+	processedRegisteredDirtyReservations   :=
+
 }
 
 func reverseUsers(users []classes.User) []classes.User{
@@ -98,6 +102,22 @@ func reduceUserQueue(queue []classes.User) userQueue{
 	}
 	return reducedQueue
 }
+
+func reduceReservationQueue(queue []classes.Reservation) reservationQueue{
+	reducedQueue := []classes.Reservation{}
+	exist := make(map[int]classes.Reservation)
+	for _,element := range queue{
+		_, found := exist[element.StudentId]
+		if found {
+			continue
+		}else{
+			reducedQueue = append(reducedQueue,element)
+		}
+	}
+	return reducedQueue
+}
+
+
 
 func convertToUserIdSlice(userSlice []classes.User) []int{
 	intSlice := []int{}
