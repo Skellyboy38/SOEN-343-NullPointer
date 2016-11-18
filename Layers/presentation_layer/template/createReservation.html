@@ -2,12 +2,11 @@
 <div id='createReservationForm'>
 	<br>
 	<h1>Create a reservation</h1>
-	<form action="/createReservation" method="post">
-		<table>
+	<table>
 		<tr>
 			<td>Room number (1-5):</td>
 			<td>
-				<select name="room">
+				<select id="room">
 					<option value="1">Room 1</option>
 					<option value="2">Room 2</option>
 					<option value="3">Room 3</option>
@@ -17,19 +16,14 @@
 			</td>
 		</tr>
 		<tr>
-			<td>Date (DD/MM/YYYY):</td>
-			<td><input name="date" type="text"></td>
+			<td>Start time (MM/DD/HH/mm):</td>
+			<td><input id="start_time" type="text"></td>
 		</tr>
 		<tr>
-			<td>Start time (HH):</td>
-			<td><input name="start_time" type="text"></td>
+			<td>End time (MM/DD/HH/mm):</td>
+			<td><input id="end_time" type="text"></td>
 		</tr>
-		<tr>
-			<td>End time (HH):</td>
-			<td><input name="end_time" type="text"></td>
-		</tr>
-		</table>
-		<input type="submit" value="Submit">
-	</form>
+	</table>
+	<button onclick="createReservation()">Submit</button>
 </div>
 {{end}}
