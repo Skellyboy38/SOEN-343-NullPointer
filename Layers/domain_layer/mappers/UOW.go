@@ -63,21 +63,21 @@ func (uow *UOW) Commit() {
 			reduceUserQueue(
 				reverseUsers(
 					uow.registeredDeletedUsers))))
-	MapperBundle.UserMapper.SaveDeletedUsers(processedRegisteredDeletedUsers)
-	MapperBundle.UserMapper.SaveDirtyUsers(processedRegisteredDirtyUsers)
-	MapperBundle.UserMapper.SaveNewUsers(processedRegisteredNewUsers)
+	MapperBundle.UserMapper.SaveDeleted(processedRegisteredDeletedUsers)
+	MapperBundle.UserMapper.SaveDirty(processedRegisteredDirtyUsers)
+	MapperBundle.UserMapper.SaveNew(processedRegisteredNewUsers)
 
-	processedRegisteredNewReservations := reverseReservations(reduceReservationQueue(reverseReservations(reservations)))
-	processedRegisteredDirtyReservations := reverseReservations(reduceReservationQueue(reverseReservations(reservations)))
+	processedRegisteredNewReservations := reverseReservations(reduceReservationQueue(reverseReservations(uow.registeredNewReservations)))
+	processedRegisteredDirtyReservations := reverseReservations(reduceReservationQueue(reverseReservations(uow.RegisterDirtyReservations(object))))
 	processedRegisteredDeletedReservations := convertToReservationIdSlice(
 		reverseReservations(
 			reduceReservationQueue(
 				reverseReservations(
 					uow.registeredDeletedReservations))))
 
-	MapperBundle.ReservationMapper.SaveDeletedReservations()
-	MapperBundle.ReservationMapper.SaveDirtyReservations()
-	MapperBundle.ReservationMapper.SaveNewReservations()
+	MapperBundle.ReservationMapper.SaveDeleted()
+	MapperBundle.ReservationMapper.SaveDirty()
+	MapperBundle.ReservationMapper.SaveNew()
 
 }
 

@@ -149,3 +149,15 @@ func (reservationMapper *ReservationMapper) Delete(id int) error {
 	err := reservationMapper.reservationTDG.Delete(id)
 	return err
 }
+
+func (reservationMapper *ReservationMapper) SaveDeleted(reservationArray []int) {
+	tdg.UserTdg{}.Delete(userArray)
+}
+
+func (reservationMapper *ReservationMapper) SaveNew(reservationArray []int) {
+	tdg.UserTdg{}.Create(userArray)
+}
+
+func (reservationMapper *ReservationMapper) SaveDirty(reservationArray []int) {
+	tdg.UserTdg{}.Update(userArray)
+}

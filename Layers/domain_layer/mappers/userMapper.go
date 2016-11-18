@@ -51,10 +51,10 @@ func (userMap *UserMapper) GetById(id int) (classes.User, error) { // add tdg th
 		return userMap.users[id], nil
 	} else {
 		studentId, password, err := userMap.UserTdg.GetById(id)
-		if err != nil{
+		if err != nil {
 			return classes.User{}, err
 		}
-		student := classes.User{studentId,password}
+		student := classes.User{studentId, password}
 		userMap.users.add(student)
 		return student, nil
 	}
@@ -64,11 +64,11 @@ func (userMap userIdentityMap) add(user classes.User) {
 	userMap[user.StudentId] = user
 }
 
-func (userMapper *UserMapper) SaveNewUsers(userArray []classes.User) error {
+func (userMapper *UserMapper) SaveNew(userArray []classes.User) error {
 	return userMapper.UserTdg.Create(userArray)
 }
 
-func (userMapper *UserMapper) SaveDeletedUsers(userArray []int) {
+func (userMapper *UserMapper) SaveDeleted(userArray []int) {
 	var wg sync.WaitGroup
 	wg.Add(2)
 	go func() {
@@ -86,7 +86,7 @@ func (userMapper *UserMapper) SaveDeletedUsers(userArray []int) {
 	wg.Wait()
 }
 
-func (userMapper *UserMapper) SaveDirtyUsers(users []classes.User) error {
+func (userMapper *UserMapper) SaveDirty(users []classes.User) error {
 	return tdg.UserTdg{}.Update(users)
 }
 
