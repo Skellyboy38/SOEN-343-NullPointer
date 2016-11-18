@@ -114,14 +114,8 @@ func (bucketTable reservationByUserIdBucketTable) add(id int, reservations []cla
 	bucketTable[id] = append(bucketTable[id], reservations...)
 }
 
-func (reservationMapper *ReservationMapper) AddReservation(id int, date string, room string, startTime string, endTime string) {
-	//reservation := classes.Reservation{1, id, room, date, startTime, endTime}
-
-	fmt.Println(id)
-	fmt.Println(date)
-	fmt.Println(room)
-	fmt.Println(startTime)
-	fmt.Println(endTime)
+func (reservationMapper *ReservationMapper) AddReservation(id string, date string, room string, startTime string, endTime string) {
+	reservation := classes.Reservation{1, id, room, date, startTime, endTime}
 }
 
 func (reservationMap reservationIdentityMap) add(reservations []classes.Reservation) {

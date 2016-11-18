@@ -58,21 +58,24 @@ func GetReservationsByUserID(rw http.ResponseWriter, req *http.Request) {
 	rw.Write(jsonReservations)
 }
 
-// func CreateReservation(rw http.ResponseWriter, req *http.Request) {
-// 	abstractTdg := mappers.MapperBundle.UserMapper.UserTdg.AbstractTdg
-// 	abstractTdg.GetConnection()
-// 	defer abstractTdg.CloseConnection()
-// 	req.ParseForm()
-// 	roomId := req.FormValue("dataRoom")
-// 	userId := req.FormValue("userID")
-// 	startTime := req.FormValue("startTime")
-// 	endTime := req.FormValue("endTime")
+func CreateReservation(rw http.ResponseWriter, req *http.Request) {
+	fmt.Println("Create reservation go")
+	abstractTdg := mappers.MapperBundle.UserMapper.UserTdg.AbstractTdg
+	abstractTdg.GetConnection()
+	defer abstractTdg.CloseConnection()
+	defer req.Body.Close()
+	req.ParseForm()
 
-// 	reservationMapper := mappers.MapperBundle.ReservationMapper
+	roomId := req.FormValue("roomID")
+	date := req.FormValue("date")
+	userId := req.FormValue("userID")
+	startTime := req.FormValue("start")
+	endTime := req.FormValue("end")
 
-// 	reservationMapper.AddReservation(1111111, date, room, startTime, endTime)
-// 	http.Redirect(rw, req, "/home", 303)
-// }
+	reservationMapper := mappers.MapperBundle.ReservationMapper
+
+	reservationMapper.Create(roomId, userId, startTime, endTime)
+}
 
 // func DeleteReservation(rw http.ResponseWriter, req *http.Request) {
 // 	abstractTdg := mappers.MapperBundle.UserMapper.UserTdg.AbstractTdg
