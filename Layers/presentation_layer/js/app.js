@@ -189,7 +189,7 @@ function createReservation() {
         contentType: "application/x-www-form-urlencoded",
         async: false,
         url: '/createReservation',
-        data: {userID: userID, roomID: room, date: date, start: start, end: end},
+        data: {userID: userID, roomID: room, start: start, end: end},
     });
 }
 
