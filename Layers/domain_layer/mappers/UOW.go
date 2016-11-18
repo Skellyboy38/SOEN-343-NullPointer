@@ -6,18 +6,31 @@ import (
 )
 
 type userQueue []classes.User
-
+type reservationQueue []classes.Reservation
 var UOWSingleTon *UOW
 
 type UOW struct {
-	registeredNewUsers     userQueue
-	registeredDirtyUsers   userQueue
-	registeredDeletedUsers userQueue
+	registeredNewUsers              userQueue
+	registeredDirtyUsers            userQueue
+	registeredDeletedUsers          userQueue
+	registeredNewReservations       reservationQueue
+	registeredDirtyReservations     reservationQueue
+	registeredDeletedReservations   reservationQueue
 	userMapper             *UserMapper
+	ReservationMapper      *ReservationMapper
 }
 
 func InitUOW() {
-	UOWSingleTon = &UOW{[]classes.User{}, []classes.User{}, []classes.User{},MapperBundle.UserMapper}
+	UOWSingleTon = &UOW{
+		[]classes.User{},
+		[]classes.User{},
+		[]classes.User{},
+		[]classes.Reservation{},
+		[]classes.Reservation{},
+		[]classes.Reservation{},
+		MapperBundle.UserMapper,
+		MapperBundle.ReservationMapper,
+	}
 }
 
 func (uow *UOW) RegisterNewUser(object classes.User) {
@@ -25,8 +38,18 @@ func (uow *UOW) RegisterNewUser(object classes.User) {
 	fmt.Println(uow.registeredNewUsers)
 }
 
+
+func (uow *UOW) RegisterNewReservation(object classes.Reservation) {
+	uow.registeredNewReservations = append(uow.registeredNewReservations, object)
+	fmt.Println(uow.registeredNewReservations)
+}
+
 func (uow *UOW) RegisterDirtyUser(object classes.User) {
 	uow.registeredDirtyUsers = append(uow.registeredDirtyUsers, object)
+}
+
+func (uow *UOW) RegisterDirtyReservations(object classes.Reservation) {
+	uow.registeredDirtyReservations = append(uow.registeredDirtyReservations, object)
 }
 
 func (uow *UOW) Commit() {
@@ -52,6 +75,14 @@ func reverseUsers(users []classes.User) []classes.User{
 		reversedUsers = append(reversedUsers,users[i])
 	}
 	return reversedUsers
+}
+
+func reverseReservations(reservations []classes.Reservation) []classes.Reservation{
+	reversedReservations := []classes.Reservation{}
+	for i := len(reservations)-1 ; i >=0; i--{
+		reversedReservations = append(reversedReservations,reservations[i])
+	}
+	return reversedReservations
 }
 
 func reduceUserQueue(queue []classes.User) userQueue{
