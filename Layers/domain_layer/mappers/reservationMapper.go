@@ -40,22 +40,50 @@ func (reservationMapper *ReservationMapper) Create(roomId, userId int, startTime
 	return nil
 }
 
-func (reservationMapper *ReservationMapper) Update(reservationId int, newStart, newEnd time.Time) error {
-	reservation := reservationMapper.reservations[reservationId]
-	reservation.StartTime, reservation.EndTime = newStart, newEnd
-
-	for _, e := range reservationMapper.reservationsByRoomId[reservation.Room] {
+func (reservationMapper *ReservationMapper) Update(reservationId, roomId, userId int, newStart, newEnd time.Time) error {
+	reservations, err := reservationMapper.GetByRoomAndUserId(roomId, userId)
+	if err != nil {
+		return err
+	}
+	var reservation classes.Reservation
+	for _, e := range reservations {
 		if e.ReservationId == reservationId {
-			e.StartTime, e.EndTime = newStart, newEnd
+			reservation = e
 		}
 	}
 
-	for _, e := range reservationMapper.reservationsByUserId[reservation.User.StudentId] {
+	delete(reservationMapper.reservations, reservationId)
+
+	reservation.StartTime = newStart
+	reservation.EndTime = newEnd
+	reservationMapper.reservations[reservationId] = reservation
+
+	for i, e := range reservationMapper.reservationsByRoomId[roomId] {
 		if e.ReservationId == reservationId {
-			e.StartTime, e.EndTime = newStart, newEnd
+			reservationMapper.reservationsByRoomId[roomId] = append(
+				reservationMapper.reservationsByRoomId[roomId][:i],
+				reservationMapper.reservationsByRoomId[roomId][i+1:]...)
+			reservationMapper.reservationsByRoomId[roomId] = append(
+				reservationMapper.reservationsByRoomId[roomId],
+				reservation)
 		}
 	}
+
+	for i, e := range reservationMapper.reservationsByUserId[userId] {
+		if e.ReservationId == reservationId {
+			reservationMapper.reservationsByUserId[userId] = append(
+				reservationMapper.reservationsByUserId[userId][:i],
+				reservationMapper.reservationsByUserId[userId][i+1:]...)
+			reservationMapper.reservationsByUserId[userId] = append(
+				reservationMapper.reservationsByUserId[userId],
+				reservation)
+		}
+	}
+
 	UOWSingleTon.RegisterDirtyReservations(reservation)
+	if err := UOWSingleTon.Commit(); err != nil {
+		return err
+	}
 	return nil
 }
 

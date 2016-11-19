@@ -80,12 +80,18 @@ function renderUserReservationList(reservations){
     var reservationListHTML = $(".reservations-table");
     var reservationHeaderHTML = renderReservationHeader();
     reservationHeaderHTML.appendTo(reservationListHTML);
-    reservations.forEach(function(resv){
-        var row = renderReservationRow(resv);
+    if(reservations.length ===0){
+        var row = $("<div></div>",{
+            class: "row",
+            text: "No reservations available."
+        })
         row.appendTo(reservationListHTML);
-    });
-
-
+    } else {
+        reservations.forEach(function(resv){
+            var row = renderReservationRow(resv);
+            row.appendTo(reservationListHTML);
+        });
+    }
 
     function renderReservationRow(resv){
         var rowHTML = $("<div></div>", {
@@ -195,16 +201,44 @@ function getReservationsUser(roomNumber, userID) {
 function createReservation() {
 	var userID = getCookie("studentId");
 	var room = $("#room").val();
-	var start = $("#start").val();
-	var end = $("#end").val();
-    if(!verifyTimeConflicts(room, start, end)) {
+    var year = $("#year").val();
+    var month = $("#month").val();
+    var day = $("#day").val();
+
+	var start = $("#start_time").val();
+	var end = $("#end_time").val();
+    var start_time = "";
+    var end_time = "";
+
+    if(parseInt(start)<10) {
+        start_time = "0" + String(start);
+    }
+    else {
+        start_time = String(start);
+    }
+
+    if(parseInt(end)<10) {
+        end_time = "0" + String(end);
+    }
+    else {
+        end_time = String(end);
+    }
+
+    var startDate = String(year) + "-" + String(month) + "-" + String(day) + " " + start_time + ":00:00";
+    var endDate = String(year) + "-" + String(month) + "-" + String(day) + " " + end_time + ":00:00";
+
+    console.log(startDate);
+    console.log(endDate);
+
+    if(!verifyTimeConflicts(room, startDate, endDate)) {
         $.ajax({
         type: 'POST',
         contentType: "application/x-www-form-urlencoded",
         async: false,
         url: '/createReservation',
-        data: {userID: userID, dataRoom: room, startTime: start, endTime: end},
+        data: {userID: userID, dataRoom: room, startTime: startDate, endTime: endDate},
     });
+        location.reload();
     }
     else {
         console.log("A time conflict exists. Abort.");
@@ -326,15 +360,16 @@ function modifyReservation() {
     });
 }
 
-// TODO
-function deleteReservation(roomID) {
-    var userID = getCookie("studentId");
-    var roomID = roomID;
+function deleteReservation(reservationID) {
+    var reservationID = reservationID;
     $.ajax({
         type: 'POST',
         contentType: "application/x-www-form-urlencoded",
         url: '/deleteReservation',
-        data: {},
+        data: { reservationID: reservationID },
+        success: function(){
+            buildCalendar(1);
+        }
     });
 }
 
@@ -377,9 +412,20 @@ function populateTime() {
         });
         optionsHTML.html(hours + ':00');
         optionsHTML.appendTo(select);
-        */select.append($('<option></option>').attr('value',hours+ ':00').text(hours + ':00'));
+        */select.append($('<option></option>').attr('value',hours).text(hours + ':00'));
     }
 }
+function populateEndTime() {
+    var select = $("#end_time");
+    var startTime = $("#start_time").val();
+    select.empty();
+    for (var i = parseInt(startTime) + 1; i <= 22 ; i++) {
+        
+        select.append($('<option></option>').attr('value',i).text(i + ':00'));
+    }
+    $('select').material_select();
+}
+
 //this.$("#start_time").value
 
 function daysInMonth(m, y) {
