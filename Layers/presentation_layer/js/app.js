@@ -184,16 +184,44 @@ function getReservationsUser(roomNumber, userID) {
 function createReservation() {
 	var userID = getCookie("studentId");
 	var room = $("#room").val();
-	var start = $("#start").val();
-	var end = $("#end").val();
-    if(!verifyTimeConflicts(room, start, end)) {
+    var year = $("#year").val();
+    var month = $("#month").val();
+    var day = $("#day").val();
+
+	var start = $("#start_time").val();
+	var end = $("#end_time").val();
+    var start_time = "";
+    var end_time = "";
+
+    if(parseInt(start)<10) {
+        start_time = "0" + String(start);
+    }
+    else {
+        start_time = String(start);
+    }
+
+    if(parseInt(end)<10) {
+        end_time = "0" + String(end);
+    }
+    else {
+        end_time = String(end);
+    }
+
+    var startDate = String(year) + "-" + String(month) + "-" + String(day) + " " + start_time + ":00:00";
+    var endDate = String(year) + "-" + String(month) + "-" + String(day) + " " + end_time + ":00:00";
+
+    console.log(startDate);
+    console.log(endDate);
+
+    if(!verifyTimeConflicts(room, startDate, endDate)) {
         $.ajax({
         type: 'POST',
         contentType: "application/x-www-form-urlencoded",
         async: false,
         url: '/createReservation',
-        data: {userID: userID, dataRoom: room, startTime: start, endTime: end},
+        data: {userID: userID, dataRoom: room, startTime: startDate, endTime: endDate},
     });
+        location.reload();
     }
     else {
         console.log("A time conflict exists. Abort.");
@@ -364,9 +392,20 @@ function populateTime() {
         });
         optionsHTML.html(hours + ':00');
         optionsHTML.appendTo(select);
-        */select.append($('<option></option>').attr('value',hours+ ':00').text(hours + ':00'));
+        */select.append($('<option></option>').attr('value',hours).text(hours + ':00'));
     }
 }
+function populateEndTime() {
+    var select = $("#end_time");
+    var startTime = $("#start_time").val();
+    select.empty();
+    for (var i = parseInt(startTime) + 1; i <= 22 ; i++) {
+        
+        select.append($('<option></option>').attr('value',i).text(i + ':00'));
+    }
+    $('select').material_select();
+}
+
 //this.$("#start_time").value
 
 function daysInMonth(m, y) {
