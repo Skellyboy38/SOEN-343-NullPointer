@@ -185,13 +185,123 @@ function createReservation() {
 	var room = $("#room").val();
 	var start = $("#start").val();
 	var end = $("#end").val();
-    $.ajax({
+    if(!verifyTimeConflicts(room, start, end)) {
+        $.ajax({
         type: 'POST',
         contentType: "application/x-www-form-urlencoded",
         async: false,
         url: '/createReservation',
         data: {userID: userID, dataRoom: room, startTime: start, endTime: end},
     });
+    }
+    else {
+        console.log("A time conflict exists. Abort.");
+    }
+}
+
+function splitTime(time) {
+    var segments = [];
+    var split = time.split("-")
+    segments.push(split[0]);
+    segments.push(split[1]);
+    var splitDay = split[2].split(" ");
+    segments.push(splitDay[0]);
+    var splitTime = splitDay[1].split(":");
+    segments.push(splitTime[0]);
+    segments.push(splitTime[1]);
+    segments.push(splitTime[2]);
+
+    return segments;
+}
+
+function verifyTimeConflicts(roomID, startTime, endTime) {
+    var status = false;
+    startTimeSplit = splitTime(startTime);
+    endTimeSplit = splitTime(endTime);
+
+    start_year = startTimeSplit[0];
+    start_month = startTimeSplit[1];
+    start_day = startTimeSplit[2];
+    start_hour = startTimeSplit[3];
+
+    end_year = endTimeSplit[0];
+    end_month = endTimeSplit[1];
+    end_day = endTimeSplit[2];
+    end_hour = endTimeSplit[3];
+
+    getReservations(roomID).success(function(data){
+        roomReservations = getReservationsSuccess(data);
+    });
+    roomReservations.forEach(function(reservation) {
+        var start = String(reservation.start);
+        var end = String(reservation.end);
+        var startSplit = start.split(" ");
+        var endSplit = end.split(" ");
+        var startYear = startSplit[3];
+        var endYear = endSplit[3];
+
+        if(start_year != startYear && end_year != endYear) {
+            return;
+        }
+
+        var startMonth = monthToInt(startSplit[1]);
+        var endMonth = monthToInt(startSplit[1]);
+
+        if(start_month != startMonth && end_month != endMoth) {
+            return;
+        }
+
+        var startDay = startSplit[2];
+        var endDay = endSplit[2];
+
+        if(start_day != startDay && end_day != endDay) {
+            return;
+        }
+
+        var startTimeSplit = startSplit[4].split(":");
+        var endTimeSplit = endSplit[4].split(":");
+        var startHour = startTimeSplit[0];
+        var endHour = endTimeSplit[0];
+
+        if(end_hour <= startHour || start_hour >= endHour) {
+            return;
+        }
+        else {
+            status = true;
+        }
+    });
+    return status;
+}
+
+function monthToInt(month) {
+    switch(month) {
+            case "Jan":
+                return 1;
+            case "Feb":
+                return 2;
+            case "Mar":
+                return 3;
+            case "Apr":
+                return 4;
+            case "May":
+                return 5;
+            case "Jun":
+                return 6;
+            case "Jul":
+                return 7;
+            case "Aug":
+                return 8;
+            case "Sep":
+                return 9;
+            case "Oct":
+                return 10;
+            case "Nov":
+                return 11;
+            case "Dec":
+                return 12;
+            default:
+                return 0;
+        }
 }
 
 // TODO
