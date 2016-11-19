@@ -42,8 +42,18 @@ func (r *ReservationTDG) ReadByRoom(roomId int) ([]int, []int, []int, []time.Tim
 	return reservationIds, roomIds, studentIds, startTimes, endTimes, nil
 }
 
-func (r *ReservationTDG) Update() {
-
+func (r *ReservationTDG) Update(reservationId []int, startTime, endTime []time.Time) error {
+	for i, _ := range reservationId {
+		_, err := DB.Exec("UPDATE reservation SET startTime = &1, endTime = &2 WHERE reservationId=&3 ;",
+			startTime[i],
+			endTime[i],
+			reservationId[i])
+		if err != nil {
+			fmt.Println(err)
+			return err
+		}
+	}
+	return nil
 }
 
 func (r *ReservationTDG) Delete(reservationIds []int) error {
