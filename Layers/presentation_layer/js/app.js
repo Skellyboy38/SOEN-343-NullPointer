@@ -183,14 +183,14 @@ function getReservationsUser(roomNumber, userID) {
 function createReservation() {
 	var userID = getCookie("studentId");
 	var room = $("#room").val();
-	var start = $("#start_time").val();
-	var end = $("#end_time").val();
+	var start = $("#start").val();
+	var end = $("#end").val();
     $.ajax({
         type: 'POST',
         contentType: "application/x-www-form-urlencoded",
         async: false,
         url: '/createReservation',
-        data: {userID: userID, roomID: room, start: start, end: end},
+        data: {userID: userID, dataRoom: room, startTime: start, endTime: end},
     });
 }
 
