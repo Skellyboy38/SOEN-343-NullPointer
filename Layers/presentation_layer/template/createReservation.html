@@ -1,29 +1,43 @@
 {{define "createReservation"}}
-<div id='createReservationForm'>
-	<br>
-	<h1>Create a reservation</h1>
-	<table>
-		<tr>
-			<td>Room number (1-5):</td>
-			<td>
-				<select id="room">
+<div id="createReservationForm">
+	<div class="wrapper">
+	<h4>Create a Reservation <i class="material-icons">today</i> </h3>
+	<div class="row">
+		<form class="col s12">
+			<div class="row">
+				<div class="input-field col s6">
+					<select id="room">
 					<option value="1">Room 1</option>
 					<option value="2">Room 2</option>
 					<option value="3">Room 3</option>
 					<option value="4">Room 4</option>
 					<option value="5">Room 5</option>
-				</select>
-			</td>
-		</tr>
-		<tr>
-			<td>Start time (MM/DD/HH/mm):</td>
-			<td><input id="start_time" type="text"></td>
-		</tr>
-		<tr>
-			<td>End time (MM/DD/HH/mm):</td>
-			<td><input id="end_time" type="text"></td>
-		</tr>
-	</table>
-	<button onclick="createReservation()">Submit</button>
+		  </select>
+					<label for="first_name">Room Number</label>
+				</div>
+				<div class="input-field col s6">
+				</div>
+			</div>
+			<div class="row">
+				<div class="input-field col s12">
+					
+					<input id="start" type="text" class="validate">
+					<label for="start">Start Time</label>
+				</div>
+			</div>
+			<div class="row">
+				<div class="input-field col s12">
+					<input id="end" type="text" class="validate">
+					<label for="end">End Time</label>
+				</div>
+			</div>
+			<div class="row">
+				<button id="createBtn" class="btn waves-effect waves-light" type="submit" onclick="createReservation()">
+					Submit
+  				</button>
+			</div>
+		</form>
+	</div>
+	</div>
 </div>
 {{end}}

@@ -16,3 +16,23 @@ body{
 	text-align: center;
 	min-width: 1050px;
 }
+
+#profile-bar{
+    margin: 0 auto;
+    padding: 20px;
+    max-width: 800px;
+}
+
+#todayDate{
+    float:right;
+    margin-top: 5px;
+}
+
+#createBtn{
+	background-color:#800000;
+}
+
+button:focus {
+    outline: none;
+    background-color: #800000 !important;
+}

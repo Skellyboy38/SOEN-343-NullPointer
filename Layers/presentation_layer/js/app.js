@@ -44,7 +44,7 @@ function init(reservations) {
         width: 1000,
         height: 600,
         source: adapter,
-        theme: 'metrodark',
+        theme: 'office',
         view: 'weekView',
         showLegend: true,
         contextMenu: false,
