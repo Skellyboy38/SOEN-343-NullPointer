@@ -73,7 +73,14 @@ func CreateReservation(rw http.ResponseWriter, req *http.Request) {
 	startTimeformated, _ := time.Parse("2006-01-02 15:04:05", startTime)
 	endTimeformated, _ := time.Parse("2006-01-02 15:04:05", endTime)
 	reservationMapper := mappers.MapperBundle.ReservationMapper
-	reservationMapper.Create(roomIdint, userIDint, startTimeformated, endTimeformated)
+
+	if err := reservationMapper.Create(roomIdint, userIDint, startTimeformated, endTimeformated); err != nil {
+		rw.WriteHeader(http.StatusExpectationFailed)
+	}
+
+	rw.WriteHeader(http.StatusOK)
+	bytes, _ := jsonConvert.MessageJson("Success")
+	rw.Write(bytes)
 }
 
 func DeleteReservation(rw http.ResponseWriter, req *http.Request) {
@@ -86,6 +93,8 @@ func DeleteReservation(rw http.ResponseWriter, req *http.Request) {
 
 	reservationsMapper := mappers.MapperBundle.ReservationMapper
 
+	rw.Header().Set("Content-Type", "application/json")
+
 	if err := reservationsMapper.Delete(reservationID); err != nil {
 		rw.WriteHeader(http.StatusExpectationFailed)
 		bytes, _ := jsonConvert.MessageJson("Failure")
@@ -96,4 +105,32 @@ func DeleteReservation(rw http.ResponseWriter, req *http.Request) {
 	rw.WriteHeader(http.StatusOK)
 	bytes, _ := jsonConvert.MessageJson("Success")
 	rw.Write(bytes)
+}
+
+func UpdateReservation(rw http.ResponseWriter, req *http.Request) {
+	abstractTdg := mappers.MapperBundle.UserMapper.UserTdg.AbstractTdg
+	abstractTdg.GetConnection()
+	defer abstractTdg.CloseConnection()
+	defer req.Body.Close()
+	req.ParseForm()
+
+	reservationID, _ := strconv.Atoi(req.FormValue("reservationID"))
+	newStart := req.FormValue("startTime")
+	newEnd := req.FormValue("endTime")
+	startTimeformated, _ := time.Parse("2006-01-02 15:04:05", newStart)
+	endTimeformated, _ := time.Parse("2006-01-02 15:04:05", newEnd)
+	rw.Header().Set("Content-Type", "application/json")
+	reservationMapper := mappers.MapperBundle.ReservationMapper
+
+	if err := reservationMapper.Update(reservationID, startTimeformated, endTimeformated); err != nil {
+		rw.WriteHeader(http.StatusExpectationFailed)
+		bytes, _ := jsonConvert.MessageJson("Failure")
+		rw.Write(bytes)
+		return
+	}
+
+	rw.WriteHeader(http.StatusOK)
+	bytes, _ := jsonConvert.MessageJson("Success")
+	rw.Write(bytes)
+
 }

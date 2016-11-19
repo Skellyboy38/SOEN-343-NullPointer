@@ -55,7 +55,7 @@ func (uow *UOW) RegisterDeleteReservation(id int) {
 	uow.registeredDeletedReservations = append(uow.registeredDeletedReservations, id)
 }
 
-func (uow *UOW) Commit() {
+func (uow *UOW) Commit() error {
 	fmt.Println("GOT TO COMMIT")
 	fmt.Println(uow.registeredNewUsers)
 
@@ -77,9 +77,18 @@ func (uow *UOW) Commit() {
 			reverseIntArray(
 				uow.registeredDeletedReservations)))
 
-	MapperBundle.ReservationMapper.SaveDeleted(processedRegisteredDeletedReservations)
-	MapperBundle.ReservationMapper.SaveDirty(processedRegisteredDirtyReservations)
-	MapperBundle.ReservationMapper.SaveNew(processedRegisteredNewReservations)
+	if err := uow.ReservationMapper.SaveDeleted(processedRegisteredDeletedReservations); err != nil {
+		fmt.Println(err)
+		return err
+	}
+	if err := uow.ReservationMapper.SaveDirty(processedRegisteredDirtyReservations); err != nil {
+		fmt.Println(err)
+		return err
+	}
+	if err := uow.ReservationMapper.SaveNew(processedRegisteredNewReservations); err != nil {
+		fmt.Println(err)
+		return err
+	}
 
 	uow.registeredNewUsers = userQueue{}
 	uow.registeredDirtyUsers = userQueue{}
@@ -87,6 +96,8 @@ func (uow *UOW) Commit() {
 	uow.registeredNewReservations = reservationQueue{}
 	uow.registeredDirtyReservations = reservationQueue{}
 	uow.registeredDeletedReservations = []int{}
+
+	return nil
 }
 
 func reverseUsers(users []classes.User) []classes.User {
