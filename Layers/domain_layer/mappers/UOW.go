@@ -41,7 +41,6 @@ func (uow *UOW) RegisterNewUser(object classes.User) {
 
 func (uow *UOW) RegisterNewReservation(object classes.Reservation) {
 	uow.registeredNewReservations = append(uow.registeredNewReservations, object)
-	fmt.Println(uow.registeredNewReservations)
 }
 
 func (uow *UOW) RegisterDirtyUser(object classes.User) {
@@ -52,7 +51,7 @@ func (uow *UOW) RegisterDirtyReservations(object classes.Reservation) {
 	uow.registeredDirtyReservations = append(uow.registeredDirtyReservations, object)
 }
 
-func (uow *UOW) RegisterDeleteReservation(object classes.Reservation){
+func (uow *UOW) RegisterDeleteReservation(object classes.Reservation) {
 	uow.registeredDeletedReservations = append(uow.registeredDeletedReservations, object)
 }
 
@@ -82,6 +81,13 @@ func (uow *UOW) Commit() {
 	MapperBundle.ReservationMapper.SaveDeleted(processedRegisteredDeletedReservations)
 	MapperBundle.ReservationMapper.SaveDirty(processedRegisteredDirtyReservations)
 	MapperBundle.ReservationMapper.SaveNew(processedRegisteredNewReservations)
+
+	uow.registeredNewUsers = userQueue{}
+	uow.registeredDirtyUsers = userQueue{}
+	uow.registeredDeletedUsers = userQueue{}
+	uow.registeredNewReservations = reservationQueue{}
+	uow.registeredDirtyReservations = reservationQueue{}
+	uow.registeredDeletedReservations = reservationQueue{}
 }
 
 func reverseUsers(users []classes.User) []classes.User {

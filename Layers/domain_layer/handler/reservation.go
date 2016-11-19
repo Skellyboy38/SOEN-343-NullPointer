@@ -68,11 +68,10 @@ func CreateReservation(rw http.ResponseWriter, req *http.Request) {
 	userId := req.FormValue("userID")
 	startTime := req.FormValue("startTime")
 	endTime := req.FormValue("endTime")
-
 	roomIdint, _ := strconv.Atoi(roomId)
 	userIDint, _ := strconv.Atoi(userId)
-	startTimeformated, _ := time.Parse("yyyy-mm-dd hh:mm:ss", startTime)
-	endTimeformated, _ := time.Parse("yyyy-mm-dd hh:mm:ss", endTime)
+	startTimeformated, _ := time.Parse("2006-01-02 15:04:05", startTime)
+	endTimeformated, _ := time.Parse("2006-01-02 15:04:05", endTime)
 	reservationMapper := mappers.MapperBundle.ReservationMapper
 	reservationMapper.Create(roomIdint, userIDint, startTimeformated, endTimeformated)
 }
