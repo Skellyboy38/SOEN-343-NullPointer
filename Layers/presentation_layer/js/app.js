@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    buildCalendar(1);
+    buildCalendar(1); // Default room is 1
 });
 
 function buildCalendar(roomNumber, el) {
@@ -183,7 +183,6 @@ function createReservation() {
 	var room = $("#room").val();
 	var start = $("#start_time").val();
 	var end = $("#end_time").val();
-	//console.log(userID + " " + room + " " + date + " " + start + " " + end);
     $.ajax({
         type: 'POST',
         contentType: "application/x-www-form-urlencoded",
@@ -193,6 +192,17 @@ function createReservation() {
     });
 }
 
+// TODO
+function modifyReservation() {
+    $.ajax({
+        type: 'POST',
+        contentType: "application/x-www-form-urlencoded",
+        url: '/modifyReservation',
+        data: {},
+    });
+}
+
+// TODO
 function deleteReservation() {
     $.ajax({
         type: 'POST',
