@@ -7,27 +7,135 @@
 			<div class="row">
 				<div class="input-field col s6">
 					<select id="room">
-					<option value="1">Room 1</option>
-					<option value="2">Room 2</option>
-					<option value="3">Room 3</option>
-					<option value="4">Room 4</option>
-					<option value="5">Room 5</option>
-		  </select>
+						<option value="1">Room 1</option>
+						<option value="2">Room 2</option>
+						<option value="3">Room 3</option>
+						<option value="4">Room 4</option>
+						<option value="5">Room 5</option>
+		  			</select>
 					<label for="first_name">Room Number</label>
 				</div>
 				<div class="input-field col s6">
 				</div>
 			</div>
 			<div class="row">
-				<div class="input-field col s12">
-					
-					<input id="start" type="text" class="validate">
+				<div class="input-field col s6">
+					<select id="year">
+						<option value="2016">2016</option>
+						<option value="2017">2017</option>
+						<option value="2018">2018</option>
+						<option value="2019">2019</option>
+						<option value="2020">2020</option>
+		  			</select>
+					<label for="first_name">Year of reservation</label>
+				</div>
+				<div class="input-field col s6">
+				</div>
+			</div>
+			<div class="row">
+				<div class="input-field col s7">
+					<select id="month" onchange="updateDays()">
+						<option value="01">January</option>
+						<option value="02">February</option>
+						<option value="03">March</option>
+						<option value="04">April</option>
+						<option value="05">May</option>
+						<option value="06">June</option>
+						<option value="07">July</option>
+						<option value="08">August</option>
+						<option value="09">September</option>
+						<option value="10">October</option>
+						<option value="11">November</option>
+						<option value="12">December</option>
+		  			</select>
+					<label for="first_name">Month of reservation</label>
+				</div>
+				<div class="input-field col s6">
+				</div>
+			</div>			
+			<div class="row">
+				<div class="input-field col s6">
+					<select id="day">
+						<!--<option value="0">1</option>
+						<option value="1">2</option>
+						<option value="2">3</option>
+						<option value="3">4</option>
+						<option value="4">5</option>
+						<option value="5">6</option>
+						<option value="6">7</option>
+						<option value="7">8</option>
+						<option value="8">9</option>
+						<option value="9">10</option>
+						<option value="10">11</option>
+						<option value="11">12</option>
+						<option value="12">13</option>
+						<option value="13">14</option>
+						<option value="14">15</option>
+						<option value="15">16</option>
+						<option value="16">17</option>
+						<option value="17">18</option>
+						<option value="18">19</option>
+						<option value="19">20</option>
+						<option value="20">21</option>
+						<option value="21">22</option>
+						<option value="22">23</option>
+						<option value="23">24</option>
+						<option value="24">25</option>
+						<option value="25">26</option>
+						<option value="26">27</option>
+						<option value="27">28</option>
+						<option value="28">29</option>
+		  				<option value="29">30</option>
+		  				<option value="30">31</option>-->
+		  			</select>
+					<label for="first_name">Day of reservation</label>
+				</div>
+				<div class="input-field col s6">
+				</div>
+			</div>
+			<div class="row">
+				<div id="startSelect" class="input-field col s12">
+					<!--<input id="start" type="text" class="validate">-->
+					<select id="start_time">
+						<!--<option value="8:00">8:00</option>
+						<option value="9:00">9:00</option>
+						<option value="10:00">10:00</option>
+						<option value="11:00">11:00</option>
+						<option value="12:00">12:00</option>
+						<option value="13:00">13:00</option>
+						<option value="14:00">14:00</option>
+						<option value="15:00">15:00</option>
+						<option value="16:00">16:00</option>
+						<option value="17:00">17:00</option>
+						<option value="18:00">18:00</option>
+						<option value="19:00">19:00</option>
+						<option value="20:00">20:00</option>
+						<option value="21:00">21:00</option>
+						<option value="22:00">22:00</option>-->
+					</select>
 					<label for="start">Start Time</label>
 				</div>
 			</div>
 			<div class="row">
 				<div class="input-field col s12">
-					<input id="end" type="text" class="validate">
+					<!--<input id="end" type="text" class="validate">-->
+					<select id="end_time">
+						<option value="8:00">8:00</option>
+						<option value="9:00">9:00</option>
+						<option value="10:00">10:00</option>
+						<option value="11:00">11:00</option>
+						<option value="12:00">12:00</option>
+						<option value="13:00">13:00</option>
+						<option value="14:00">14:00</option>
+						<option value="15:00">15:00</option>
+						<option value="16:00">16:00</option>
+						<option value="17:00">17:00</option>
+						<option value="18:00">18:00</option>
+						<option value="19:00">19:00</option>
+						<option value="20:00">20:00</option>
+						<option value="21:00">21:00</option>
+						<option value="22:00">22:00</option>
+					</select>
 					<label for="end">End Time</label>
 				</div>
 			</div>
