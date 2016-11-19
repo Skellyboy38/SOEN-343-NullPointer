@@ -1,5 +1,6 @@
 $(document).ready(function () {
-    $('select').material_select();
+    populateTime();
+    populateDays(1, 2016);
     printTodayDate();
     buildCalendar(1); // Default room is 1
 });
@@ -350,4 +351,45 @@ function printTodayDate(){
     day: "numeric", hour: "2-digit", minute: "2-digit"
     };
     $("#todayDate").html(today.toLocaleTimeString("en-us", options));
+}
+
+function populateTime() {
+    var select = $("#start_time");
+    //var selectHTML = $("<select></elect")
+    var hours
+    for (var i = 420; i <= 1320; i += 60){
+        hours = Math.floor(i/60);
+        /*var optionsHTML = $("<option></option>",{
+            value : i
+        });
+        optionsHTML.html(hours + ':00');
+        optionsHTML.appendTo(select);
+        */select.append($('<option></option>').attr('value',hours+ ':00').text(hours + ':00'));
+    }
+}
+//this.$("#start_time").value
+
+function daysInMonth(m, y) {
+    return /8|3|5|10/.test(--m)?30:m==1?(!(y%4)&&y%100)||!(y%400)?29:28:31; //1337 hax
+}
+
+function populateDays(month, year) {
+    var select = $("#day");
+    // for (var i = 0 ; i < select.options.length; i++){
+    //     select.options[i] = null;
+    // }
+    $("#day").empty();
+    var days = daysInMonth(parseInt(month), parseInt(year));
+    for (var i = 1; i <= days ; i += 1) {
+        
+        select.append($('<option></option>').attr('value', i).text(i));
+    }
+    $('select').material_select();
+}
+function updateDays() {
+    //var selectedMonth = document.getElementById("month").value;
+    //var selectedYear = document.getElementById("year").value;
+    var selectedMonth = $("#month").val();
+    var selectedYear = $("#year").val();
+    populateDays(selectedMonth, selectedYear);
 }
