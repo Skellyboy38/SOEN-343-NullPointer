@@ -115,14 +115,19 @@ func UpdateReservation(rw http.ResponseWriter, req *http.Request) {
 	req.ParseForm()
 
 	reservationID, _ := strconv.Atoi(req.FormValue("reservationID"))
+	userID, _ := strconv.Atoi(req.FormValue("userID"))
+	fmt.Printf("userID : %d", userID)
+	roomID, _ := strconv.Atoi(req.FormValue("dataRoom"))
 	newStart := req.FormValue("startTime")
 	newEnd := req.FormValue("endTime")
 	startTimeformated, _ := time.Parse("2006-01-02 15:04:05", newStart)
 	endTimeformated, _ := time.Parse("2006-01-02 15:04:05", newEnd)
+	fmt.Printf("startTimeFormated %v \n", startTimeformated)
+	fmt.Printf("endTimeFormated %v \n", endTimeformated)
 	rw.Header().Set("Content-Type", "application/json")
 	reservationMapper := mappers.MapperBundle.ReservationMapper
 
-	if err := reservationMapper.Update(reservationID, startTimeformated, endTimeformated); err != nil {
+	if err := reservationMapper.Update(reservationID, roomID, userID, startTimeformated, endTimeformated); err != nil {
 		rw.WriteHeader(http.StatusExpectationFailed)
 		bytes, _ := jsonConvert.MessageJson("Failure")
 		rw.Write(bytes)
