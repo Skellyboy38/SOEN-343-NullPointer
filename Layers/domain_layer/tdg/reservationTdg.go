@@ -44,10 +44,12 @@ func (r *ReservationTDG) ReadByRoom(roomId int) ([]int, []int, []int, []time.Tim
 
 func (r *ReservationTDG) Update(reservationId []int, startTime, endTime []time.Time) error {
 	for i, _ := range reservationId {
-		_, err := DB.Exec("UPDATE reservation SET startTime = &1, endTime = &2 WHERE reservationId=&3 ;",
+		_, err := DB.Exec("UPDATE reservation SET startTime = $1, endTime = $2 WHERE reservationId=$3 ;",
 			startTime[i],
 			endTime[i],
 			reservationId[i])
+		fmt.Printf("newStartTime %v \n", startTime[i])
+		fmt.Printf("newEndTime %v \n", endTime[i])
 		if err != nil {
 			fmt.Println(err)
 			return err

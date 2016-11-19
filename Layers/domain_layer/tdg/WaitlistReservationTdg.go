@@ -42,7 +42,7 @@ func (r *WaitlistReservationTDG) ReadByRoom(roomId int) ([]int, []int, []int, []
 	return waitListreservationIds, roomIds, studentIds, startTimes, endTimes, nil
 }
 
-func (r *ReservationTDG) Delete(waitListreservationIds []int) error {
+func (r *WaitlistReservationTDG) Delete(waitListreservationIds []int) error {
 
 	for _, i := range waitListreservationIds {
 		_, err := DB.Exec("DELETE FROM waitlistMaster WHERE waitListreservationId=$1;", i)
