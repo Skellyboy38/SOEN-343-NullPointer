@@ -150,7 +150,12 @@ func (reservationMapper *ReservationMapper) InMemoryByReservationId(id int) bool
 }
 
 func (reservationMapper *ReservationMapper) Delete(id int) error {
+	reservation := reservationMapper.reservations[id]
+	delete(reservationMapper.reservationsByRoomId, reservation.Room)
+	delete(reservationMapper.reservationsByUserId, reservation.User.StudentId)
 	delete(reservationMapper.reservations, id)
+	UOWSingleTon.RegisterDeleteReservation(id)
+	UOWSingleTon.Commit()
 	return nil
 }
 

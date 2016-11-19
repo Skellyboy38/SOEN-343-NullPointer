@@ -49,7 +49,7 @@ func (r *ReservationTDG) Update() {
 func (r *ReservationTDG) Delete(reservationIds []int) error {
 
 	for _, i := range reservationIds {
-		_, err := DB.Exec("DELETE * FROM reservation WHERE reservationId=$1;", i)
+		_, err := DB.Exec("DELETE FROM reservation WHERE reservationId=$1;", i)
 		if err != nil {
 			fmt.Println(err)
 			return err
