@@ -50,9 +50,19 @@ p {
 .roomTabs {
   display: inline-block;
   position: relative;
-  margin-top: 110px;
 }
 
 div:focus {
   outline: none;
+}
+
+#profile-bar{
+    margin: 0 auto;
+    padding: 20px;
+    max-width: 800px;
+}
+
+#todayDate{
+    float:right;
+    margin-top: 5px;
 }

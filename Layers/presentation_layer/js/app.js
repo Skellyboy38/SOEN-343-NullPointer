@@ -1,4 +1,6 @@
 $(document).ready(function () {
+    $('select').material_select();
+    printTodayDate();
     buildCalendar(1); // Default room is 1
 });
 
@@ -229,4 +231,13 @@ function deserializeReservation(reservations){
 function changeRoom(roomNumber, el){
     $(".reservations-table").empty();
     buildCalendar(roomNumber, el);
+}
+
+function printTodayDate(){
+    var today = new Date();
+    var options = {
+    weekday: "long", year: "numeric", month: "short",
+    day: "numeric", hour: "2-digit", minute: "2-digit"
+    };
+    $("#todayDate").html(today.toLocaleTimeString("en-us", options));
 }
