@@ -1,5 +1,6 @@
 $(document).ready(function () {
-    $('select').material_select();
+    populateTime();
+    populateDays(1, 2016);
     printTodayDate();
     buildCalendar(1); // Default room is 1
 });
@@ -12,10 +13,12 @@ function buildCalendar(roomNumber, el) {
     getReservations(roomNumber).success(function(data){
         roomReservations = getReservationsSuccess(data);
     });
+
     getReservationsUser(roomNumber, studentId).success(function(data){
         renderUserReservationList(data);
         userRoomReservations = getReservationsUserSuccess(data);
     });
+
     if(el != null){
         $(".tab").attr("id", "");
         $(el).attr("id", "active");
@@ -109,9 +112,18 @@ function renderUserReservationList(reservations){
         });
         endTimeCell.appendTo(rowHTML);
         var actionsCell = $("<div></div>", {
-            text: "Save / Delete Buttons",
             class: "cell"
         });
+        var deleteBtn = $("<a></a>", {
+            class: "Waves-effect waves-light btn deleteBtn",
+            text: "Delete",
+            "data-reservationid": resv.reservationID
+        });
+        deleteBtn.data("reservationID", resv.reservationID);
+        deleteBtn.click(function(){
+            deleteReservation($(this).attr("data-reservationid"));
+        });
+        deleteBtn.appendTo(actionsCell)
         actionsCell.appendTo(rowHTML);
         return rowHTML;
     }
@@ -185,13 +197,123 @@ function createReservation() {
 	var room = $("#room").val();
 	var start = $("#start").val();
 	var end = $("#end").val();
-    $.ajax({
+    if(!verifyTimeConflicts(room, start, end)) {
+        $.ajax({
         type: 'POST',
         contentType: "application/x-www-form-urlencoded",
         async: false,
         url: '/createReservation',
         data: {userID: userID, dataRoom: room, startTime: start, endTime: end},
     });
+    }
+    else {
+        console.log("A time conflict exists. Abort.");
+    }
+}
+
+function splitTime(time) {
+    var segments = [];
+    var split = time.split("-")
+    segments.push(split[0]);
+    segments.push(split[1]);
+    var splitDay = split[2].split(" ");
+    segments.push(splitDay[0]);
+    var splitTime = splitDay[1].split(":");
+    segments.push(splitTime[0]);
+    segments.push(splitTime[1]);
+    segments.push(splitTime[2]);
+
+    return segments;
+}
+
+function verifyTimeConflicts(roomID, startTime, endTime) {
+    var status = false;
+    startTimeSplit = splitTime(startTime);
+    endTimeSplit = splitTime(endTime);
+
+    start_year = startTimeSplit[0];
+    start_month = startTimeSplit[1];
+    start_day = startTimeSplit[2];
+    start_hour = startTimeSplit[3];
+
+    end_year = endTimeSplit[0];
+    end_month = endTimeSplit[1];
+    end_day = endTimeSplit[2];
+    end_hour = endTimeSplit[3];
+
+    getReservations(roomID).success(function(data){
+        roomReservations = getReservationsSuccess(data);
+    });
+    roomReservations.forEach(function(reservation) {
+        var start = String(reservation.start);
+        var end = String(reservation.end);
+        var startSplit = start.split(" ");
+        var endSplit = end.split(" ");
+        var startYear = startSplit[3];
+        var endYear = endSplit[3];
+
+        if(start_year != startYear && end_year != endYear) {
+            return;
+        }
+
+        var startMonth = monthToInt(startSplit[1]);
+        var endMonth = monthToInt(startSplit[1]);
+
+        if(start_month != startMonth && end_month != endMoth) {
+            return;
+        }
+
+        var startDay = startSplit[2];
+        var endDay = endSplit[2];
+
+        if(start_day != startDay && end_day != endDay) {
+            return;
+        }
+
+        var startTimeSplit = startSplit[4].split(":");
+        var endTimeSplit = endSplit[4].split(":");
+        var startHour = startTimeSplit[0];
+        var endHour = endTimeSplit[0];
+
+        if(end_hour <= startHour || start_hour >= endHour) {
+            return;
+        }
+        else {
+            status = true;
+        }
+    });
+    return status;
+}
+
+function monthToInt(month) {
+    switch(month) {
+            case "Jan":
+                return 1;
+            case "Feb":
+                return 2;
+            case "Mar":
+                return 3;
+            case "Apr":
+                return 4;
+            case "May":
+                return 5;
+            case "Jun":
+                return 6;
+            case "Jul":
+                return 7;
+            case "Aug":
+                return 8;
+            case "Sep":
+                return 9;
+            case "Oct":
+                return 10;
+            case "Nov":
+                return 11;
+            case "Dec":
+                return 12;
+            default:
+                return 0;
+        }
 }
 
 // TODO
@@ -205,7 +327,9 @@ function modifyReservation() {
 }
 
 // TODO
-function deleteReservation() {
+function deleteReservation(roomID) {
+    var userID = getCookie("studentId");
+    var roomID = roomID;
     $.ajax({
         type: 'POST',
         contentType: "application/x-www-form-urlencoded",
@@ -240,4 +364,45 @@ function printTodayDate(){
     day: "numeric", hour: "2-digit", minute: "2-digit"
     };
     $("#todayDate").html(today.toLocaleTimeString("en-us", options));
+}
+
+function populateTime() {
+    var select = $("#start_time");
+    //var selectHTML = $("<select></elect")
+    var hours
+    for (var i = 420; i <= 1320; i += 60){
+        hours = Math.floor(i/60);
+        /*var optionsHTML = $("<option></option>",{
+            value : i
+        });
+        optionsHTML.html(hours + ':00');
+        optionsHTML.appendTo(select);
+        */select.append($('<option></option>').attr('value',hours+ ':00').text(hours + ':00'));
+    }
+}
+//this.$("#start_time").value
+
+function daysInMonth(m, y) {
+    return /8|3|5|10/.test(--m)?30:m==1?(!(y%4)&&y%100)||!(y%400)?29:28:31; //1337 hax
+}
+
+function populateDays(month, year) {
+    var select = $("#day");
+    // for (var i = 0 ; i < select.options.length; i++){
+    //     select.options[i] = null;
+    // }
+    $("#day").empty();
+    var days = daysInMonth(parseInt(month), parseInt(year));
+    for (var i = 1; i <= days ; i += 1) {
+        
+        select.append($('<option></option>').attr('value', i).text(i));
+    }
+    $('select').material_select();
+}
+function updateDays() {
+    //var selectedMonth = document.getElementById("month").value;
+    //var selectedYear = document.getElementById("year").value;
+    var selectedMonth = $("#month").val();
+    var selectedYear = $("#year").val();
+    populateDays(selectedMonth, selectedYear);
 }

@@ -11,13 +11,10 @@ CREATE TABLE reservation (
 	endTime TIMESTAMP
 );
 
-CREATE TABLE waitlist (
-	waitlistId SERIAL UNIQUE PRIMARY KEY,
-	capasity int
-);
-
-CREATE TABLE waitlistcontract (
+CREATE TABLE waitListMaster (
+	waitlistID SERIAL UNIQUE PRIMARY KEY,
+	roomId INTEGER,
 	studentId INTEGER references userTable,
-	waitlistId SERIAL references waitlist,
-	PRIMARY KEY (studentId,waitlistId)
+	startTime TIMESTAMP,
+	endTime TIMESTAMP
 );
