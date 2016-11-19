@@ -207,8 +207,20 @@ function createReservation() {
 
 	var start = $("#start_time").val();
 	var end = $("#end_time").val();
+    if(room == null || year == null || month == null || day == null || start == null || end == null) {
+        console.log("missing information");
+        return;
+    }
     var start_time = "";
     var end_time = "";
+    var day_time = "";
+
+    if(parseInt(day)<10) {
+        day_time = "0" + String(day);
+    }
+    else {
+        day_time = String(day);
+    }
 
     if(parseInt(start)<10) {
         start_time = "0" + String(start);
@@ -224,11 +236,8 @@ function createReservation() {
         end_time = String(end);
     }
 
-    var startDate = String(year) + "-" + String(month) + "-" + String(day) + " " + start_time + ":00:00";
-    var endDate = String(year) + "-" + String(month) + "-" + String(day) + " " + end_time + ":00:00";
-
-    console.log(startDate);
-    console.log(endDate);
+    var startDate = String(year) + "-" + String(month) + "-" + day_time + " " + start_time + ":00:00";
+    var endDate = String(year) + "-" + String(month) + "-" + day_time + " " + end_time + ":00:00";
 
     if(!verifyTimeConflicts(room, startDate, endDate)) {
         $.ajax({
@@ -293,7 +302,7 @@ function verifyTimeConflicts(roomID, startTime, endTime) {
         var startMonth = monthToInt(startSplit[1]);
         var endMonth = monthToInt(startSplit[1]);
 
-        if(start_month != startMonth && end_month != endMoth) {
+        if(start_month != startMonth && end_month != endMonth) {
             return;
         }
 
