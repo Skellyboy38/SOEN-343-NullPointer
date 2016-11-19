@@ -1,5 +1,6 @@
 $(document).ready(function () {
-    $('select').material_select();
+    populateTime();
+    populateDays(1, 2016);
     printTodayDate();
     buildCalendar(1); // Default room is 1
 });
@@ -12,10 +13,12 @@ function buildCalendar(roomNumber, el) {
     getReservations(roomNumber).success(function(data){
         roomReservations = getReservationsSuccess(data);
     });
+
     getReservationsUser(roomNumber, studentId).success(function(data){
         renderUserReservationList(data);
         userRoomReservations = getReservationsUserSuccess(data);
     });
+
     if(el != null){
         $(".tab").attr("id", "");
         $(el).attr("id", "active");
@@ -77,12 +80,18 @@ function renderUserReservationList(reservations){
     var reservationListHTML = $(".reservations-table");
     var reservationHeaderHTML = renderReservationHeader();
     reservationHeaderHTML.appendTo(reservationListHTML);
-    reservations.forEach(function(resv){
-        var row = renderReservationRow(resv);
+    if(reservations.length ===0){
+        var row = $("<div></div>",{
+            class: "row",
+            text: "No reservations available."
+        })
         row.appendTo(reservationListHTML);
-    });
-
-
+    } else {
+        reservations.forEach(function(resv){
+            var row = renderReservationRow(resv);
+            row.appendTo(reservationListHTML);
+        });
+    }
 
     function renderReservationRow(resv){
         var rowHTML = $("<div></div>", {
@@ -109,9 +118,18 @@ function renderUserReservationList(reservations){
         });
         endTimeCell.appendTo(rowHTML);
         var actionsCell = $("<div></div>", {
-            text: "Save / Delete Buttons",
             class: "cell"
         });
+        var deleteBtn = $("<a></a>", {
+            class: "Waves-effect waves-light btn deleteBtn",
+            text: "Delete",
+            "data-reservationid": resv.reservationID
+        });
+        deleteBtn.data("reservationID", resv.reservationID);
+        deleteBtn.click(function(){
+            deleteReservation($(this).attr("data-reservationid"));
+        });
+        deleteBtn.appendTo(actionsCell)
         actionsCell.appendTo(rowHTML);
         return rowHTML;
     }
@@ -183,16 +201,44 @@ function getReservationsUser(roomNumber, userID) {
 function createReservation() {
 	var userID = getCookie("studentId");
 	var room = $("#room").val();
-	var start = $("#start").val();
-	var end = $("#end").val();
-    if(!verifyTimeConflicts(room, start, end)) {
+    var year = $("#year").val();
+    var month = $("#month").val();
+    var day = $("#day").val();
+
+	var start = $("#start_time").val();
+	var end = $("#end_time").val();
+    var start_time = "";
+    var end_time = "";
+
+    if(parseInt(start)<10) {
+        start_time = "0" + String(start);
+    }
+    else {
+        start_time = String(start);
+    }
+
+    if(parseInt(end)<10) {
+        end_time = "0" + String(end);
+    }
+    else {
+        end_time = String(end);
+    }
+
+    var startDate = String(year) + "-" + String(month) + "-" + String(day) + " " + start_time + ":00:00";
+    var endDate = String(year) + "-" + String(month) + "-" + String(day) + " " + end_time + ":00:00";
+
+    console.log(startDate);
+    console.log(endDate);
+
+    if(!verifyTimeConflicts(room, startDate, endDate)) {
         $.ajax({
         type: 'POST',
         contentType: "application/x-www-form-urlencoded",
         async: false,
         url: '/createReservation',
-        data: {userID: userID, dataRoom: room, startTime: start, endTime: end},
+        data: {userID: userID, dataRoom: room, startTime: startDate, endTime: endDate},
     });
+        location.reload();
     }
     else {
         console.log("A time conflict exists. Abort.");
@@ -314,13 +360,16 @@ function modifyReservation() {
     });
 }
 
-// TODO
-function deleteReservation() {
+function deleteReservation(reservationID) {
+    var reservationID = reservationID;
     $.ajax({
         type: 'POST',
         contentType: "application/x-www-form-urlencoded",
         url: '/deleteReservation',
-        data: {},
+        data: { reservationID: reservationID },
+        success: function(){
+            buildCalendar(1);
+        }
     });
 }
 
@@ -350,4 +399,56 @@ function printTodayDate(){
     day: "numeric", hour: "2-digit", minute: "2-digit"
     };
     $("#todayDate").html(today.toLocaleTimeString("en-us", options));
+}
+
+function populateTime() {
+    var select = $("#start_time");
+    //var selectHTML = $("<select></elect")
+    var hours
+    for (var i = 420; i <= 1320; i += 60){
+        hours = Math.floor(i/60);
+        /*var optionsHTML = $("<option></option>",{
+            value : i
+        });
+        optionsHTML.html(hours + ':00');
+        optionsHTML.appendTo(select);
+        */select.append($('<option></option>').attr('value',hours).text(hours + ':00'));
+    }
+}
+function populateEndTime() {
+    var select = $("#end_time");
+    var startTime = $("#start_time").val();
+    select.empty();
+    for (var i = parseInt(startTime) + 1; i <= 22 ; i++) {
+        
+        select.append($('<option></option>').attr('value',i).text(i + ':00'));
+    }
+    $('select').material_select();
+}
+
+//this.$("#start_time").value
+
+function daysInMonth(m, y) {
+    return /8|3|5|10/.test(--m)?30:m==1?(!(y%4)&&y%100)||!(y%400)?29:28:31; //1337 hax
+}
+
+function populateDays(month, year) {
+    var select = $("#day");
+    // for (var i = 0 ; i < select.options.length; i++){
+    //     select.options[i] = null;
+    // }
+    $("#day").empty();
+    var days = daysInMonth(parseInt(month), parseInt(year));
+    for (var i = 1; i <= days ; i += 1) {
+        
+        select.append($('<option></option>').attr('value', i).text(i));
+    }
+    $('select').material_select();
+}
+function updateDays() {
+    //var selectedMonth = document.getElementById("month").value;
+    //var selectedYear = document.getElementById("year").value;
+    var selectedMonth = $("#month").val();
+    var selectedYear = $("#year").val();
+    populateDays(selectedMonth, selectedYear);
 }
