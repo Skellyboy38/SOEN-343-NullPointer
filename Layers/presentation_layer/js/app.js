@@ -13,10 +13,12 @@ function buildCalendar(roomNumber, el) {
     getReservations(roomNumber).success(function(data){
         roomReservations = getReservationsSuccess(data);
     });
+
     getReservationsUser(roomNumber, studentId).success(function(data){
         renderUserReservationList(data);
         userRoomReservations = getReservationsUserSuccess(data);
     });
+
     if(el != null){
         $(".tab").attr("id", "");
         $(el).attr("id", "active");
@@ -78,12 +80,18 @@ function renderUserReservationList(reservations){
     var reservationListHTML = $(".reservations-table");
     var reservationHeaderHTML = renderReservationHeader();
     reservationHeaderHTML.appendTo(reservationListHTML);
-    reservations.forEach(function(resv){
-        var row = renderReservationRow(resv);
+    if(reservations.length ===0){
+        var row = $("<div></div>",{
+            class: "row",
+            text: "No reservations available."
+        })
         row.appendTo(reservationListHTML);
-    });
-
-
+    } else {
+        reservations.forEach(function(resv){
+            var row = renderReservationRow(resv);
+            row.appendTo(reservationListHTML);
+        });
+    }
 
     function renderReservationRow(resv){
         var rowHTML = $("<div></div>", {
@@ -110,9 +118,18 @@ function renderUserReservationList(reservations){
         });
         endTimeCell.appendTo(rowHTML);
         var actionsCell = $("<div></div>", {
-            text: "Save / Delete Buttons",
             class: "cell"
         });
+        var deleteBtn = $("<a></a>", {
+            class: "Waves-effect waves-light btn deleteBtn",
+            text: "Delete",
+            "data-reservationid": resv.reservationID
+        });
+        deleteBtn.data("reservationID", resv.reservationID);
+        deleteBtn.click(function(){
+            deleteReservation($(this).attr("data-reservationid"));
+        });
+        deleteBtn.appendTo(actionsCell)
         actionsCell.appendTo(rowHTML);
         return rowHTML;
     }
@@ -343,13 +360,16 @@ function modifyReservation() {
     });
 }
 
-// TODO
-function deleteReservation() {
+function deleteReservation(reservationID) {
+    var reservationID = reservationID;
     $.ajax({
         type: 'POST',
         contentType: "application/x-www-form-urlencoded",
         url: '/deleteReservation',
-        data: {},
+        data: { reservationID: reservationID },
+        success: function(){
+            buildCalendar(1);
+        }
     });
 }
 
