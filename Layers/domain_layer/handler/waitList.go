@@ -19,14 +19,21 @@ func AddToWaitList(rw http.ResponseWriter, req *http.Request) {
 	userId := req.FormValue("userID")
 	startTime := req.FormValue("startTime")
 	endTime := req.FormValue("endTime")
-	roomIdint, _ := strconv.Atoi(roomId)
-	userIDint, _ := strconv.Atoi(userId)
+	roomIdInt, _ := strconv.Atoi(roomId)
+	userIDInt, _ := strconv.Atoi(userId)
 
 	startTimeformated, _ := time.Parse("2006-01-02 15:04:05", startTime)
 	endTimeformated, _ := time.Parse("2006-01-02 15:04:05", endTime)
 
 	waitListMapper := mappers.MapperBundle.WaitListMapper
-	waitListMapper.Create(roomIdint, userIDint, startTimeformated, endTimeformated)
+
+	if err := waitListMapper.Create(roomIdInt, userIDInt, startTimeformated, endTimeformated); err != nil {
+		rw.WriteHeader(http.StatusExpectationFailed)
+	}
+
+	rw.WriteHeader(http.StatusOK)
+	bytes, _ := jsonConvert.MessageJson("Success")
+	rw.Write(bytes)
 }
 
 func GetWaitListEntriesByRoom(rw http.ResponseWriter, req *http.Request) {
