@@ -49,7 +49,8 @@
 
 <form action="/login" method="post">
 	<div class="container">
-	    <a>User ID:</a><input type="text" name="id"><br/>
+		
+	    <a>User ID: </a><label style="color:red">{{.message}}</label><br/><input type="text" name="id"><br/>
 	    <a>Password:</a><input type="password" name="password"><br/>
 	    <input id="loginBtn" type="submit" value="Login">
     </div>

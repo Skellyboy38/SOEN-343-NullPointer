@@ -20,6 +20,10 @@ func LoginGet(rw http.ResponseWriter, req *http.Request) {
 	t.ExecuteTemplate(rw, "base", nil)
 }
 
+type ErrorMessage struct {
+	Message template.HTML
+}
+
 func LoginForm(rw http.ResponseWriter, req *http.Request) {
 
 	abstractTdg := mappers.MapperBundle.UserMapper.UserTdg.AbstractTdg
@@ -36,7 +40,15 @@ func LoginForm(rw http.ResponseWriter, req *http.Request) {
 	verifiedUser, err := userMapper.Get(studentId, password)
 
 	if err != nil { // return error
-		rw.Write([]byte("Invalid id and password"))
+		login := filepath.Join("presentation_layer", "template", "login.html")
+		base := filepath.Join("presentation_layer", "template", "base.html")
+		header := filepath.Join("presentation_layer", "template", "header.html")
+		t := (template.Must(template.ParseFiles(base, login, header)))
+		varmap := map[string]interface{}{
+			"message": "Wrong Credentials",
+		}
+		t.ExecuteTemplate(rw, "base", varmap)
+
 		return
 	}
 	expire := time.Now().Add(time.Hour * 45)
