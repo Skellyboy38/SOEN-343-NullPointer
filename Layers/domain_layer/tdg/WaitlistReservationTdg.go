@@ -88,7 +88,7 @@ func (r *WaitlistReservationTDG) ReadByUser(roomId, userId int) ([]int, []int, [
 
 func (r *WaitlistReservationTDG) Create(roomId, studentId int, startTime, endTime time.Time) (int, error) {
 	waitListreservationId := 0
-	res, err := DB.Query("INSERT INTO waitlistReservation (roomId, studentId, startTime, endTime) VALUES ($1,$2,$3,$4) RETURNING waitlistID;",
+	res, err := DB.Query("INSERT INTO waitlistMaster (roomId, studentId, startTime, endTime) VALUES ($1,$2,$3,$4) RETURNING waitlistID;",
 		roomId,
 		studentId,
 		startTime.Format("2006-01-02 15:04:05"),
