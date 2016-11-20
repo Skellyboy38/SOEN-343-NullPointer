@@ -241,16 +241,23 @@ function createReservation() {
 
     if(!verifyTimeConflicts(room, startDate, endDate)) {
         $.ajax({
-        type: 'POST',
-        contentType: "application/x-www-form-urlencoded",
-        async: false,
-        url: '/createReservation',
-        data: {userID: userID, dataRoom: room, startTime: startDate, endTime: endDate},
-    });
+            type: 'POST',
+            contentType: "application/x-www-form-urlencoded",
+            async: false,
+            url: '/createReservation',
+            data: {userID: userID, dataRoom: room, startTime: start, endTime: end},
+        });
         location.reload();
     }
-    else {
-        console.log("A time conflict exists. Abort.");
+    else { // Add the person to a wait list
+        $.ajax({
+            type: 'POST',
+            contentType: "application/x-www-form-urlencoded",
+            async: false,
+            url: '/addToWaitList',
+            data: {userID: userID, dataRoom: room, startTime: start, endTime: end},
+        });
+        console.log("Added to wait list.");
     }
 }
 
