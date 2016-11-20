@@ -1,5 +1,6 @@
 $(document).ready(function () {
-    $('select').material_select();
+    populateTime();
+    populateDays(1, 2016);
     printTodayDate();
     buildCalendar(1); // Default room is 1
 });
@@ -12,10 +13,12 @@ function buildCalendar(roomNumber, el) {
     getReservations(roomNumber).success(function(data){
         roomReservations = getReservationsSuccess(data);
     });
+
     getReservationsUser(roomNumber, studentId).success(function(data){
         renderUserReservationList(data);
         userRoomReservations = getReservationsUserSuccess(data);
     });
+
     if(el != null){
         $(".tab").attr("id", "");
         $(el).attr("id", "active");
@@ -77,12 +80,18 @@ function renderUserReservationList(reservations){
     var reservationListHTML = $(".reservations-table");
     var reservationHeaderHTML = renderReservationHeader();
     reservationHeaderHTML.appendTo(reservationListHTML);
-    reservations.forEach(function(resv){
-        var row = renderReservationRow(resv);
+    if(reservations.length ===0){
+        var row = $("<div></div>",{
+            class: "row",
+            text: "No reservations available."
+        })
         row.appendTo(reservationListHTML);
-    });
-
-
+    } else {
+        reservations.forEach(function(resv){
+            var row = renderReservationRow(resv);
+            row.appendTo(reservationListHTML);
+        });
+    }
 
     function renderReservationRow(resv){
         var rowHTML = $("<div></div>", {
@@ -109,9 +118,18 @@ function renderUserReservationList(reservations){
         });
         endTimeCell.appendTo(rowHTML);
         var actionsCell = $("<div></div>", {
-            text: "Save / Delete Buttons",
             class: "cell"
         });
+        var deleteBtn = $("<a></a>", {
+            class: "Waves-effect waves-light btn deleteBtn",
+            text: "Delete",
+            "data-reservationid": resv.reservationID
+        });
+        deleteBtn.data("reservationID", resv.reservationID);
+        deleteBtn.click(function(){
+            deleteReservation($(this).attr("data-reservationid"));
+        });
+        deleteBtn.appendTo(actionsCell)
         actionsCell.appendTo(rowHTML);
         return rowHTML;
     }
@@ -183,15 +201,173 @@ function getReservationsUser(roomNumber, userID) {
 function createReservation() {
 	var userID = getCookie("studentId");
 	var room = $("#room").val();
+    var year = $("#year").val();
+    var month = $("#month").val();
+    var day = $("#day").val();
+
 	var start = $("#start_time").val();
 	var end = $("#end_time").val();
+    if(room == null || year == null || month == null || day == null || start == null || end == null) {
+        console.log("missing information");
+        return;
+    }
+    var start_time = "";
+    var end_time = "";
+    var day_time = "";
+
+    if(parseInt(day)<10) {
+        day_time = "0" + String(day);
+    }
+    else {
+        day_time = String(day);
+    }
+
+    if(parseInt(start)<10) {
+        start_time = "0" + String(start);
+    }
+    else {
+        start_time = String(start);
+    }
+
+    if(parseInt(end)<10) {
+        end_time = "0" + String(end);
+    }
+    else {
+        end_time = String(end);
+    }
+
+    var startDate = String(year) + "-" + String(month) + "-" + day_time + " " + start_time + ":00:00";
+    var endDate = String(year) + "-" + String(month) + "-" + day_time + " " + end_time + ":00:00";
+
+    if(!verifyTimeConflicts(room, startDate, endDate)) {
+        pushReservation(userID, room, startDate, endDate);
+        location.reload();
+    }
+    else { // Add the person to a wait list
+        $.ajax({
+            type: 'POST',
+            contentType: "application/x-www-form-urlencoded",
+            async: false,
+            url: '/addToWaitList',
+            data: {userID: userID, dataRoom: room, startTime: start, endTime: end},
+        });
+        console.log("Added to wait list.");
+    }
+}
+
+function pushReservation(userID, room, startDate, endDate) {
     $.ajax({
         type: 'POST',
         contentType: "application/x-www-form-urlencoded",
         async: false,
         url: '/createReservation',
-        data: {userID: userID, roomID: room, start: start, end: end},
+        data: {userID: userID, dataRoom: room, startTime: startDate, endTime: endDate},
     });
+}
+
+function splitTime(time) {
+    var segments = [];
+    var split = time.split("-")
+    segments.push(split[0]);
+    segments.push(split[1]);
+    var splitDay = split[2].split(" ");
+    segments.push(splitDay[0]);
+    var splitTime = splitDay[1].split(":");
+    segments.push(splitTime[0]);
+    segments.push(splitTime[1]);
+    segments.push(splitTime[2]);
+
+    return segments;
+}
+
+function verifyTimeConflicts(roomID, startTime, endTime) {
+    var status = false;
+    startTimeSplit = splitTime(startTime);
+    endTimeSplit = splitTime(endTime);
+
+    start_year = startTimeSplit[0];
+    start_month = startTimeSplit[1];
+    start_day = startTimeSplit[2];
+    start_hour = startTimeSplit[3];
+
+    end_year = endTimeSplit[0];
+    end_month = endTimeSplit[1];
+    end_day = endTimeSplit[2];
+    end_hour = endTimeSplit[3];
+
+    getReservations(roomID).success(function(data){
+        roomReservations = getReservationsSuccess(data);
+    });
+    roomReservations.forEach(function(reservation) {
+        var start = String(reservation.start);
+        var end = String(reservation.end);
+        var startSplit = start.split(" ");
+        var endSplit = end.split(" ");
+        var startYear = startSplit[3];
+        var endYear = endSplit[3];
+
+        if(start_year != startYear && end_year != endYear) {
+            return;
+        }
+
+        var startMonth = monthToInt(startSplit[1]);
+        var endMonth = monthToInt(startSplit[1]);
+
+        if(start_month != startMonth && end_month != endMonth) {
+            return;
+        }
+
+        var startDay = startSplit[2];
+        var endDay = endSplit[2];
+
+        if(start_day != startDay && end_day != endDay) {
+            return;
+        }
+
+        var startTimeSplit = startSplit[4].split(":");
+        var endTimeSplit = endSplit[4].split(":");
+        var startHour = startTimeSplit[0];
+        var endHour = endTimeSplit[0];
+
+        if(end_hour <= startHour || start_hour >= endHour) {
+            return;
+        }
+        else {
+            status = true;
+        }
+    });
+    return status;
+}
+
+function monthToInt(month) {
+    switch(month) {
+            case "Jan":
+                return 1;
+            case "Feb":
+                return 2;
+            case "Mar":
+                return 3;
+            case "Apr":
+                return 4;
+            case "May":
+                return 5;
+            case "Jun":
+                return 6;
+            case "Jul":
+                return 7;
+            case "Aug":
+                return 8;
+            case "Sep":
+                return 9;
+            case "Oct":
+                return 10;
+            case "Nov":
+                return 11;
+            case "Dec":
+                return 12;
+            default:
+                return 0;
+        }
 }
 
 // TODO
@@ -202,15 +378,60 @@ function modifyReservation() {
         url: '/modifyReservation',
         data: {},
     });
+    updateWaitList();
 }
 
-// TODO
-function deleteReservation() {
+function deleteReservation(reservationID) {
+    var reservationID = reservationID;
     $.ajax({
         type: 'POST',
         contentType: "application/x-www-form-urlencoded",
         url: '/deleteReservation',
-        data: {},
+        data: { reservationID: reservationID },
+        success: function(resp){
+            location.reload();
+        }
+    });
+    updateWaitList();
+}
+
+function updateWaitList(room) { // This function updates the waitlist by checking if someone's reservation can be created.
+    var idsToRemove = [];
+    getAllWaitingListEntriesByRoom(room).success(function(data){
+        entries = getReservationsSuccess(data);
+    });
+
+    entries.ForEach(function(entry) {
+        if(!verifyTimeConflicts(entry.room, entry.start, entry.end)) {
+            pushReservation(entry.userId, entry.roomNumber, entry.startTime, entry.endTime);
+            idsToRemove.push(entry.reservationID);
+        }
+        else {
+            return;
+        }
+    });
+    removeWaitListEntries(idsToRemove);
+}
+
+function removeWaitListEntries(idsToRemove) {
+    idsToRemove.ForEach(function(id) {
+        $.ajax({
+            type: 'POST',
+            contentType: "application/x-www-form-urlencoded",
+            async: false,
+            url: '/removeWaitListEntriesById',
+            data: {waitListId: id},
+        });
+    });
+}
+
+function getAllWaitingListEntriesByRoom(room) {
+    $.ajax({
+        type: 'POST',
+        contentType: "application/x-www-form-urlencoded",
+        async: false,
+        url: '/getWaitListEntriesByRoom',
+        data: {dataRoom: room},
     });
 }
 
@@ -218,7 +439,7 @@ function deserializeReservation(reservations){
     if(reservations != undefined && reservations.length > 0){
         var result = [];
         reservations.forEach(function(reservationJSON){
-            var reservation = new Reservation(reservationJSON.reservationID, reservationJSON.subject, reservationJSON.roomNumber, reservationJSON.startTime, reservationJSON.endTime);
+            var reservation = new Reservation(reservationJSON.reservationID, reservationJSON.subject, reservationJSON.roomNumber, reservationJSON.startTime, reservationJSON.endTime, reservationJSON.userId);
             result.push(reservation)
         })
     } else{
@@ -240,4 +461,43 @@ function printTodayDate(){
     day: "numeric", hour: "2-digit", minute: "2-digit"
     };
     $("#todayDate").html(today.toLocaleTimeString("en-us", options));
+}
+
+function populateTime() {
+    var select = $("#start_time");
+    var hours
+    for (var i = 420; i <= 1320; i += 60){
+        hours = Math.floor(i/60);
+        select.append($('<option></option>').attr('value',hours).text(hours + ':00'));
+    }
+}
+function populateEndTime() {
+    var select = $("#end_time");
+    var startTime = $("#start_time").val();
+    select.empty();
+    for (var i = parseInt(startTime) + 1; i <= 22 ; i++) {
+        
+        select.append($('<option></option>').attr('value',i).text(i + ':00'));
+    }
+    $('select').material_select();
+}
+
+function daysInMonth(m, y) {
+    return /8|3|5|10/.test(--m)?30:m==1?(!(y%4)&&y%100)||!(y%400)?29:28:31; //1337 hax
+}
+
+function populateDays(month, year) {
+    var select = $("#day");
+    $("#day").empty();
+    var days = daysInMonth(parseInt(month), parseInt(year));
+    for (var i = 1; i <= days ; i += 1) {
+        
+        select.append($('<option></option>').attr('value', i).text(i));
+    }
+    $('select').material_select();
+}
+function updateDays() {
+    var selectedMonth = $("#month").val();
+    var selectedYear = $("#year").val();
+    populateDays(selectedMonth, selectedYear);
 }

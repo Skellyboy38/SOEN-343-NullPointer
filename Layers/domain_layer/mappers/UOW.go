@@ -7,6 +7,7 @@ import (
 
 type userQueue []classes.User
 type reservationQueue []classes.Reservation
+type waitingListQueue []classes.WaitlistReservation
 
 var UOWSingleTon *UOW
 
@@ -16,9 +17,12 @@ type UOW struct {
 	registeredDeletedUsers        userQueue
 	registeredNewReservations     reservationQueue
 	registeredDirtyReservations   reservationQueue
-	registeredDeletedReservations reservationQueue
+	registeredDeletedReservations []int
+	//wait list queues
+	registeredNewWaiting          waitingListQueue
 	userMapper                    *UserMapper
 	ReservationMapper             *ReservationMapper
+	waitingListMapper             *WaitListMapper
 }
 
 func InitUOW() {
@@ -28,9 +32,11 @@ func InitUOW() {
 		[]classes.User{},
 		[]classes.Reservation{},
 		[]classes.Reservation{},
-		[]classes.Reservation{},
+		[]int{},
+		[]classes.WaitlistReservation{},
 		MapperBundle.UserMapper,
 		MapperBundle.ReservationMapper,
+		MapperBundle.WaitListMapper,
 	}
 }
 
@@ -41,7 +47,6 @@ func (uow *UOW) RegisterNewUser(object classes.User) {
 
 func (uow *UOW) RegisterNewReservation(object classes.Reservation) {
 	uow.registeredNewReservations = append(uow.registeredNewReservations, object)
-	fmt.Println(uow.registeredNewReservations)
 }
 
 func (uow *UOW) RegisterDirtyUser(object classes.User) {
@@ -52,11 +57,16 @@ func (uow *UOW) RegisterDirtyReservations(object classes.Reservation) {
 	uow.registeredDirtyReservations = append(uow.registeredDirtyReservations, object)
 }
 
-func (uow *UOW) RegisterDeleteReservation(object classes.Reservation){
-	uow.registeredDeletedReservations = append(uow.registeredDeletedReservations, object)
+func (uow *UOW) RegisterDeleteReservation(id int) {
+	uow.registeredDeletedReservations = append(uow.registeredDeletedReservations, id)
 }
 
-func (uow *UOW) Commit() {
+func (uow *UOW) RegisterNewWaitingReservation(object classes.WaitlistReservation) {
+	uow.registeredNewWaiting = append(uow.registeredNewWaiting, object)
+}
+
+
+func (uow *UOW) Commit() error {
 	fmt.Println("GOT TO COMMIT")
 	fmt.Println(uow.registeredNewUsers)
 
@@ -73,15 +83,32 @@ func (uow *UOW) Commit() {
 
 	processedRegisteredNewReservations := reverseReservations(reduceReservationQueue(reverseReservations(uow.registeredNewReservations)))
 	processedRegisteredDirtyReservations := reverseReservations(reduceReservationQueue(reverseReservations(uow.registeredDirtyReservations)))
-	processedRegisteredDeletedReservations := convertToReservationIdSlice(
-		reverseReservations(
-			reduceReservationQueue(
-				reverseReservations(
-					uow.registeredDeletedReservations))))
+	processedRegisteredDeletedReservations := reverseIntArray(
+		reduceIntQueue(
+			reverseIntArray(
+				uow.registeredDeletedReservations)))
 
-	MapperBundle.ReservationMapper.SaveDeleted(processedRegisteredDeletedReservations)
-	MapperBundle.ReservationMapper.SaveDirty(processedRegisteredDirtyReservations)
-	MapperBundle.ReservationMapper.SaveNew(processedRegisteredNewReservations)
+	if err := uow.ReservationMapper.SaveDeleted(processedRegisteredDeletedReservations); err != nil {
+		fmt.Println(err)
+		return err
+	}
+	if err := uow.ReservationMapper.SaveDirty(processedRegisteredDirtyReservations); err != nil {
+		fmt.Println(err)
+		return err
+	}
+	if err := uow.ReservationMapper.SaveNew(processedRegisteredNewReservations); err != nil {
+		fmt.Println(err)
+		return err
+	}
+
+	uow.registeredNewUsers = userQueue{}
+	uow.registeredDirtyUsers = userQueue{}
+	uow.registeredDeletedUsers = userQueue{}
+	uow.registeredNewReservations = reservationQueue{}
+	uow.registeredDirtyReservations = reservationQueue{}
+	uow.registeredDeletedReservations = []int{}
+
+	return nil
 }
 
 func reverseUsers(users []classes.User) []classes.User {
@@ -94,6 +121,14 @@ func reverseUsers(users []classes.User) []classes.User {
 
 func reverseReservations(reservations []classes.Reservation) []classes.Reservation {
 	reversedReservations := []classes.Reservation{}
+	for i := len(reservations) - 1; i >= 0; i-- {
+		reversedReservations = append(reversedReservations, reservations[i])
+	}
+	return reversedReservations
+}
+
+func reverseIntArray(reservations []int) []int {
+	reversedReservations := []int{}
 	for i := len(reservations) - 1; i >= 0; i-- {
 		reversedReservations = append(reversedReservations, reservations[i])
 	}
@@ -128,18 +163,24 @@ func reduceReservationQueue(queue []classes.Reservation) reservationQueue {
 	return reducedQueue
 }
 
+func reduceIntQueue(queue []int) []int {
+	reducedQueue := []int{}
+	exist := make(map[int]int)
+	for _, element := range queue {
+		_, found := exist[element]
+		if found {
+			continue
+		} else {
+			reducedQueue = append(reducedQueue, element)
+		}
+	}
+	return reducedQueue
+}
+
 func convertToUserIdSlice(userSlice []classes.User) []int {
 	intSlice := []int{}
 	for _, x := range userSlice {
 		intSlice = append(intSlice, x.StudentId)
-	}
-	return intSlice
-}
-
-func convertToReservationIdSlice(reservationSlice []classes.Reservation) []int {
-	intSlice := []int{}
-	for _, x := range reservationSlice {
-		intSlice = append(intSlice, x.ReservationId)
 	}
 	return intSlice
 }

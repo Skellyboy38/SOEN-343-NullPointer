@@ -37,15 +37,53 @@ func (reservationMapper *ReservationMapper) Create(roomId, userId int, startTime
 	newReservation := classes.Reservation{0, roomId, user, startTime, endTime}
 	UOWSingleTon.RegisterNewReservation(newReservation)
 	UOWSingleTon.Commit()
-	// reservations := []classes.Reservation{}
-	// for i, _ := range roomId {
-	// 	reservations = append(reservations, classes.Reservation{reservationIds[i],
-	// 		roomId[i],
-	// 		user,
-	// 		startTime[i],
-	// 		endTime[i]})
-	// }
-	// reservationMapper.reservations.add(reservations)
+	return nil
+}
+
+func (reservationMapper *ReservationMapper) Update(reservationId, roomId, userId int, newStart, newEnd time.Time) error {
+	reservations, err := reservationMapper.GetByRoomAndUserId(roomId, userId)
+	if err != nil {
+		return err
+	}
+	var reservation classes.Reservation
+	for _, e := range reservations {
+		if e.ReservationId == reservationId {
+			reservation = e
+		}
+	}
+
+	delete(reservationMapper.reservations, reservationId)
+
+	reservation.StartTime = newStart
+	reservation.EndTime = newEnd
+	reservationMapper.reservations[reservationId] = reservation
+
+	for i, e := range reservationMapper.reservationsByRoomId[roomId] {
+		if e.ReservationId == reservationId {
+			reservationMapper.reservationsByRoomId[roomId] = append(
+				reservationMapper.reservationsByRoomId[roomId][:i],
+				reservationMapper.reservationsByRoomId[roomId][i+1:]...)
+			reservationMapper.reservationsByRoomId[roomId] = append(
+				reservationMapper.reservationsByRoomId[roomId],
+				reservation)
+		}
+	}
+
+	for i, e := range reservationMapper.reservationsByUserId[userId] {
+		if e.ReservationId == reservationId {
+			reservationMapper.reservationsByUserId[userId] = append(
+				reservationMapper.reservationsByUserId[userId][:i],
+				reservationMapper.reservationsByUserId[userId][i+1:]...)
+			reservationMapper.reservationsByUserId[userId] = append(
+				reservationMapper.reservationsByUserId[userId],
+				reservation)
+		}
+	}
+
+	UOWSingleTon.RegisterDirtyReservations(reservation)
+	if err := UOWSingleTon.Commit(); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -150,19 +188,33 @@ func (reservationMapper *ReservationMapper) InMemoryByReservationId(id int) bool
 }
 
 func (reservationMapper *ReservationMapper) Delete(id int) error {
+	reservation := reservationMapper.reservations[id]
+	delete(reservationMapper.reservationsByRoomId, reservation.Room)
+	delete(reservationMapper.reservationsByUserId, reservation.User.StudentId)
 	delete(reservationMapper.reservations, id)
+	UOWSingleTon.RegisterDeleteReservation(id)
+	err := UOWSingleTon.Commit()
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
 	return nil
 }
 
-func (reservationMapper *ReservationMapper) SaveDeleted(reservationArray []int) {
-	reservationMapper.reservationTDG.Delete(reservationArray)
+func (reservationMapper *ReservationMapper) SaveDeleted(reservationArray []int) error {
+	if err := reservationMapper.reservationTDG.Delete(reservationArray); err != nil {
+		fmt.Println(err)
+		return err
+	}
+	return nil
 }
 
-func (reservationMapper *ReservationMapper) SaveNew(reservationArray []classes.Reservation) {
+func (reservationMapper *ReservationMapper) SaveNew(reservationArray []classes.Reservation) error {
 	for _, r := range reservationArray {
 		reservationid, err := reservationMapper.reservationTDG.Create(r.Room, r.User.StudentId, r.StartTime, r.EndTime)
 		if err != nil {
 			fmt.Printf(" saveNew has a problem %v : \n", err)
+			return err
 			continue
 		}
 		r.ReservationId = reservationid
@@ -170,8 +222,22 @@ func (reservationMapper *ReservationMapper) SaveNew(reservationArray []classes.R
 		reservationMapper.reservationsByUserId.add(r.User.StudentId, []classes.Reservation{r})
 	}
 	reservationMapper.reservations.add(reservationArray)
+	return nil
 }
 
-func (reservationMapper *ReservationMapper) SaveDirty(reservationArray []classes.Reservation) {
-	// reservationMapper.reservationTDG.Update(reservationArray)
+func (reservationMapper *ReservationMapper) SaveDirty(reservationArray []classes.Reservation) error {
+	reservationIds := []int{}
+	startTimes := []time.Time{}
+	endTimes := []time.Time{}
+
+	for _, e := range reservationArray {
+		reservationIds = append(reservationIds, e.ReservationId)
+		startTimes = append(startTimes, e.StartTime)
+		endTimes = append(endTimes, e.EndTime)
+	}
+	if err := reservationMapper.reservationTDG.Update(reservationIds, startTimes, endTimes); err != nil {
+		fmt.Println(err)
+		return err
+	}
+	return nil
 }

@@ -3,40 +3,87 @@
 	<div class="wrapper">
 	<h4>Create a Reservation <i class="material-icons">today</i> </h3>
 	<div class="row">
-		<form class="col s12">
+		<!--<form class="col s12">-->
 			<div class="row">
 				<div class="input-field col s6">
 					<select id="room">
-					<option value="1">Room 1</option>
-					<option value="2">Room 2</option>
-					<option value="3">Room 3</option>
-					<option value="4">Room 4</option>
-					<option value="5">Room 5</option>
-		  </select>
+						<option value="1">Room 1</option>
+						<option value="2">Room 2</option>
+						<option value="3">Room 3</option>
+						<option value="4">Room 4</option>
+						<option value="5">Room 5</option>
+		  			</select>
 					<label for="first_name">Room Number</label>
 				</div>
 				<div class="input-field col s6">
 				</div>
 			</div>
 			<div class="row">
-				<div class="input-field col s12">
-					
-					<input id="start" type="text" class="validate">
+				<div class="input-field col s6">
+					<select id="year">
+						<option value="2016">2016</option>
+						<option value="2017">2017</option>
+						<option value="2018">2018</option>
+						<option value="2019">2019</option>
+						<option value="2020">2020</option>
+		  			</select>
+					<label for="first_name">Year of reservation</label>
+				</div>
+				<div class="input-field col s6">
+				</div>
+			</div>
+			<div class="row">
+				<div class="input-field col s7">
+					<select id="month" onchange="updateDays()">
+						<option value="01">January</option>
+						<option value="02">February</option>
+						<option value="03">March</option>
+						<option value="04">April</option>
+						<option value="05">May</option>
+						<option value="06">June</option>
+						<option value="07">July</option>
+						<option value="08">August</option>
+						<option value="09">September</option>
+						<option value="10">October</option>
+						<option value="11">November</option>
+						<option value="12">December</option>
+		  			</select>
+					<label for="first_name">Month of reservation</label>
+				</div>
+				<div class="input-field col s6">
+				</div>
+			</div>			
+			<div class="row">
+				<div class="input-field col s6">
+					<select id="day">
+						
+		  			</select>
+					<label for="first_name">Day of reservation</label>
+				</div>
+				<div class="input-field col s6">
+				</div>
+			</div>
+			<div class="row">
+				<div id="startSelect" class="input-field col s12">
+
+					<select id="start_time" onchange="populateEndTime()">
+
+					</select>
 					<label for="start">Start Time</label>
 				</div>
 			</div>
 			<div class="row">
 				<div class="input-field col s12">
-					<input id="end" type="text" class="validate">
+					<select id="end_time">
+					</select>
 					<label for="end">End Time</label>
 				</div>
 			</div>
 			<div class="row">
-				<button id="createBtn" class="btn waves-effect waves-light" type="submit" onclick="createReservation()">
+				<button id="createBtn" class="btn waves-effect waves-light" onclick="createReservation()">
 					Submit
   				</button>
 			</div>
-		</form>
 	</div>
 	</div>
 </div>

@@ -42,14 +42,26 @@ func (r *ReservationTDG) ReadByRoom(roomId int) ([]int, []int, []int, []time.Tim
 	return reservationIds, roomIds, studentIds, startTimes, endTimes, nil
 }
 
-func (r *ReservationTDG) Update() {
-
+func (r *ReservationTDG) Update(reservationId []int, startTime, endTime []time.Time) error {
+	for i, _ := range reservationId {
+		_, err := DB.Exec("UPDATE reservation SET startTime = $1, endTime = $2 WHERE reservationId=$3 ;",
+			startTime[i],
+			endTime[i],
+			reservationId[i])
+		fmt.Printf("newStartTime %v \n", startTime[i])
+		fmt.Printf("newEndTime %v \n", endTime[i])
+		if err != nil {
+			fmt.Println(err)
+			return err
+		}
+	}
+	return nil
 }
 
 func (r *ReservationTDG) Delete(reservationIds []int) error {
 
 	for _, i := range reservationIds {
-		_, err := DB.Exec("DELETE * FROM reservation WHERE reservationId=$1;", i)
+		_, err := DB.Exec("DELETE FROM reservation WHERE reservationId=$1;", i)
 		if err != nil {
 			fmt.Println(err)
 			return err
@@ -91,16 +103,20 @@ func (r *ReservationTDG) ReadByUser(roomId, userId int) ([]int, []int, []int, []
 }
 
 func (r *ReservationTDG) Create(roomId, studentId int, startTime, endTime time.Time) (int, error) {
-	reservationId, err := DB.Exec("INSERT into reservations (roomId, studentId, startTime, endTime) VALUES ($1,$2,$3,$4) ",
+	reservationId := 0
+	res, err := DB.Query("INSERT INTO reservation (roomId, studentId, startTime, endTime) VALUES ($1,$2,$3,$4) RETURNING reservationId;",
 		roomId,
 		studentId,
-		startTime,
-		endTime)
+		startTime.Format("2006-01-02 15:04:05"),
+		endTime.Format("2006-01-02 15:04:05"))
 
+	res.Scan(&reservationId)
 	if err != nil {
+		fmt.Printf(startTime.Format("2006-01-02 15:04:05"))
+		fmt.Printf(endTime.Format("2006-01-02 15:04:05"))
+		fmt.Println(err)
 		return -1, errors.New("Could not create reservation")
 	}
-	resId, err := reservationId.LastInsertId()
 
 	if err != nil {
 		fmt.Printf("Cannot get last inserted id : %v", err)
@@ -108,5 +124,5 @@ func (r *ReservationTDG) Create(roomId, studentId int, startTime, endTime time.T
 
 	}
 
-	return int(resId), nil
+	return int(reservationId), nil
 }
