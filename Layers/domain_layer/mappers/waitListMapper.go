@@ -55,4 +55,12 @@ func (waitListMap waitListIdentityMap) add(waitList []classes.WaitlistReservatio
 	}
 }
 
+func (waitListMapper *WaitListMapper) GetByRoomId(id int) ([]classes.WaitlistReservation, error){
+	return nil, nil
+}
+
+func (waitListMapper *WaitListMapper) Delete(id int){
+	
+}
+
 //GetByRoomId return all the waiting reservations with the room id.

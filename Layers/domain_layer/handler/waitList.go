@@ -2,7 +2,7 @@ package handler
 
 import (
 	"fmt"
-	"github.com/Skellyboy38/SOEN-343-NullPointer/Layers/domain_layer/jsonConvert"
+	//"github.com/Skellyboy38/SOEN-343-NullPointer/Layers/domain_layer/jsonConvert"
 	"github.com/Skellyboy38/SOEN-343-NullPointer/Layers/domain_layer/mappers"
 	"net/http"
 	"strconv"
@@ -37,20 +37,21 @@ func GetWaitListEntriesByRoom(rw http.ResponseWriter, req *http.Request) {
 	req.ParseForm()
 	roomId := req.FormValue("dataRoom")
 	waitListMapper := mappers.MapperBundle.WaitListMapper
-	reservations, err := waitListMapper.GetByRoomId(roomId)
-
+	roomIdInt, _ := strconv.Atoi(roomId)
+	reservations, err := waitListMapper.GetByRoomId(roomIdInt)
+	fmt.Println(reservations)
 	if err != nil {
 		rw.WriteHeader(http.StatusExpectationFailed)
 		fmt.Println(err)
 	}
 
-	jsonReservations, err := jsonConvert.ReservationsJson(reservations)
+	/*jsonReservations, err := jsonConvert.ReservationsJson(reservations)
 	if err != nil {
 		rw.WriteHeader(http.StatusExpectationFailed)
 		fmt.Println(err)
 	}
 	rw.Header().Set("Content-Type", "application/json")
-	rw.Write(jsonReservations)
+	rw.Write(jsonReservations)*/
 }
 
 func RemoveWaitListEntriesById(rw http.ResponseWriter, req *http.Request) {
@@ -62,5 +63,6 @@ func RemoveWaitListEntriesById(rw http.ResponseWriter, req *http.Request) {
 	waitListId := req.FormValue("waitListId")
 
 	waitListMapper := mappers.MapperBundle.WaitListMapper
-	waitListMapper.Delete(waitListId)
+	waitListIdInt, _ := strconv.Atoi(waitListId)
+	waitListMapper.Delete(waitListIdInt)
 }
