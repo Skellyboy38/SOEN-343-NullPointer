@@ -27,7 +27,6 @@ func (waitListMapper *WaitListMapper) Create(roomId, userId int, startTime, endT
 		return err
 	}
 	newWaitReservation := classes.WaitlistReservation{0, roomId, user, startTime, endTime}
-	//waitListMapper.waitList = append(waitListMapper.waitList, newWaitReservation)
 	UOWSingleTon.RegisterNewWaitingReservation(newWaitReservation)
 	UOWSingleTon.Commit()
 	return nil
@@ -74,8 +73,18 @@ func (waitListMapper *WaitListMapper) GetByRoomId(roomId int) ([]classes.Waitlis
 		return waitingReservations, nil
 }
 
-func (waitListMapper *WaitListMapper) Delete(waitingReservationId int){
-	//if InMemoryByWaitingReservationId(waitingReservationId)
+func (waitListMapper *WaitListMapper) Delete(waitingReservationId int) error{
+	//waitingreservation := waitListMapper.waitList[waitingReservationId]
+	//delete(waitListMapper.reservationsByRoomId, reservation.Room)
+	//delete(waitListMapper.reservationsByUserId, reservation.User.StudentId)
+	delete(waitListMapper.waitList,waitingReservationId )
+	//UOWSingleTon.RegisterDeleteWaitingReservation(id)
+	err := UOWSingleTon.Commit()
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+	return nil
 	
 }
 

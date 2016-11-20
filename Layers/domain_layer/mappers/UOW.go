@@ -81,6 +81,7 @@ func (uow *UOW) Commit() error {
 	MapperBundle.UserMapper.SaveDirty(processedRegisteredDirtyUsers)
 	MapperBundle.UserMapper.SaveNew(processedRegisteredNewUsers)
 
+    //reservations
 	processedRegisteredNewReservations := reverseReservations(reduceReservationQueue(reverseReservations(uow.registeredNewReservations)))
 	processedRegisteredDirtyReservations := reverseReservations(reduceReservationQueue(reverseReservations(uow.registeredDirtyReservations)))
 	processedRegisteredDeletedReservations := reverseIntArray(
@@ -101,13 +102,20 @@ func (uow *UOW) Commit() error {
 		return err
 	}
 
+	//waiting list
+	processedRegisteredNewWaitingReservations := reverseWaitingReservations(reduceWaitingReservationQueue(reverseWaitingReservations(uow.registeredNewWaiting)))
+	if err := uow.waitingListMapper.SaveNew(processedRegisteredNewWaitingReservations); err != nil {
+		fmt.Println(err)
+		return err
+	}
+
 	uow.registeredNewUsers = userQueue{}
 	uow.registeredDirtyUsers = userQueue{}
 	uow.registeredDeletedUsers = userQueue{}
 	uow.registeredNewReservations = reservationQueue{}
 	uow.registeredDirtyReservations = reservationQueue{}
 	uow.registeredDeletedReservations = []int{}
-
+	uow.registeredNewWaiting = waitingListQueue{}
 	return nil
 }
 
@@ -125,6 +133,14 @@ func reverseReservations(reservations []classes.Reservation) []classes.Reservati
 		reversedReservations = append(reversedReservations, reservations[i])
 	}
 	return reversedReservations
+}
+
+func reverseWaitingReservations(waitingList []classes.WaitlistReservation) []classes.WaitlistReservation {
+	reversedWaitingList := []classes.WaitlistReservation{}
+	for i := len(waitingList) - 1; i >= 0; i-- {
+		reversedWaitingList = append(reversedWaitingList, waitingList[i])
+	}
+	return reversedWaitingList
 }
 
 func reverseIntArray(reservations []int) []int {
@@ -154,6 +170,20 @@ func reduceReservationQueue(queue []classes.Reservation) reservationQueue {
 	exist := make(map[int]classes.Reservation)
 	for _, element := range queue {
 		_, found := exist[element.ReservationId]
+		if found {
+			continue
+		} else {
+			reducedQueue = append(reducedQueue, element)
+		}
+	}
+	return reducedQueue
+}
+
+func reduceWaitingReservationQueue(queue []classes.WaitlistReservation) waitingListQueue {
+	reducedQueue := []classes.WaitlistReservation{}
+	exist := make(map[int]classes.WaitlistReservation)
+	for _, element := range queue {
+		_, found := exist[element.WaitlistId]
 		if found {
 			continue
 		} else {
