@@ -28,3 +28,39 @@ func AddToWaitList(rw http.ResponseWriter, req *http.Request) {
 	waitListMapper := mappers.MapperBundle.WaitListMapper
 	waitListMapper.Create(roomIdint, userIDint, startTimeformated, endTimeformated)
 }
+
+func GetWaitListEntriesByRoom(rw http.ResponseWriter, req *http.Request) {
+	abstractTdg := mappers.MapperBundle.UserMapper.UserTdg.AbstractTdg
+	abstractTdg.GetConnection()
+	defer abstractTdg.CloseConnection()
+
+	req.ParseForm()
+	roomId := req.FormValue("dataRoom")
+	waitListMapper := mappers.MapperBundle.WaitListMapper
+	reservations, err := waitListMapper.GetByRoomId(roomId)
+
+	if err != nil {
+		rw.WriteHeader(http.StatusExpectationFailed)
+		fmt.Println(err)
+	}
+
+	jsonReservations, err := jsonConvert.ReservationsJson(reservations)
+	if err != nil {
+		rw.WriteHeader(http.StatusExpectationFailed)
+		fmt.Println(err)
+	}
+	rw.Header().Set("Content-Type", "application/json")
+	rw.Write(jsonReservations)
+}
+
+func RemoveWaitListEntriesById(rw http.ResponseWriter, req *http.Request) {
+	abstractTdg := mappers.MapperBundle.UserMapper.UserTdg.AbstractTdg
+	abstractTdg.GetConnection()
+	defer abstractTdg.CloseConnection()
+
+	req.ParseForm()
+	waitListId := req.FormValue("waitListId")
+
+	waitListMapper := mappers.MapperBundle.WaitListMapper
+	waitListMapper.Delete(waitListId)
+}
