@@ -240,18 +240,29 @@ function createReservation() {
     var endDate = String(year) + "-" + String(month) + "-" + day_time + " " + end_time + ":00:00";
 
     if(!verifyTimeConflicts(room, startDate, endDate)) {
+        pushReservation(userID, room, startDate, endDate);
+        location.reload();
+    }
+    else { // Add the person to a wait list
         $.ajax({
+            type: 'POST',
+            contentType: "application/x-www-form-urlencoded",
+            async: false,
+            url: '/addToWaitList',
+            data: {userID: userID, dataRoom: room, startTime: start, endTime: end},
+        });
+        console.log("Added to wait list.");
+    }
+}
+
+function pushReservation(userID, room, startDate, endDate) {
+    $.ajax({
         type: 'POST',
         contentType: "application/x-www-form-urlencoded",
         async: false,
         url: '/createReservation',
         data: {userID: userID, dataRoom: room, startTime: startDate, endTime: endDate},
     });
-        location.reload();
-    }
-    else {
-        console.log("A time conflict exists. Abort.");
-    }
 }
 
 function splitTime(time) {
@@ -367,6 +378,7 @@ function modifyReservation() {
         url: '/modifyReservation',
         data: {},
     });
+    updateWaitList();
 }
 
 function deleteReservation(reservationID) {
@@ -380,13 +392,54 @@ function deleteReservation(reservationID) {
             location.reload();
         }
     });
+    updateWaitList();
+}
+
+function updateWaitList(room) { // This function updates the waitlist by checking if someone's reservation can be created.
+    var idsToRemove = [];
+    getAllWaitingListEntriesByRoom(room).success(function(data){
+        entries = getReservationsSuccess(data);
+    });
+
+    entries.ForEach(function(entry) {
+        if(!verifyTimeConflicts(entry.room, entry.start, entry.end)) {
+            pushReservation(entry.userId, entry.roomNumber, entry.startTime, entry.endTime);
+            idsToRemove.push(entry.reservationID);
+        }
+        else {
+            return;
+        }
+    });
+    removeWaitListEntries(idsToRemove);
+}
+
+function removeWaitListEntries(idsToRemove) {
+    idsToRemove.ForEach(function(id) {
+        $.ajax({
+            type: 'POST',
+            contentType: "application/x-www-form-urlencoded",
+            async: false,
+            url: '/removeWaitListEntriesById',
+            data: {waitListId: id},
+        });
+    });
+}
+
+function getAllWaitingListEntriesByRoom(room) {
+    $.ajax({
+        type: 'POST',
+        contentType: "application/x-www-form-urlencoded",
+        async: false,
+        url: '/getWaitListEntriesByRoom',
+        data: {dataRoom: room},
+    });
 }
 
 function deserializeReservation(reservations){
     if(reservations != undefined && reservations.length > 0){
         var result = [];
         reservations.forEach(function(reservationJSON){
-            var reservation = new Reservation(reservationJSON.reservationID, reservationJSON.subject, reservationJSON.roomNumber, reservationJSON.startTime, reservationJSON.endTime);
+            var reservation = new Reservation(reservationJSON.reservationID, reservationJSON.subject, reservationJSON.roomNumber, reservationJSON.startTime, reservationJSON.endTime, reservationJSON.userId);
             result.push(reservation)
         })
     } else{
