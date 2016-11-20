@@ -7,6 +7,7 @@ import (
 
 type userQueue []classes.User
 type reservationQueue []classes.Reservation
+type waitingListQueue []classes.WaitlistReservation
 
 var UOWSingleTon *UOW
 
@@ -17,8 +18,11 @@ type UOW struct {
 	registeredNewReservations     reservationQueue
 	registeredDirtyReservations   reservationQueue
 	registeredDeletedReservations []int
+	//wait list queues
+	registeredNewWaiting          waitingListQueue
 	userMapper                    *UserMapper
 	ReservationMapper             *ReservationMapper
+	waitingListMapper             *WaitListMapper
 }
 
 func InitUOW() {
@@ -29,8 +33,10 @@ func InitUOW() {
 		[]classes.Reservation{},
 		[]classes.Reservation{},
 		[]int{},
+		[]classes.WaitlistReservation{},
 		MapperBundle.UserMapper,
 		MapperBundle.ReservationMapper,
+		MapperBundle.WaitListMapper,
 	}
 }
 
@@ -54,6 +60,11 @@ func (uow *UOW) RegisterDirtyReservations(object classes.Reservation) {
 func (uow *UOW) RegisterDeleteReservation(id int) {
 	uow.registeredDeletedReservations = append(uow.registeredDeletedReservations, id)
 }
+
+func (uow *UOW) RegisterNewWaitingReservation(object classes.WaitlistReservation) {
+	uow.registeredNewWaiting = append(uow.registeredNewWaiting, object)
+}
+
 
 func (uow *UOW) Commit() error {
 	fmt.Println("GOT TO COMMIT")
