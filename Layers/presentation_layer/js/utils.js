@@ -101,12 +101,13 @@ function renderUserReservationList(reservations) {
         var deleteBtn = $("<a></a>", {
             class: "Waves-effect waves-light btn deleteBtn",
             text: "Delete",
-            "data-reservationid": resv.reservationID
+            "data-reservationid": resv.reservationID,
+            "data-roomNumber": resv.roomNumber
         });
 
         deleteBtn.data("reservationID", resv.reservationID);
         deleteBtn.click(function () {
-            deleteReservation($(this).attr("data-reservationid"));
+            deleteReservation($(this).attr("data-reservationid"), $(this).attr("data-roomNumber"));
         });
         deleteBtn.appendTo(actionsCell)
         actionsCell.appendTo(rowHTML);

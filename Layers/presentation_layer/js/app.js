@@ -285,39 +285,42 @@ function modifyReservation() {
     // endTime
 
     var userID = getCookie("studentId");
-	var room = $("#modifyRoom").val();
-    var year = $("#modifyYear").val();
-    var month = $("#modifyMonth").val();
-    var day = $("#modifyDay").val();
+	var updatedRoom = $("#modifyRoom").val();
+    var updatedYear = $("#modifyYear").val();
+    var updatedMonth = $("#modifyMonth").val();
+    var updatedDay = $("#modifyDay").val();
 
-	var start = $("#modifyStart_time").val();
-	var end = $("#modifyEnd_time").val();
+	var updatedStart = $("#modifyStart_time").val();
+	var updatedEnd = $("#modifyEnd_time").val();
     // $.ajax({
     //     type: 'POST',
     //     contentType: "application/x-www-form-urlencoded",
     //     url: '/modifyReservation',
     //     data: {},
     // });
-    //updateWaitList();
+    //updateWaitingList();
 }
 
-function deleteReservation(reservationID) {
+function deleteReservation(reservationID, roomNumber) {
     var reservationID = reservationID;
+    var roomNumber = roomNumber;
     $.ajax({
         type: 'POST',
         contentType: "application/x-www-form-urlencoded",
         url: '/deleteReservation',
         data: { reservationID: reservationID },
         success: function(resp){
+            updateWaitingList(roomNumber);
             location.reload();
         }
     });
-    updateWaitList();
+
 }
 
-function updateWaitList(room) { // This function updates the waitlist by checking if someone's reservation can be created.
+function updateWaitingList(room) { // This function updates the waitlist by checking if someone's reservation can be created.
     var idsToRemove = [];
     getAllWaitingListEntriesByRoom(room).success(function(data){ //TODO Darrel the ajax call returns a list of JsonWaitingReservation
+        console.log(data);
         entries = getReservationsSuccess(data);  //TODO Darrel entries should be all the waiting list elements which have the same room. Not sure if entries is populated proberly. 
     });
 
