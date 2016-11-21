@@ -369,12 +369,9 @@ function updateWaitingList(room) { // This function updates the waitlist by chec
         entries.forEach(function(entry) {
             var startTime = formatTimeFromJSON(entry.start);
             var endTime = formatTimeFromJSON(entry.end);
-           // console.log(entry.userId+ " " + entry.room + " " + startTime + " " + endTime);
             if(!verifyTimeConflicts(entry.room, startTime, endTime)) {
-                pushReservation(entry.id, entry.room, startTime, endTime);
-               // pushReservation("2222222", entry.room, startTime, endTime);
+                pushReservation(entry.userId, entry.room, startTime, endTime);
                 idsToRemove.push(entry.id);
-                //idsToRemove.push("1");
             }
             else {
                 return;
