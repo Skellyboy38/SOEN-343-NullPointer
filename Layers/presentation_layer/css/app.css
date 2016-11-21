@@ -41,8 +41,18 @@ body{
 	margin: 10px;
 }
 
+.modifyBtn{
+	background-color:#800000 !important;
+	margin:10px;
+}
+
 .deleteBtn{
 	background-color:#FCC200 !important;
+	margin:10px;
+}
+
+.btnFlex{
+	display: inline-flex;
 }
 
 .flex-wrapper{

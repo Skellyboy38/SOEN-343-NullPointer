@@ -60,9 +60,21 @@ function renderUserReservationList(reservations){
         });
         endTimeCell.appendTo(rowHTML);
         var actionsCell = $("<div></div>", {
-            class: "cell"
+            class: "cell btnFlex"
         });
-        
+
+        var modifyBtn = $("<a></a>", {
+            class: "Waves-effect waves-light btn modifyBtn",
+            text: "Modify",
+            "data-reservationid": resv.reservationID
+        });
+
+        modifyBtn.data("reservationID", resv.reservationID);
+        modifyBtn.click(function(){
+            console.log("TO MODIFY!");
+        });
+        modifyBtn.appendTo(actionsCell)
+
         var deleteBtn = $("<a></a>", {
             class: "Waves-effect waves-light btn deleteBtn",
             text: "Delete",
