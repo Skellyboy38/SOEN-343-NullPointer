@@ -23,7 +23,6 @@ func InitWaitListMapper() *WaitListMapper {
 func (waitListMapper *WaitListMapper) Create(roomId, userId int, startTime, endTime time.Time) error {
 	userMapper := MapperBundle.UserMapper
 	user, err := userMapper.GetById(userId)
-	fmt.Println("in the mapper")
 	if err != nil {
 		return err
 	}
