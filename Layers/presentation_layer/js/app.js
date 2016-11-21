@@ -287,15 +287,9 @@ function monthToInt(month) {
         }
 }
 
-// TODO - Darrel
 function modifyReservation() {
-    // reservationID
-    // userID
-    // dataRoom
-    // startTime
-    // endTime
-
     var userID = getCookie("studentId");
+    var reservationID = $("#modifyDataID").data("reservationID");
 	var updatedRoom = $("#modifyRoom").val();
     var updatedYear = $("#modifyYear").val();
     var updatedMonth = $("#modifyMonth").val();
@@ -303,6 +297,35 @@ function modifyReservation() {
 
 	var updatedStart = $("#modifyStart_time").val();
 	var updatedEnd = $("#modifyEnd_time").val();
+
+    if(updatedRoom == null || updatedYear == null || updatedMonth == null || updatedDay == null || updatedStart == null || updatedEnd == null) {
+        console.error("Missing reservation field for edit");
+        return;
+    }
+
+    var day_time = parseTimeValue(updatedDay);
+    var start_time = parseTimeValue(updatedStart);
+    var end_time = parseTimeValue(updatedEnd);
+
+    var startDate = String(updatedYear) + "-" + String(updatedMonth) + "-" + day_time + " " + start_time + ":00:00";
+    var endDate = String(updatedYear) + "-" + String(updatedMonth) + "-" + day_time + " " + end_time + ":00:00";
+
+    if(!verifyTimeConflicts(updatedRoom, startDate, endDate)) {
+        console.log(reservationID);
+        console.log(updatedRoom);
+        console.log(startDate);
+        console.log(endDate);
+        $.ajax({
+            type: 'POST',
+            contentType: "application/x-www-form-urlencoded",
+            async: false,
+            url: '/updateReservation',
+            data: {userID: userID, reservationID: reservationID, dataRoom: updatedRoom, startTime: startDate, endTime: endDate},
+            success: function(data){
+                console.log(data);
+            }
+        });
+    }
     // $.ajax({
     //     type: 'POST',
     //     contentType: "application/x-www-form-urlencoded",
@@ -310,6 +333,17 @@ function modifyReservation() {
     //     data: {},
     // });
     //updateWaitingList();
+}
+
+function parseTimeValue(value){
+    var parsedTimeValue;
+    if(parseInt(value)<10) {
+        parsedTimeValue = "0" + String(value);
+    }
+    else {
+        parsedTimeValue = String(value);
+    }
+    return parsedTimeValue;
 }
 
 function deleteReservation(reservationID, roomNumber) {
@@ -322,7 +356,7 @@ function deleteReservation(reservationID, roomNumber) {
         data: { reservationID: reservationID },
         success: function(resp){
             updateWaitingList(roomNumber);
-            location.reload();
+            window.location.reload(true);
         }
     });
 

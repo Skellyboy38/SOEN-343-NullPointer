@@ -12,7 +12,7 @@ function initializeModifyModal(reservation) {
     var day = padNumber(startTimeSegments[2]);
     var startTime = startTimeSegments[3];
     var endTime = padNumber(endTimeSegments[3]);
-
+    $("#modifyDataID").data("reservationID", reservation.reservationID);
     populateModifyStartTime();
     populateModifyEndTime();
     $("#modifyRoom").val(roomNumber);
