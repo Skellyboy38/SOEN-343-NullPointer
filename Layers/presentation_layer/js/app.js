@@ -2,22 +2,27 @@ $(document).ready(function () {
     populateTime();
     populateEndTime();
     populateDays(1, 2016);
-    printTodayDate();
+    printTodayDate(); // Displays current time and date
     buildCalendar(1); // Default room is 1
 });
 
 function buildCalendar(roomNumber, el) {
     var roomReservations = [];
     var userRoomReservations = [];
+    var roomReservationsNonUser = [];
     var studentId = getCookie("studentId");
 
     getReservations(roomNumber).success(function(data){
-        roomReservations = getReservationsSuccess(data);
+        roomReservations = deserializeReservation(data);
     });
 
     getReservationsUser(roomNumber, studentId).success(function(data){
         renderUserReservationList(data);
-        userRoomReservations = getReservationsUserSuccess(data);
+        userRoomReservations = deserializeReservation(data);
+    });
+
+    getReservationsNonUser(roomNumber, studentId).success(function(data){
+        roomReservationsNonUser = deserializeReservation(data);
     });
 
     if(el != null){
@@ -76,6 +81,16 @@ function init(reservations) {
     });
 }
 
+function getReservationsNonUser(roomNumber, userID) {
+    return $.ajax({
+        type: 'POST',
+        contentType: "application/x-www-form-urlencoded",
+        async: false, 
+        url: '/reservationsOthers',
+        data: {dataRoom: roomNumber, userID: userID},
+    });
+}
+
 function getReservations(roomNumber) {
     return $.ajax({
         type: 'POST',
@@ -85,15 +100,6 @@ function getReservations(roomNumber) {
         data: {dataRoom: roomNumber},
     });
 }
-
-function getReservationsSuccess(data){
-    return deserializeReservation(data);
-}
-
-function getReservationsUserSuccess(data){
-    return deserializeReservation(data);
-}
-
 
 function getReservationsUser(roomNumber, userID) {
     return $.ajax({
@@ -322,17 +328,14 @@ function modifyReservation() {
             url: '/updateReservation',
             data: {userID: userID, reservationID: reservationID, dataRoom: updatedRoom, startTime: startDate, endTime: endDate},
             success: function(data){
-                //console.log(data);
+                console.log(data);
+                window.location.reload(true);
             }
         });
     }
-    // $.ajax({
-    //     type: 'POST',
-    //     contentType: "application/x-www-form-urlencoded",
-    //     url: '/modifyReservation',
-    //     data: {},
-    // });
-    //updateWaitingList();
+    else {
+        // TODO waiting list
+    }
 }
 
 function parseTimeValue(value){
@@ -410,7 +413,6 @@ function deserializeReservation(reservations){
     if(reservations != undefined && reservations.length > 0){
         var result = [];
         reservations.forEach(function(reservationJSON){
-            console.log("User id" + reservationJSON.reservationID);
             var reservation = new Reservation(reservationJSON.reservationID, reservationJSON.subject, reservationJSON.roomNumber, reservationJSON.startTime, reservationJSON.endTime, reservationJSON.studentID);
             result.push(reservation)
         })

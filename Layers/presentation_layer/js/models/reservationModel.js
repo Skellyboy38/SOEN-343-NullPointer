@@ -1,8 +1,8 @@
-function Reservation(id, subject, room, start, end, userId) {
+function Reservation(id, subject, calendar, start, end, userId) {
 	this.id = id;
     startDate = parseDate(start);
     endDate = parseDate(end);
-    this.room = room; // Room Number
+    this.calendar = calendar; // Room Number
     this.userId = userId;
     this.start = new Date(startDate[0], startDate[1], startDate[2], startDate[3], startDate[4], startDate[5]); // Start Time
     this.end = new Date(endDate[0], endDate[1], endDate[2], endDate[3], endDate[4], endDate[5]); // End Time
@@ -10,7 +10,11 @@ function Reservation(id, subject, room, start, end, userId) {
     this.subject = "Subject: " + subject + 
     "\n" + "Start: " + this.start.getHours() + ":" + this.start.getMinutes() + ":" + this.start.getSeconds() +
     "\n" + "End: " + this.end.getHours() + ":" + this.end.getMinutes() + ":" + this.end.getSeconds();
-    //subject === undefined ? this.subject = "Reservation" : this.subject = subject; // Description
+	if(getCookie("studentId") == userId){
+		this.calendar = "Current Reservations";
+	} else {
+		this.calendar = "Others";
+	}
 
 }
 

@@ -1,5 +1,6 @@
 function clearModal() {
-    // TODO - Clear all fields
+    $("#modifyStart_time").empty();
+    $("#modifyEnd_time").empty();
 }
 
 function initializeModifyModal(reservation) {
