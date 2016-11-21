@@ -1,5 +1,6 @@
 $(document).ready(function () {
     populateTime();
+    populateEndTime();
     populateDays(1, 2016);
     printTodayDate();
     buildCalendar(1); // Default room is 1
