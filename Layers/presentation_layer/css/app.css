@@ -10,11 +10,15 @@ body{
 	background-size: cover;
 }
 
-#scheduler{
+#currentReservations{
 	margin: 0 auto;
 }
 
-.roomTabs{
+#scheduler{
+	min-width: 1000px
+}
+
+#roomTabs{
 	display: block;
 	text-align: center;
 	min-width: 1050px;
@@ -37,6 +41,11 @@ body{
 
 .deleteBtn{
 	background-color:#FCC200 !important;
+}
+
+.flex-wrapper{
+	display: flex;
+	justify-content: center;
 }
 
 button:focus {
