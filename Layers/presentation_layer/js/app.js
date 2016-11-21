@@ -398,7 +398,7 @@ function deleteReservation(reservationID) {
 function updateWaitList(room) { // This function updates the waitlist by checking if someone's reservation can be created.
     var idsToRemove = [];
     getAllWaitingListEntriesByRoom(room).success(function(data){ //TODO Darrel the ajax call returns a list of JsonWaitingReservation
-        entries = getReservationsSuccess(data);  
+        entries = getReservationsSuccess(data);  //TODO Darrel entries should be all the waiting list elements which have the same room. Not sure if entries is populated proberly. 
     });
 
     entries.forEach(function(entry) {
