@@ -323,16 +323,13 @@ function modifyReservation() {
             data: {userID: userID, reservationID: reservationID, dataRoom: updatedRoom, startTime: startDate, endTime: endDate},
             success: function(data){
                 console.log(data);
+                window.location.reload(true);
             }
         });
     }
-    // $.ajax({
-    //     type: 'POST',
-    //     contentType: "application/x-www-form-urlencoded",
-    //     url: '/modifyReservation',
-    //     data: {},
-    // });
-    //updateWaitingList();
+    else {
+        // TODO waiting list
+    }
 }
 
 function parseTimeValue(value){
