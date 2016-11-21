@@ -23,11 +23,11 @@ func InitWaitListMapper() *WaitListMapper {
 func (waitListMapper *WaitListMapper) Create(roomId, userId int, startTime, endTime time.Time) error {
 	userMapper := MapperBundle.UserMapper
 	user, err := userMapper.GetById(userId)
+	fmt.Println("in the mapper")
 	if err != nil {
 		return err
 	}
 	newWaitReservation := classes.WaitlistReservation{0, roomId, user, startTime, endTime}
-	//waitListMapper.waitList = append(waitListMapper.waitList, newWaitReservation)
 	UOWSingleTon.RegisterNewWaitingReservation(newWaitReservation)
 	UOWSingleTon.Commit()
 	return nil
@@ -49,18 +49,63 @@ func (waitListMapper *WaitListMapper) SaveNew(waitingReservationArray []classes.
 	return nil
 }
 
-func (waitListMap waitListIdentityMap) add(waitList []classes.WaitlistReservation) {
-	for _, e := range waitList {
+func (waitListMapper *WaitListMapper) GetByRoomId(roomId int) ([]classes.WaitlistReservation, error){
+	waitReservationIds, roomIds, studentIds, startTimes, endTimes, err := waitListMapper.waitListTDG.ReadByRoom(roomId)
+		if err != nil {
+			return []classes.WaitlistReservation{}, err
+		}
+		waitingReservations := []classes.WaitlistReservation{}
+
+		for i, _ := range roomIds {
+			student, err := MapperBundle.UserMapper.GetById(studentIds[i])
+			if err != nil {
+				return []classes.WaitlistReservation{}, err
+			}
+			currentwaitingReservation := classes.WaitlistReservation{waitReservationIds[i], roomIds[i], student, startTimes[i], endTimes[i]}
+			waitingReservations = append(waitingReservations, currentwaitingReservation)
+		}
+		//reservationMapper.reservationsByRoomId.add(roomId, reservations)
+		waitListMapper.waitList.add(waitingReservations)
+		/*for _, e := range reservations {
+			reservationMapper.reservationsByUserId[e.User.StudentId] = append(
+				reservationMapper.reservationsByUserId[e.User.StudentId],
+				e)
+		}*/
+		return waitingReservations, nil
+}
+
+func (waitListMapper *WaitListMapper) Delete(waitingReservationId int) error{
+	//waitingreservation := waitListMapper.waitList[waitingReservationId]
+	//delete(waitListMapper.reservationsByRoomId, reservation.Room)
+	//delete(waitListMapper.reservationsByUserId, reservation.User.StudentId)
+	delete(waitListMapper.waitList,waitingReservationId )
+	//UOWSingleTon.RegisterDeleteWaitingReservation(id)
+	err := UOWSingleTon.Commit()
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+	return nil
+	
+}
+
+func (waitListMapper *WaitListMapper) InMemoryByWaitingReservationId(id int) bool {
+	_, ok := waitListMapper.waitList[id]
+	if ok {
+		return true
+	} else {
+		return false
+	}
+} 
+
+//functions for the wait list identity map
+func (waitListMap waitListIdentityMap) add(waitingList []classes.WaitlistReservation) {
+	for _, e := range waitingList {
 		waitListMap[e.WaitlistId] = e
 	}
 }
 
-func (waitListMapper *WaitListMapper) GetByRoomId(id int) ([]classes.WaitlistReservation, error){
-	return nil, nil
-}
+//end of functions for the wait list identity map
 
-func (waitListMapper *WaitListMapper) Delete(id int){
-	
-}
 
 //GetByRoomId return all the waiting reservations with the room id.

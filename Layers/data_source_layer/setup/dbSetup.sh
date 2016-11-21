@@ -12,3 +12,4 @@ psql -U soen343 -d registry -f initDbTables.sql
 echo inittables
 psql -U soen343 -d registry -f fillUserTable.sql
 psql -U soen343 -d registry -f fillReservationTable.sql  
+psql -U soen343 -d registry -f fillWaitListMasterTable.sql

@@ -249,7 +249,7 @@ function createReservation() {
             contentType: "application/x-www-form-urlencoded",
             async: false,
             url: '/addToWaitList',
-            data: {userID: userID, dataRoom: room, startTime: start, endTime: end},
+            data: {userID: userID, dataRoom: room, startTime: startDate, endTime: endDate},
         });
         console.log("Added to wait list.");
     }
