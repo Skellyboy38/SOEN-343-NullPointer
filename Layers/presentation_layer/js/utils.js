@@ -44,7 +44,18 @@ function renderUserReservationList(reservations) {
         });
     }
 
+
+
     function renderReservationRow(resv) {
+
+        var start_time = resv.startTime;
+        start_time = start_time.substr(0,10) + ' ' + start_time.substr(10 + 1);
+        start_time = start_time.substr(0,19); 
+
+        var end_time = resv.endTime;
+        end_time = end_time.substr(0,10) + ' ' + end_time.substr(10 + 1);
+        end_time = end_time.substr(0,19); 
+
         var rowHTML = $("<div></div>", {
             class: "row"
         });
@@ -59,12 +70,12 @@ function renderUserReservationList(reservations) {
         });
         descriptionCell.appendTo(rowHTML);
         var startTimeCell = $("<div></div>", {
-            text: resv.startTime,
+            text: start_time,
             class: "cell"
         });
         startTimeCell.appendTo(rowHTML);
         var endTimeCell = $("<div></div>", {
-            text: resv.endTime,
+            text: end_time,
             class: "cell"
         });
         endTimeCell.appendTo(rowHTML);
