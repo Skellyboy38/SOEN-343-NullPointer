@@ -71,8 +71,8 @@ func TestLoginForm(t *testing.T) {
 			continue
 		}
 
-		if rw.Code != http.StatusPermanentRedirect {
-			t.Errorf("expected status %s; got %d", http.StatusPermanentRedirect, rw.Code)
+		if rw.Code != 303 {
+			t.Errorf("expected status %d; got %d", 303, rw.Code)
 		}
 
 		if i != 7 && i != 8 && i != 9 {
