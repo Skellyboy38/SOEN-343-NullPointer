@@ -42,7 +42,6 @@ button:focus + p, div:focus P {
 }
 
 p {
-  display: none;
   font-size: 2em;
 
 }

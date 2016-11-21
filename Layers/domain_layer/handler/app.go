@@ -14,6 +14,7 @@ func Home(rw http.ResponseWriter, req *http.Request) {
         filepath.Join("presentation_layer", "template", "app.html"),
         filepath.Join("presentation_layer", "template", "currentReservations.html"),
         filepath.Join("presentation_layer", "template", "createReservation.html"),
+        filepath.Join("presentation_layer", "template", "modifyModal.html"),
         filepath.Join("presentation_layer", "template", "header.html"),
         filepath.Join("presentation_layer", "template", "waitList.html"),
 
