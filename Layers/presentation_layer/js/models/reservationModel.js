@@ -1,8 +1,9 @@
-function Reservation(id, subject, calendar, start, end) {
+function Reservation(id, subject, room, start, end, userId) {
 	this.id = id;
     startDate = parseDate(start);
     endDate = parseDate(end);
-    this.calendar = calendar; // Room Number
+    this.room = room; // Room Number
+    this.userId = userId;
     this.start = new Date(startDate[0], startDate[1], startDate[2], startDate[3], startDate[4], startDate[5]); // Start Time
     this.end = new Date(endDate[0], endDate[1], endDate[2], endDate[3], endDate[4], endDate[5]); // End Time
     this.readOnly = true

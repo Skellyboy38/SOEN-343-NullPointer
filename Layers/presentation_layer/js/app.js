@@ -106,6 +106,8 @@ function getReservationsUser(roomNumber, userID) {
 }
 
 function createReservation() {
+    var span = $("#message");
+    span.html("");
 	var userID = getCookie("studentId");
 	var room = $("#room").val();
     var year = $("#year").val();
@@ -115,7 +117,7 @@ function createReservation() {
 	var start = $("#start_time").val();
 	var end = $("#end_time").val();
     if(room == null || year == null || month == null || day == null || start == null || end == null) {
-        console.log("missing information");
+        span.html("Missing information.");
         return;
     }
     var start_time = "";
@@ -149,6 +151,7 @@ function createReservation() {
     if(!verifyTimeConflicts(room, startDate, endDate)) {
         pushReservation(userID, room, startDate, endDate);
         location.reload();
+        span.html("Reservation created.");
     }
     else { // Add the person to a wait list
         $.ajax({
@@ -158,6 +161,7 @@ function createReservation() {
             url: '/addToWaitList',
             data: {userID: userID, dataRoom: room, startTime: startDate, endTime: endDate},
         });
+        span.html("Time conflict. Added to wait list.");
     }
 }
 
@@ -364,21 +368,23 @@ function deleteReservation(reservationID, roomNumber) {
 
 function updateWaitingList(room) { // This function updates the waitlist by checking if someone's reservation can be created.
     var idsToRemove = [];
-    getAllWaitingListEntriesByRoom(room).success(function(data){ 
-        console.log(data);
-        entries = getReservationsSuccess(data);  
+    getAllWaitingListEntriesByRoom(room).success(function(data){ //TODO Darrel the ajax call returns a list of JsonWaitingReservation
+        console.log(data.length);
+        entries = getReservationsSuccess(data);  //TODO Darrel entries should be all the waiting list elements which have the same room. Not sure if entries is populated proberly. 
+        entries.forEach(function(entry) {
+            var startTime = formatTimeFromJSON(entry.start);
+            var endTime = formatTimeFromJSON(entry.end);
+            console.log(entry.room + " " + startTime + " " + endTime);
+            if(!verifyTimeConflicts(entry.room, startTime, endTime)) {
+                pushReservation(entry.userId, entry.room, startTime, endTime);
+                idsToRemove.push(entry.reservationID);
+            }
+            else {
+                return;
+            }
+        });
+        removeWaitListEntries(idsToRemove);
     });
-    console.log("entries: " + entries);
-    entries.forEach(function(entry) {
-        if(!verifyTimeConflicts(entry.room, formatTimeFromJSON(entry.start), formatTimeFromJSON(entry.end))) {
-            pushReservation(entry.userId, entry.roomNumber, entry.startTime, entry.endTime);
-            idsToRemove.push(entry.reservationID);
-        }
-        else {
-            return;
-        }
-    });
-    removeWaitListEntries(idsToRemove);
 }
 
 function removeWaitListEntries(idsToRemove) {
