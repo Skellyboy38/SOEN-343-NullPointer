@@ -45,7 +45,7 @@ func (r *WaitlistReservationTDG) ReadByRoom(roomId int) ([]int, []int, []int, []
 func (r *WaitlistReservationTDG) Delete(waitListreservationIds []int) error {
 
 	for _, i := range waitListreservationIds {
-		_, err := DB.Exec("DELETE FROM waitlistMaster WHERE waitListreservationId=$1;", i)
+		_, err := DB.Exec("DELETE FROM waitlistMaster WHERE waitlistID=$1;", i)
 		if err != nil {
 			fmt.Println(err)
 			return err
