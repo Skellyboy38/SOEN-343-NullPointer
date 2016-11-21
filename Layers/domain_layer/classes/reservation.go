@@ -1,6 +1,5 @@
 package classes
 
-import ()
 import "time"
 
 type Reservation struct {

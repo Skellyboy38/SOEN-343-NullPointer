@@ -1,13 +1,13 @@
 package mappers
 
 type Mappers struct {
-	UserMapper *UserMapper
+	UserMapper        *UserMapper
 	ReservationMapper *ReservationMapper
-	WaitListMapper *WaitListMapper
+	WaitListMapper    *WaitListMapper
 }
 
 var MapperBundle *Mappers
 
-func Init(){
-	MapperBundle = &Mappers{InitUserMapper(),InitReservationMapper(),InitWaitListMapper()}
+func Init() {
+	MapperBundle = &Mappers{InitUserMapper(), InitReservationMapper(), InitWaitListMapper()}
 }

@@ -3,9 +3,10 @@ package mappers
 import (
 	"errors"
 	"fmt"
+	"sync"
+
 	"github.com/Skellyboy38/SOEN-343-NullPointer/Layers/domain_layer/classes"
 	"github.com/Skellyboy38/SOEN-343-NullPointer/Layers/domain_layer/tdg"
-	"sync"
 )
 
 type userIdentityMap map[int]classes.User
@@ -46,7 +47,7 @@ func (userMap *UserMapper) Get(id int, password string) (classes.User, error) {
 	}
 }
 
-func (userMap *UserMapper) GetById(id int) (classes.User, error) { // add tdg that searches by
+func (userMap *UserMapper) GetById(id int) (classes.User, error) {
 	if userMap.InMemory(id) { // only id and finish with check to db
 		return userMap.users[id], nil
 	} else {

@@ -2,6 +2,7 @@ package mappers
 
 import (
 	"fmt"
+
 	"github.com/Skellyboy38/SOEN-343-NullPointer/Layers/domain_layer/classes"
 )
 
@@ -19,11 +20,11 @@ type UOW struct {
 	registeredDirtyReservations   reservationQueue
 	registeredDeletedReservations []int
 	//wait list queues
-	registeredNewWaiting          waitingListQueue
-	registeredDeletedWaiting      []int
-	userMapper                    *UserMapper
-	ReservationMapper             *ReservationMapper
-	waitingListMapper             *WaitListMapper
+	registeredNewWaiting     waitingListQueue
+	registeredDeletedWaiting []int
+	userMapper               *UserMapper
+	ReservationMapper        *ReservationMapper
+	waitingListMapper        *WaitListMapper
 }
 
 func InitUOW() {
@@ -67,10 +68,9 @@ func (uow *UOW) RegisterNewWaitingReservation(object classes.WaitlistReservation
 	uow.registeredNewWaiting = append(uow.registeredNewWaiting, object)
 }
 
-func (uow *UOW) RegisterDeleteWaitingReservation(id int){
-	uow.registeredDeletedWaiting = append(uow.registeredDeletedWaiting,id)
+func (uow *UOW) RegisterDeleteWaitingReservation(id int) {
+	uow.registeredDeletedWaiting = append(uow.registeredDeletedWaiting, id)
 }
-
 
 func (uow *UOW) Commit() error {
 	fmt.Println("GOT TO COMMIT")
@@ -87,7 +87,7 @@ func (uow *UOW) Commit() error {
 	MapperBundle.UserMapper.SaveDirty(processedRegisteredDirtyUsers)
 	MapperBundle.UserMapper.SaveNew(processedRegisteredNewUsers)
 
-    //reservations
+	//reservations
 	processedRegisteredNewReservations := reverseReservations(reduceReservationQueue(reverseReservations(uow.registeredNewReservations)))
 	processedRegisteredDirtyReservations := reverseReservations(reduceReservationQueue(reverseReservations(uow.registeredDirtyReservations)))
 	processedRegisteredDeletedReservations := reverseIntArray(
@@ -122,8 +122,6 @@ func (uow *UOW) Commit() error {
 		fmt.Println(err)
 		return err
 	}
-
-
 
 	uow.registeredNewUsers = userQueue{}
 	uow.registeredDirtyUsers = userQueue{}

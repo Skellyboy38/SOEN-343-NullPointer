@@ -3,8 +3,9 @@ package jsonConvert
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/Skellyboy38/SOEN-343-NullPointer/Layers/domain_layer/classes"
 	"time"
+
+	"github.com/Skellyboy38/SOEN-343-NullPointer/Layers/domain_layer/classes"
 )
 
 type JsonReservation struct {
@@ -16,11 +17,11 @@ type JsonReservation struct {
 }
 
 type JsonWaitingReservation struct {
-	WaitlistID    int       `json:"waitlistID"`
-	StudentId     int       `json:"studentID"`
-	RoomNumber    int       `json:"roomNumber"`
-	StartTime     time.Time `json:"startTime"`
-	EndTime       time.Time `json:"endTime"`
+	WaitlistID int       `json:"waitlistID"`
+	StudentId  int       `json:"studentID"`
+	RoomNumber int       `json:"roomNumber"`
+	StartTime  time.Time `json:"startTime"`
+	EndTime    time.Time `json:"endTime"`
 }
 
 func ReservationsJson(reservations []classes.Reservation) ([]byte, error) {

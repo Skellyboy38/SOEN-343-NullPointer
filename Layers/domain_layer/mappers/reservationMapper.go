@@ -1,11 +1,11 @@
 package mappers
 
-import ()
 import (
 	"fmt"
+	"time"
+
 	"github.com/Skellyboy38/SOEN-343-NullPointer/Layers/domain_layer/classes"
 	"github.com/Skellyboy38/SOEN-343-NullPointer/Layers/domain_layer/tdg"
-	"time"
 )
 
 type reservationIdentityMap map[int]classes.Reservation
@@ -29,7 +29,7 @@ func InitReservationMapper() *ReservationMapper {
 
 func (reservationMapper *ReservationMapper) Create(roomId, userId int, startTime, endTime time.Time) error {
 	userMapper := MapperBundle.UserMapper
-	// reservationTDG := reservationMapper.reservationTDG
+
 	user, err := userMapper.GetById(userId)
 	if err != nil {
 		return err

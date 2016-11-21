@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+
 	"github.com/Skellyboy38/SOEN-343-NullPointer/Layers/domain_layer/classes"
 )
 

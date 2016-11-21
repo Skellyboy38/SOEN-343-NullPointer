@@ -2,11 +2,12 @@ package handler
 
 import (
 	"fmt"
-	"github.com/Skellyboy38/SOEN-343-NullPointer/Layers/domain_layer/jsonConvert"
-	"github.com/Skellyboy38/SOEN-343-NullPointer/Layers/domain_layer/mappers"
 	"net/http"
 	"strconv"
 	"time"
+
+	"github.com/Skellyboy38/SOEN-343-NullPointer/Layers/domain_layer/jsonConvert"
+	"github.com/Skellyboy38/SOEN-343-NullPointer/Layers/domain_layer/mappers"
 )
 
 func AddToWaitList(rw http.ResponseWriter, req *http.Request) {

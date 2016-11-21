@@ -3,8 +3,9 @@ package tdg
 import (
 	"errors"
 	"fmt"
-	"github.com/Skellyboy38/SOEN-343-NullPointer/Layers/domain_layer/classes"
 	"strconv"
+
+	"github.com/Skellyboy38/SOEN-343-NullPointer/Layers/domain_layer/classes"
 )
 
 type UserTdg struct {
@@ -28,7 +29,7 @@ func (tdg UserTdg) updateEach(user classes.User) error {
 	return err
 }
 
-func (tdg *UserTdg) GetById(id int) (int,string,error){
+func (tdg *UserTdg) GetById(id int) (int, string, error) {
 	rows, err := DB.Query("SELECT * FROM userTable WHERE studentId=$1;",
 		id)
 
@@ -43,8 +44,8 @@ func (tdg *UserTdg) GetById(id int) (int,string,error){
 		return studentId, foundPass, errors.New("User not found in Db")
 	}
 
-	err = rows.Scan(&studentId,&foundPass)
-	return studentId,foundPass, err
+	err = rows.Scan(&studentId, &foundPass)
+	return studentId, foundPass, err
 }
 
 func (tdg *UserTdg) GetByIdAndPass(id int, password string) (int, string, error) {

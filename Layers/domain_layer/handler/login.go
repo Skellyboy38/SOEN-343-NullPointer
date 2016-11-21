@@ -1,15 +1,13 @@
 package handler
 
 import (
-	"fmt"
-	"github.com/Skellyboy38/SOEN-343-NullPointer/Layers/domain_layer/mappers"
 	"html/template"
 	"net/http"
 	"path/filepath"
 	"strconv"
-	//"time"
-	//"os/user"	user := classes.User{studentId,password}
 	"time"
+
+	"github.com/Skellyboy38/SOEN-343-NullPointer/Layers/domain_layer/mappers"
 )
 
 func LoginGet(rw http.ResponseWriter, req *http.Request) {
@@ -58,10 +56,4 @@ func LoginForm(rw http.ResponseWriter, req *http.Request) {
 	req.AddCookie(&cookie)
 	http.SetCookie(rw, &cookie)
 	http.Redirect(rw, req, "/home", 303)
-	//user, err := mappers.MapperBundle.UserMapper.Get(studentId, password)
-	//userMapper.Create(user.StudentId, password)
-	//userMapper.Commit()
-	fmt.Println(req.Form)
-	fmt.Println(studentId)
-	fmt.Println(password)
 }

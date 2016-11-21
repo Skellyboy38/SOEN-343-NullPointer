@@ -2,6 +2,7 @@ package tdg
 
 import (
 	"database/sql"
+
 	"github.com/Skellyboy38/SOEN-343-NullPointer/Layers/data_source_layer/dB"
 )
 
