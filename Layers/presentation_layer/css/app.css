@@ -38,10 +38,21 @@ body{
 
 #createBtn{
 	background-color:#800000;
+	margin: 10px;
+}
+
+.modifyBtn{
+	background-color:#800000 !important;
+	margin:10px;
 }
 
 .deleteBtn{
 	background-color:#FCC200 !important;
+	margin:10px;
+}
+
+.btnFlex{
+	display: inline-flex;
 }
 
 .flex-wrapper{
@@ -52,4 +63,20 @@ body{
 button:focus {
     outline: none;
     background-color: #800000 !important;
+}
+
+.actionTitle{
+	color: white;
+}
+
+#actionWrapperWaitlist{
+  padding: 0px 0px 0px 40px;
+  max-width: 800px;
+  width: 400px;
+}
+
+#actionWrapperCreate{
+  padding: 0px 40px 0px 0px;
+  max-width: 800px;
+  width: 400px;
 }
