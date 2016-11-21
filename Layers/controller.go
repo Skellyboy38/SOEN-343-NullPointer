@@ -2,12 +2,13 @@ package main
 
 import (
 	"fmt"
-	"github.com/Skellyboy38/SOEN-343-NullPointer/Layers/domain_layer/handler"
-	"github.com/Skellyboy38/SOEN-343-NullPointer/Layers/domain_layer/mappers"
-	"github.com/gorilla/mux"
 	"log"
 	"net/http"
 	"os/exec"
+
+	"github.com/Skellyboy38/SOEN-343-NullPointer/Layers/domain_layer/handler"
+	"github.com/Skellyboy38/SOEN-343-NullPointer/Layers/domain_layer/mappers"
+	"github.com/gorilla/mux"
 )
 
 func main() {
