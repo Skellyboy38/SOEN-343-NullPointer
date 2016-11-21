@@ -140,3 +140,32 @@ func UpdateReservation(rw http.ResponseWriter, req *http.Request) {
 	rw.Write(bytes)
 
 }
+
+func GetReservationsOthers(rw http.ResponseWriter, req *http.Request) {
+	abstractTdg := mappers.MapperBundle.UserMapper.UserTdg.AbstractTdg
+	abstractTdg.GetConnection()
+	defer abstractTdg.CloseConnection()
+	defer req.Body.Close()
+	req.ParseForm()
+
+	roomID, err := strconv.Atoi(req.FormValue("dataRoom"))
+	userID, err := strconv.Atoi(req.FormValue("UserID"))
+	reservationsMapper := mappers.MapperBundle.ReservationMapper
+	reservations, err := reservationsMapper.GetByRoomId(roomID)
+
+	otherReservations := reservationsMapper.FilterOutUser(reservations, userID)
+
+	if err != nil {
+		rw.WriteHeader(http.StatusExpectationFailed)
+		fmt.Println(err)
+	}
+
+	jsonReservations, err := jsonConvert.ReservationsJson(otherReservations)
+	if err != nil {
+		rw.WriteHeader(http.StatusExpectationFailed)
+		fmt.Println(err)
+	}
+	rw.Header().Set("Content-Type", "application/json")
+	rw.Write(jsonReservations)
+
+}

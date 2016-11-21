@@ -114,6 +114,19 @@ func (reservationMapper *ReservationMapper) GetByRoomAndUserId(roomId, userId in
 	}
 }
 
+func (reservationMapper *ReservationMapper) FilterOutUser(reservations []classes.Reservation, userId int) []classes.Reservation {
+	otherReservations := []classes.Reservation{}
+
+	for _, e := range reservations {
+		if userId == e.User.StudentId {
+			continue
+		}
+		otherReservations = append(otherReservations, e)
+	}
+
+	return otherReservations
+}
+
 func (reservationMapper *ReservationMapper) GetByRoomId(roomId int) ([]classes.Reservation, error) {
 	if reservationMapper.InMemoryByRoomId(roomId) {
 		return reservationMapper.reservationsByRoomId[roomId], nil
