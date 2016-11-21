@@ -397,11 +397,11 @@ function deleteReservation(reservationID) {
 
 function updateWaitList(room) { // This function updates the waitlist by checking if someone's reservation can be created.
     var idsToRemove = [];
-    getAllWaitingListEntriesByRoom(room).success(function(data){
-        entries = getReservationsSuccess(data);
+    getAllWaitingListEntriesByRoom(room).success(function(data){ //TODO Darrel the ajax call returns a list of JsonWaitingReservation
+        entries = getReservationsSuccess(data);  
     });
 
-    entries.ForEach(function(entry) {
+    entries.forEach(function(entry) {
         if(!verifyTimeConflicts(entry.room, entry.start, entry.end)) {
             pushReservation(entry.userId, entry.roomNumber, entry.startTime, entry.endTime);
             idsToRemove.push(entry.reservationID);
@@ -414,7 +414,7 @@ function updateWaitList(room) { // This function updates the waitlist by checkin
 }
 
 function removeWaitListEntries(idsToRemove) {
-    idsToRemove.ForEach(function(id) {
+    idsToRemove.forEach(function(id) {
         $.ajax({
             type: 'POST',
             contentType: "application/x-www-form-urlencoded",
@@ -426,7 +426,7 @@ function removeWaitListEntries(idsToRemove) {
 }
 
 function getAllWaitingListEntriesByRoom(room) {
-    $.ajax({
+    return $.ajax({
         type: 'POST',
         contentType: "application/x-www-form-urlencoded",
         async: false,
@@ -436,6 +436,7 @@ function getAllWaitingListEntriesByRoom(room) {
 }
 
 function deserializeReservation(reservations){
+    console.log(reservations);
     if(reservations != undefined && reservations.length > 0){
         var result = [];
         reservations.forEach(function(reservationJSON){
@@ -443,7 +444,7 @@ function deserializeReservation(reservations){
             result.push(reservation)
         })
     } else{
-        console.error("No reservations found.");
+        console.error("No reservations found."); //TODO darrel we end up here because the reservation is not found.
         return [];
     }
     return result;
