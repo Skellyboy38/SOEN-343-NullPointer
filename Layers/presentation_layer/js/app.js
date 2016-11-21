@@ -186,6 +186,17 @@ function splitTime(time) {
     return segments;
 }
 
+function formatTimeFromJSON(time) {
+    var timeString = String(time);
+    var split = timeString.split(" ");
+    var year = split[3];
+    var month = monthToInt(split[1]);
+    var day = split[2];
+    var timeSplit = split[4].split(":");
+    var hour = timeSplit[0];
+    return year + "-" + month + "-" + day + " " + hour + ":00:00";
+}
+
 function verifyTimeConflicts(roomID, startTime, endTime) {
     var status = false;
     startTimeSplit = splitTime(startTime);
@@ -325,7 +336,7 @@ function updateWaitingList(room) { // This function updates the waitlist by chec
     });
 
     entries.forEach(function(entry) {
-        if(!verifyTimeConflicts(entry.room, entry.start, entry.end)) {
+        if(!verifyTimeConflicts(entry.room, formatTimeFromJSON(entry.start), formatTimeFromJSON(entry.end))) {
             pushReservation(entry.userId, entry.roomNumber, entry.startTime, entry.endTime);
             idsToRemove.push(entry.reservationID);
         }
