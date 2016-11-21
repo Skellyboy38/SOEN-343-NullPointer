@@ -321,7 +321,7 @@ function deleteReservation(reservationID, roomNumber) {
         url: '/deleteReservation',
         data: { reservationID: reservationID },
         success: function(resp){
-            updateWaitingList(roomNumber);
+           // updateWaitingList(roomNumber);
             location.reload();
         }
     });
@@ -330,11 +330,11 @@ function deleteReservation(reservationID, roomNumber) {
 
 function updateWaitingList(room) { // This function updates the waitlist by checking if someone's reservation can be created.
     var idsToRemove = [];
-    getAllWaitingListEntriesByRoom(room).success(function(data){ //TODO Darrel the ajax call returns a list of JsonWaitingReservation
+    getAllWaitingListEntriesByRoom(room).success(function(data){ 
         console.log(data);
-        entries = getReservationsSuccess(data);  //TODO Darrel entries should be all the waiting list elements which have the same room. Not sure if entries is populated proberly. 
+        entries = getReservationsSuccess(data);  
     });
-
+    console.log("entries: " + entries);
     entries.forEach(function(entry) {
         if(!verifyTimeConflicts(entry.room, formatTimeFromJSON(entry.start), formatTimeFromJSON(entry.end))) {
             pushReservation(entry.userId, entry.roomNumber, entry.startTime, entry.endTime);
@@ -371,6 +371,7 @@ function getAllWaitingListEntriesByRoom(room) {
 
 function deserializeReservation(reservations){
     if(reservations != undefined && reservations.length > 0){
+        console.log(reservations);
         var result = [];
         reservations.forEach(function(reservationJSON){
             var reservation = new Reservation(reservationJSON.reservationID, reservationJSON.subject, reservationJSON.roomNumber, reservationJSON.startTime, reservationJSON.endTime, reservationJSON.userId);
