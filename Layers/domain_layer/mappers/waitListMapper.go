@@ -49,6 +49,14 @@ func (waitListMapper *WaitListMapper) SaveNew(waitingReservationArray []classes.
 	return nil
 }
 
+func (waitListMapper *WaitListMapper) SaveDeleted(waitingreservationsArray []int) error {
+	if err := waitListMapper.waitListTDG.Delete(waitingreservationsArray); err != nil {
+		fmt.Println(err)
+		return err
+	}
+	return nil
+}
+
 func (waitListMapper *WaitListMapper) GetByRoomId(roomId int) ([]classes.WaitlistReservation, error){
 	waitReservationIds, roomIds, studentIds, startTimes, endTimes, err := waitListMapper.waitListTDG.ReadByRoom(roomId)
 		if err != nil {
@@ -74,19 +82,19 @@ func (waitListMapper *WaitListMapper) GetByRoomId(roomId int) ([]classes.Waitlis
 		return waitingReservations, nil
 }
 
+
 func (waitListMapper *WaitListMapper) Delete(waitingReservationId int) error{
 	//waitingreservation := waitListMapper.waitList[waitingReservationId]
 	//delete(waitListMapper.reservationsByRoomId, reservation.Room)
 	//delete(waitListMapper.reservationsByUserId, reservation.User.StudentId)
-	delete(waitListMapper.waitList,waitingReservationId )
-	//UOWSingleTon.RegisterDeleteWaitingReservation(id)
+	delete(waitListMapper.waitList,waitingReservationId)
+	UOWSingleTon.RegisterDeleteWaitingReservation(waitingReservationId)
 	err := UOWSingleTon.Commit()
 	if err != nil {
 		fmt.Println(err)
 		return err
 	}
-	return nil
-	
+	return nil 
 }
 
 func (waitListMapper *WaitListMapper) InMemoryByWaitingReservationId(id int) bool {

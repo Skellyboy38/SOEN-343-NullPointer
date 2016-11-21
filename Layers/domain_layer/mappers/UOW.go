@@ -20,6 +20,7 @@ type UOW struct {
 	registeredDeletedReservations []int
 	//wait list queues
 	registeredNewWaiting          waitingListQueue
+	registeredDeletedWaiting      []int
 	userMapper                    *UserMapper
 	ReservationMapper             *ReservationMapper
 	waitingListMapper             *WaitListMapper
@@ -34,6 +35,7 @@ func InitUOW() {
 		[]classes.Reservation{},
 		[]int{},
 		[]classes.WaitlistReservation{},
+		[]int{},
 		MapperBundle.UserMapper,
 		MapperBundle.ReservationMapper,
 		MapperBundle.WaitListMapper,
@@ -63,6 +65,10 @@ func (uow *UOW) RegisterDeleteReservation(id int) {
 
 func (uow *UOW) RegisterNewWaitingReservation(object classes.WaitlistReservation) {
 	uow.registeredNewWaiting = append(uow.registeredNewWaiting, object)
+}
+
+func (uow *UOW) RegisterDeleteWaitingReservation(id int){
+	uow.registeredDeletedWaiting = append(uow.registeredDeletedWaiting,id)
 }
 
 
@@ -104,10 +110,20 @@ func (uow *UOW) Commit() error {
 
 	//waiting list
 	processedRegisteredNewWaitingReservations := reverseWaitingReservations(reduceWaitingReservationQueue(reverseWaitingReservations(uow.registeredNewWaiting)))
+	processedRegisteredDeletedWaitingReservations := reverseIntArray(
+		reduceIntQueue(
+			reverseIntArray(
+				uow.registeredDeletedWaiting)))
 	if err := uow.waitingListMapper.SaveNew(processedRegisteredNewWaitingReservations); err != nil {
 		fmt.Println(err)
 		return err
 	}
+	if err := uow.waitingListMapper.SaveDeleted(processedRegisteredDeletedWaitingReservations); err != nil {
+		fmt.Println(err)
+		return err
+	}
+
+
 
 	uow.registeredNewUsers = userQueue{}
 	uow.registeredDirtyUsers = userQueue{}
@@ -116,6 +132,7 @@ func (uow *UOW) Commit() error {
 	uow.registeredDirtyReservations = reservationQueue{}
 	uow.registeredDeletedReservations = []int{}
 	uow.registeredNewWaiting = waitingListQueue{}
+	uow.registeredDeletedWaiting = []int{}
 	return nil
 }
 
