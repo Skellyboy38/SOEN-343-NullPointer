@@ -343,7 +343,6 @@ function getAllWaitingListEntriesByRoom(room) {
 }
 
 function deserializeReservation(reservations){
-    console.log(reservations);
     if(reservations != undefined && reservations.length > 0){
         var result = [];
         reservations.forEach(function(reservationJSON){

@@ -1,11 +1,11 @@
-function buildHTML(tag, html, attrs){
-    if (typeof(html) != 'string') {
+function buildHTML(tag, html, attrs) {
+    if (typeof (html) != 'string') {
         attrs = html;
         html = null;
     }
     var h = '<' + tag;
     for (attr in attrs) {
-        if(attrs[attr] === false) 
+        if (attrs[attr] === false)
             continue;
         h += ' ' + attr + '="' + attrs[attr] + '"';
     }
@@ -13,29 +13,29 @@ function buildHTML(tag, html, attrs){
 }
 
 function getCookie(name) {
-  var value = "; " + document.cookie;
-  var parts = value.split("; " + name + "=");
-  if (parts.length == 2) return parts.pop().split(";").shift();
+    var value = "; " + document.cookie;
+    var parts = value.split("; " + name + "=");
+    if (parts.length == 2) return parts.pop().split(";").shift();
 }
 
-function renderUserReservationList(reservations){
+function renderUserReservationList(reservations) {
     var reservationListHTML = $(".reservations-table");
     var reservationHeaderHTML = renderReservationHeader();
     reservationHeaderHTML.appendTo(reservationListHTML);
-    if(reservations.length ===0){
-        var row = $("<div></div>",{
+    if (reservations.length === 0) {
+        var row = $("<div></div>", {
             class: "row",
             text: "No reservations available."
         })
         row.appendTo(reservationListHTML);
     } else {
-        reservations.forEach(function(resv){
+        reservations.forEach(function (resv) {
             var row = renderReservationRow(resv);
             row.appendTo(reservationListHTML);
         });
     }
 
-    function renderReservationRow(resv){
+    function renderReservationRow(resv) {
         var rowHTML = $("<div></div>", {
             class: "row"
         });
@@ -70,20 +70,21 @@ function renderUserReservationList(reservations){
         });
 
         modifyBtn.data("reservationID", resv.reservationID);
-        modifyBtn.click(function(){
-            console.log("hai");
+        modifyBtn.click(function () {
             $('#modifyModal').modal({
-            dismissible: true, // Modal can be dismissed by clicking outside of the modal
-            opacity: .5, // Opacity of modal background
-            in_duration: 300, // Transition in duration
-            out_duration: 200, // Transition out duration
-            starting_top: '4%', // Starting top style attribute
-            ending_top: '10%', // Ending top style attribute
-            ready: function(modal, trigger) { // Callback for Modal open. Modal and trigger parameters available.
-                console.log(modal, trigger);
-            },
-        complete: function() { alert('Closed'); } // Callback for Modal close
-    });
+                dismissible: true,
+                opacity: .8,
+                in_duration: 300,
+                out_duration: 200,
+                starting_top: '4%',
+                ending_top: '10%',
+                ready: function (modal, trigger) {
+                    clearModal();
+                    initializeModifyModal(resv);
+                    // Callback for Modal open. Modal and trigger parameters available.
+                },
+                complete: function () { }
+            });
             $('#modifyModal').modal('open');
         });
         modifyBtn.appendTo(actionsCell)
@@ -93,9 +94,9 @@ function renderUserReservationList(reservations){
             text: "Delete",
             "data-reservationid": resv.reservationID
         });
-        
+
         deleteBtn.data("reservationID", resv.reservationID);
-        deleteBtn.click(function(){
+        deleteBtn.click(function () {
             deleteReservation($(this).attr("data-reservationid"));
         });
         deleteBtn.appendTo(actionsCell)
@@ -104,29 +105,29 @@ function renderUserReservationList(reservations){
     }
 }
 
-function renderReservationHeader(){
+function renderReservationHeader() {
     var header = $("<div></div>", {
-            class: "row"
-        });
+        class: "row"
+    });
     header.addClass("row reservations-header");
     var roomNumberCell = $("<div></div>", {
-        class:"cell",
+        class: "cell",
         text: "Room Number"
     });
     var descriptionCell = $("<div></div>", {
-        class:"cell",
+        class: "cell",
         text: "Description"
     });
-    var startTimeCell = $("<div></div>",{
-        class:"cell",
+    var startTimeCell = $("<div></div>", {
+        class: "cell",
         text: "Start Time"
     });
-    var endTimeCell = $("<div></div>",{
-        class:"cell",
+    var endTimeCell = $("<div></div>", {
+        class: "cell",
         text: "End Time"
     });
-    var actionsCell = $("<div></div>",{
-        class:"cell",
+    var actionsCell = $("<div></div>", {
+        class: "cell",
         text: "Actions"
     });
     roomNumberCell.appendTo(header);

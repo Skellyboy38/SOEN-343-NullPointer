@@ -1,7 +1,79 @@
 {{define "modifyModal"}}
   <div id="modifyModal" class="modal modal-fixed-footer">
     <div class="modal-content">
-      <h4>Modify Reservation</h4>
+      <h4>Modify Reservation <i class="material-icons">mode_edit</i> </h4>
+
+      <div class="row">
+				<!--<form class="col s12">-->
+				<div class="row">
+					<div class="input-field col s6">
+						<select id="modifyRoom">
+                            <option value="1">Room 1</option>
+                            <option value="2">Room 2</option>
+                            <option value="3">Room 3</option>
+                            <option value="4">Room 4</option>
+                            <option value="5">Room 5</option>
+                        </select>
+						<label for="first_name">Room Number</label>
+					</div>
+					<div class="input-field col s6">
+						<select id="modifyYear">
+                            <option value="2016">2016</option>
+                            <option value="2017">2017</option>
+                            <option value="2018">2018</option>
+                            <option value="2019">2019</option>
+                            <option value="2020">2020</option>
+                        </select>
+						<label for="first_name">Year of reservation</label>
+					</div>
+				</div>
+				<div class="row">
+					<div class="input-field col s6">
+                            <select id="modifyMonth" onchange="updateDays()">
+                            <option value="01">January</option>
+                            <option value="02">February</option>
+                            <option value="03">March</option>
+                            <option value="04">April</option>
+                            <option value="05">May</option>
+                            <option value="06">June</option>
+                            <option value="07">July</option>
+                            <option value="08">August</option>
+                            <option value="09">September</option>
+                            <option value="10">October</option>
+                            <option value="11">November</option>
+                            <option value="12">December</option>
+                        </select>
+						<label for="first_name">Month of reservation</label>
+					</div>
+					<div class="input-field col s6">
+						<select id="modifyDay">
+						
+		  			</select>
+						<label for="first_name">Day of reservation</label>
+					</div>
+					<div class="input-field col s6">
+					</div>
+				</div>
+				<div class="row">
+					<div id="modifyStartSelect" class="input-field col s12">
+
+						<select id="modifyStart_time" onchange="populateModifyEndTime()">
+
+					</select>
+						<label for="start">Start Time</label>
+					</div>
+				</div>
+				<div class="row">
+					<div class="input-field col s12">
+						<select id="modifyEnd_time">
+					</select>
+						<label for="end">End Time</label>
+					</div>
+				</div>
+				<!--<button id="createBtn" class="Waves-effect waves-light btn" onclick="createReservation()">
+					Submit
+  				</button>-->
+			</div>           
     </div>
     <div class="modal-footer">
       <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Save</a>
