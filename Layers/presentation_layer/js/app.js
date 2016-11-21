@@ -158,7 +158,6 @@ function createReservation() {
             url: '/addToWaitList',
             data: {userID: userID, dataRoom: room, startTime: startDate, endTime: endDate},
         });
-        console.log("Added to wait list.");
     }
 }
 
@@ -277,15 +276,29 @@ function monthToInt(month) {
         }
 }
 
-// TODO
+// TODO - Darrel
 function modifyReservation() {
-    $.ajax({
-        type: 'POST',
-        contentType: "application/x-www-form-urlencoded",
-        url: '/modifyReservation',
-        data: {},
-    });
-    updateWaitList();
+    // reservationID
+    // userID
+    // dataRoom
+    // startTime
+    // endTime
+
+    var userID = getCookie("studentId");
+	var room = $("#modifyRoom").val();
+    var year = $("#modifyYear").val();
+    var month = $("#modifyMonth").val();
+    var day = $("#modifyDay").val();
+
+	var start = $("#modifyStart_time").val();
+	var end = $("#modifyEnd_time").val();
+    // $.ajax({
+    //     type: 'POST',
+    //     contentType: "application/x-www-form-urlencoded",
+    //     url: '/modifyReservation',
+    //     data: {},
+    // });
+    //updateWaitList();
 }
 
 function deleteReservation(reservationID) {
@@ -359,15 +372,6 @@ function deserializeReservation(reservations){
 function changeRoom(roomNumber, el){
     $(".reservations-table").empty();
     buildCalendar(roomNumber, el);
-}
-
-function printTodayDate(){
-    var today = new Date();
-    var options = {
-    weekday: "long", year: "numeric", month: "short",
-    day: "numeric", hour: "2-digit", minute: "2-digit"
-    };
-    $("#todayDate").html(today.toLocaleTimeString("en-us", options));
 }
 
 function populateTime() {

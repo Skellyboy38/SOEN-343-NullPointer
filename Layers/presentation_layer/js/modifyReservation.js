@@ -10,7 +10,7 @@ function initializeModifyModal(reservation) {
     var year = startTimeSegments[0];
     var month = padNumber(startTimeSegments[1] + 1);
     var day = padNumber(startTimeSegments[2]);
-    var startTime = padNumber(startTimeSegments[3]);
+    var startTime = startTimeSegments[3];
     var endTime = padNumber(endTimeSegments[3]);
 
     populateModifyStartTime();
@@ -20,8 +20,8 @@ function initializeModifyModal(reservation) {
     $("#modifyMonth").val(month);
     populateModifyDays(month, year);
     $("#modifyDay").val(day);
-    $("#modifyStart_time").val(startTime)
-    $("#modifyEnd_time").val(endTime)
+    $("#modifyStart_time").val(startTime);
+    $("#modifyEnd_time").val(endTime);
     $('select').material_select();
 
     function padNumber(d) {

@@ -12,6 +12,15 @@ function buildHTML(tag, html, attrs) {
     return h += html ? ">" + html + "</" + tag + ">" : "/>";
 }
 
+function printTodayDate(){
+    var today = new Date();
+    var options = {
+    weekday: "long", year: "numeric", month: "short",
+    day: "numeric", hour: "2-digit", minute: "2-digit"
+    };
+    $("#todayDate").html(today.toLocaleTimeString("en-us", options));
+}
+
 function getCookie(name) {
     var value = "; " + document.cookie;
     var parts = value.split("; " + name + "=");
