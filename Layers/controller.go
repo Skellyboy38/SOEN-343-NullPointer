@@ -32,6 +32,7 @@ func main() {
 	router.HandleFunc("/addToWaitList", handler.AddToWaitList).Methods("POST")
 	router.HandleFunc("/getWaitListEntriesByRoom", handler.GetWaitListEntriesByRoom).Methods("POST")
 	router.HandleFunc("/removeWaitListEntriesById", handler.RemoveWaitListEntriesById).Methods("POST")
+	router.HandleFunc("/getWaitListEntriesByUserId", handler.GetWaitListReservationsByUserID).Methods("POST")
 	router.HandleFunc("/reservationsByRoom", handler.GetReservationsByRoomID).Methods("POST")
 	router.HandleFunc("/reservationsByUser", handler.GetReservationsByUserID).Methods("POST")
 	router.HandleFunc("/deleteReservation", handler.DeleteReservation).Methods("POST")

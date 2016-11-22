@@ -62,6 +62,31 @@ func GetWaitListEntriesByRoom(rw http.ResponseWriter, req *http.Request) {
 	rw.Write(jsonReservations)
 }
 
+func GetWaitListReservationsByUserID(rw http.ResponseWriter, req *http.Request) {
+	abstractTdg := mappers.MapperBundle.UserMapper.UserTdg.AbstractTdg
+	abstractTdg.GetConnection()
+	defer abstractTdg.CloseConnection()
+	defer req.Body.Close()
+	req.ParseForm()
+	userID, err := strconv.Atoi(req.FormValue("userID"))
+	waitListMapper := mappers.MapperBundle.WaitListMapper
+	waitList, err := waitListMapper.GetByUserId(userID)
+
+	if err != nil {
+		rw.WriteHeader(http.StatusExpectationFailed)
+		fmt.Println(err)
+	}
+
+	jsonWaitList, err := jsonConvert.WaitListReservationsJson(waitList)
+	if err != nil {
+		rw.WriteHeader(http.StatusExpectationFailed)
+		fmt.Println(err)
+	}
+	rw.Header().Set("Content-Type", "application/json")
+	rw.WriteHeader(http.StatusOK)
+	rw.Write(jsonWaitList)
+}
+
 func RemoveWaitListEntriesById(rw http.ResponseWriter, req *http.Request) {
 	abstractTdg := mappers.MapperBundle.UserMapper.UserTdg.AbstractTdg
 	abstractTdg.GetConnection()

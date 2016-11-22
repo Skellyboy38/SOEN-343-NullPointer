@@ -1,3 +1,4 @@
+var numberOfReservation = 0;
 function buildHTML(tag, html, attrs) {
     if (typeof (html) != 'string') {
         attrs = html;
@@ -27,7 +28,15 @@ function getCookie(name) {
     if (parts.length == 2) return parts.pop().split(";").shift();
 }
 
+function getNumberOfResevations() {
+    return numberOfReservation;
+}
+function incrementNumberOfReservations(){
+    numberOfReservation++;
+}
+
 function renderUserReservationList(reservations) {
+    numberOfReservation = 0;
     var reservationListHTML = $(".reservations-table");
     var reservationHeaderHTML = renderReservationHeader();
     reservationHeaderHTML.appendTo(reservationListHTML);
@@ -39,12 +48,11 @@ function renderUserReservationList(reservations) {
         row.appendTo(reservationListHTML);
     } else {
         reservations.forEach(function (resv) {
+            incrementNumberOfReservations();
             var row = renderReservationRow(resv);
             row.appendTo(reservationListHTML);
         });
     }
-
-
 
     function renderReservationRow(resv) {
 
@@ -64,11 +72,6 @@ function renderUserReservationList(reservations) {
             class: "cell"
         });
         roomNumberCell.appendTo(rowHTML);
-        var descriptionCell = $("<div></div>", {
-            text: "TBD",
-            class: "cell"
-        });
-        descriptionCell.appendTo(rowHTML);
         var startTimeCell = $("<div></div>", {
             text: start_time,
             class: "cell"
@@ -135,10 +138,6 @@ function renderReservationHeader() {
         class: "cell",
         text: "Room Number"
     });
-    var descriptionCell = $("<div></div>", {
-        class: "cell",
-        text: "Description"
-    });
     var startTimeCell = $("<div></div>", {
         class: "cell",
         text: "Start Time"
@@ -152,7 +151,6 @@ function renderReservationHeader() {
         text: "Actions"
     });
     roomNumberCell.appendTo(header);
-    descriptionCell.appendTo(header);
     startTimeCell.appendTo(header);
     endTimeCell.appendTo(header);
     actionsCell.appendTo(header);
