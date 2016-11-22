@@ -126,30 +126,9 @@ function createReservation() {
         span.html("Missing information.");
         return;
     }
-    var start_time = "";
-    var end_time = "";
-    var day_time = "";
-
-    if(parseInt(day)<10) {
-        day_time = "0" + String(day);
-    }
-    else {
-        day_time = String(day);
-    }
-
-    if(parseInt(start)<10) {
-        start_time = "0" + String(start);
-    }
-    else {
-        start_time = String(start);
-    }
-
-    if(parseInt(end)<10) {
-        end_time = "0" + String(end);
-    }
-    else {
-        end_time = String(end);
-    }
+    var start_time = formatSingleIntegerForReservations(start);
+    var end_time = formatSingleIntegerForReservations(end);
+    var day_time = formatSingleIntegerForReservations(day);
 
     var startDate = String(year) + "-" + String(month) + "-" + day_time + " " + start_time + ":00:00";
     var endDate = String(year) + "-" + String(month) + "-" + day_time + " " + end_time + ":00:00";
@@ -168,6 +147,15 @@ function createReservation() {
             data: {userID: userID, dataRoom: room, startTime: startDate, endTime: endDate},
         });
         span.html("Time conflict. Added to wait list.");
+    }
+}
+
+function formatSingleIntegerForReservations(toFormat) {
+    if(parseInt(toFormat) < 10) {
+        return "0" + String(toFormat);
+    }
+    else {
+        return toFormat;
     }
 }
 
@@ -200,7 +188,7 @@ function formatTimeFromJSON(time) {
     var timeString = String(time);
     var split = timeString.split(" ");
     var year = split[3];
-    var month = monthToInt(split[1]);
+    var month = formatSingleIntegerForReservations(monthToInt(split[1]));
     var day = split[2];
     var timeSplit = split[4].split(":");
     var hour = timeSplit[0];
