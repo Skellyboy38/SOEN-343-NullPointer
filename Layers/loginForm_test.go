@@ -70,7 +70,7 @@ func TestLoginForm(t *testing.T) {
 			continue
 		}
 
-		if rw.Code != 303 {
+		if rw.Code != 307 {
 			t.Errorf("expected status %d; got %d", 303, rw.Code)
 		}
 
