@@ -26,6 +26,7 @@ func main() {
 	router.PathPrefix("/images/").Handler(http.StripPrefix("/images/", http.FileServer(http.Dir("./presentation_layer/images"))))
 	router.PathPrefix("/css/").Handler(http.StripPrefix("/css/", http.FileServer(http.Dir("./presentation_layer/css"))))
 	router.HandleFunc("/login", handler.LoginGet).Methods("GET")
+	router.HandleFunc("/", handler.LoginGet).Methods("GET")
 	router.HandleFunc("/login", handler.LoginForm).Methods("POST")
 	router.HandleFunc("/createReservation", handler.CreateReservation).Methods("POST")
 	router.HandleFunc("/addToWaitList", handler.AddToWaitList).Methods("POST")
