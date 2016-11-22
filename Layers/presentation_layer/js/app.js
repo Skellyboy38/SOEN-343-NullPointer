@@ -6,6 +6,10 @@ $(document).ready(function () {
     buildCalendar(1); // Default room is 1
 });
 
+function logout() {
+    window.location.replace("/login");
+}
+
 function buildCalendar(roomNumber, el) {
     var roomReservations = [];
     var userRoomReservations = [];
