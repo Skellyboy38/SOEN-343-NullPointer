@@ -20,7 +20,7 @@ function initializeModifyModal(reservation) {
     $("#modifyYear").val(year);
     $("#modifyMonth").val(month);
     populateModifyDays(month, year);
-    $("#modifyDay").val(day);
+    $("#modifyDay").val(parseInt(day));
     $("#modifyStart_time").val(startTime);
     $("#modifyEnd_time").val(endTime);
     $('select').material_select();

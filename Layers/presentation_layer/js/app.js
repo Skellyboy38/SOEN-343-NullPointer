@@ -1,4 +1,5 @@
 $(document).ready(function () {
+    console.log("Reloaded page");
     populateTime();
     populateEndTime();
     populateDays(1, 2016);
@@ -152,7 +153,7 @@ function createReservation() {
             var startDate = String(year) + "-" + String(month) + "-" + day + " " + start_time + ":00:00";
             var endDate = String(year) + "-" + String(month) + "-" + day + " " + end_time + ":00:00";
 
-            if(!verifyTimeConflicts(room, startDate, endDate)) {
+            if(!verifyTimeConflicts(room, startDate, endDate, -1)) {
                 if (getNumberOfResevations() >= 5){
                     span.html("You have exceeded your number of reservations.");
                     return;
@@ -178,7 +179,7 @@ function createReservation() {
         var startDate = String(year) + "-" + String(month) + "-" + day_time + " " + start_time + ":00:00";
         var endDate = String(year) + "-" + String(month) + "-" + day_time + " " + end_time + ":00:00";
 
-        if(!verifyTimeConflicts(room, startDate, endDate)) {
+        if(!verifyTimeConflicts(room, startDate, endDate, -1)) {
             if (getNumberOfResevations() >= 5){
                 span.html("You have exceeded your number of reservations.");
                 return;
@@ -245,7 +246,7 @@ function formatTimeFromJSON(time) {
     return year + "-" + month + "-" + day + " " + hour + ":00:00";
 }
 
-function verifyTimeConflicts(roomID, startTime, endTime) {
+function verifyTimeConflicts(roomID, startTime, endTime, reservationId) {
     var status = false;
     startTimeSplit = splitTime(startTime);
     endTimeSplit = splitTime(endTime);
@@ -262,44 +263,90 @@ function verifyTimeConflicts(roomID, startTime, endTime) {
 
     getReservations(roomID).success(function(data){
         roomReservations = deserializeReservation(data);
-        roomReservations.forEach(function(reservation) {
-        var start = String(reservation.start);
-        var end = String(reservation.end);
-        var startSplit = start.split(" ");
-        var endSplit = end.split(" ");
-        var startYear = startSplit[3];
-        var endYear = endSplit[3];
+        if(reservationId >= 0) {
+            roomReservations.forEach(function(reservation) {
+                if(reservation.id == reservationId) {
+                    return;
+                }
+                var start = String(reservation.start);
+                var end = String(reservation.end);
+                var startSplit = start.split(" ");
+                var endSplit = end.split(" ");
+                var startYear = startSplit[3];
+                var endYear = endSplit[3];
 
-        if(start_year != startYear && end_year != endYear) {
-            return;
-        }
+                if(start_year != startYear && end_year != endYear) {
+                    return;
+                }
 
-        var startMonth = monthToInt(startSplit[1]);
-        var endMonth = monthToInt(startSplit[1]);
+                var startMonth = monthToInt(startSplit[1]);
+                var endMonth = monthToInt(startSplit[1]);
 
-        if(start_month != startMonth && end_month != endMonth) {
-            return;
-        }
+                if(start_month != startMonth && end_month != endMonth) {
+                    return;
+                }
 
-        var startDay = startSplit[2];
-        var endDay = endSplit[2];
+                var startDay = startSplit[2];
+                var endDay = endSplit[2];
 
-        if(start_day != startDay && end_day != endDay) {
-            return;
-        }
+                if(start_day != startDay && end_day != endDay) {
+                    return;
+                }
 
-        var startTimeSplit = startSplit[4].split(":");
-        var endTimeSplit = endSplit[4].split(":");
-        var startHour = startTimeSplit[0];
-        var endHour = endTimeSplit[0];
+                var startTimeSplit = startSplit[4].split(":");
+                var endTimeSplit = endSplit[4].split(":");
+                var startHour = startTimeSplit[0];
+                var endHour = endTimeSplit[0];
 
-        if(end_hour <= startHour || start_hour >= endHour) {
-            return;
+                if(end_hour <= startHour || start_hour >= endHour) {
+                    return;
+                }
+                else {
+                    status = true;
+                }
+            });
         }
         else {
-            status = true;
+            roomReservations.forEach(function(reservation) {
+                var start = String(reservation.start);
+                var end = String(reservation.end);
+                var startSplit = start.split(" ");
+                var endSplit = end.split(" ");
+                var startYear = startSplit[3];
+                var endYear = endSplit[3];
+
+                if(start_year != startYear && end_year != endYear) {
+                    return;
+                }
+
+                var startMonth = monthToInt(startSplit[1]);
+                var endMonth = monthToInt(startSplit[1]);
+
+                if(start_month != startMonth && end_month != endMonth) {
+                    return;
+                }
+
+                var startDay = startSplit[2];
+                var endDay = endSplit[2];
+
+                if(start_day != startDay && end_day != endDay) {
+                    return;
+                }
+
+                var startTimeSplit = startSplit[4].split(":");
+                var endTimeSplit = endSplit[4].split(":");
+                var startHour = startTimeSplit[0];
+                var endHour = endTimeSplit[0];
+
+                if(end_hour <= startHour || start_hour >= endHour) {
+                    return;
+                }
+                else {
+                    status = true;
+                }
+            });
         }
-    });
+    
     });
     return status;
 }
@@ -358,7 +405,7 @@ function modifyReservation() {
     var startDate = String(updatedYear) + "-" + String(updatedMonth) + "-" + day_time + " " + start_time + ":00:00";
     var endDate = String(updatedYear) + "-" + String(updatedMonth) + "-" + day_time + " " + end_time + ":00:00";
 
-    if(!verifyTimeConflicts(updatedRoom, startDate, endDate)) {
+    if(!verifyTimeConflicts(updatedRoom, startDate, endDate, reservationID)) {
         $.ajax({
             type: 'POST',
             contentType: "application/x-www-form-urlencoded",
@@ -372,7 +419,7 @@ function modifyReservation() {
         });
     }
     else {
-        // TODO waiting list
+        console.log("Time conflict.");
     }
 }
 
@@ -410,7 +457,7 @@ function updateWaitingList(room) { // This function updates the waitlist by chec
         entries.forEach(function(entry) {
             var startTime = formatTimeFromJSON(entry.start);
             var endTime = formatTimeFromJSON(entry.end);
-            if(!verifyTimeConflicts(entry.room, startTime, endTime)) {
+            if(!verifyTimeConflicts(entry.room, startTime, endTime, -1)) {
                 pushReservation(entry.userId, entry.room, startTime, endTime);
                 idsToRemove.push(entry.id);
             }
