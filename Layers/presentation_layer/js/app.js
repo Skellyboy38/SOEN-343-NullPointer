@@ -141,6 +141,7 @@ function createReservation() {
         span.html("Missing information.");
         return;
     }
+
     var start_time = formatSingleIntegerForReservations(start);
     var end_time = formatSingleIntegerForReservations(end);
     var day_time = formatSingleIntegerForReservations(day);
@@ -152,7 +153,12 @@ function createReservation() {
             var endDate = String(year) + "-" + String(month) + "-" + day + " " + end_time + ":00:00";
 
             if(!verifyTimeConflicts(room, startDate, endDate)) {
+                if (getNumberOfResevations() >= 5){
+                    span.html("You have exceeded your number of reservations.");
+                    return;
+                }
                 pushReservation(userID, room, startDate, endDate);
+                incrementNumberOfReservations();
                 span.html("Reservation created.");
             }
             else { // Add the person to a wait list
@@ -173,9 +179,13 @@ function createReservation() {
         var endDate = String(year) + "-" + String(month) + "-" + day_time + " " + end_time + ":00:00";
 
         if(!verifyTimeConflicts(room, startDate, endDate)) {
-        pushReservation(userID, room, startDate, endDate);
-        location.reload();
-        span.html("Reservation created.");
+            if (getNumberOfResevations() >= 5){
+                span.html("You have exceeded your number of reservations.");
+                return;
+            }            
+            pushReservation(userID, room, startDate, endDate);
+            location.reload();
+            span.html("Reservation created.");
         }
         else { // Add the person to a wait list
             $.ajax({
