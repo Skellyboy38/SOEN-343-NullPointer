@@ -2,6 +2,7 @@ function Reservation(id, subject, calendar, start, end, userId) {
 	this.id = id;
     startDate = parseDate(start);
     endDate = parseDate(end);
+    this.room = calendar;
     this.calendar = calendar; // Room Number
     this.userId = userId;
     this.start = new Date(startDate[0], startDate[1], startDate[2], startDate[3], startDate[4], startDate[5]); // Start Time

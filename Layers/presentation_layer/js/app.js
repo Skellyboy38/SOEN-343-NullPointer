@@ -223,9 +223,8 @@ function verifyTimeConflicts(roomID, startTime, endTime) {
     end_hour = endTimeSplit[3];
 
     getReservations(roomID).success(function(data){
-        roomReservations = getReservationsSuccess(data);
-    });
-    roomReservations.forEach(function(reservation) {
+        roomReservations = deserializeReservation(data);
+        roomReservations.forEach(function(reservation) {
         var start = String(reservation.start);
         var end = String(reservation.end);
         var startSplit = start.split(" ");
@@ -262,6 +261,7 @@ function verifyTimeConflicts(roomID, startTime, endTime) {
         else {
             status = true;
         }
+    });
     });
     return status;
 }
@@ -368,7 +368,7 @@ function deleteReservation(reservationID, roomNumber) {
 function updateWaitingList(room) { // This function updates the waitlist by checking if someone's reservation can be created.
     var idsToRemove = [];
     getAllWaitingListEntriesByRoom(room).success(function(data){ //TODO Darrel the ajax call returns a list of JsonWaitingReservation
-        entries = getReservationsSuccess(data);  //TODO Darrel entries should be all the waiting list elements which have the same room. Not sure if entries is populated proberly. 
+        entries = deserializeReservation(data);  //TODO Darrel entries should be all the waiting list elements which have the same room. Not sure if entries is populated proberly. 
         entries.forEach(function(entry) {
             var startTime = formatTimeFromJSON(entry.start);
             var endTime = formatTimeFromJSON(entry.end);
