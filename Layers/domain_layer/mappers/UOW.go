@@ -45,7 +45,7 @@ func InitUOW() {
 
 func (uow *UOW) RegisterNewUser(object classes.User) {
 	uow.registeredNewUsers = append(uow.registeredNewUsers, object)
-	fmt.Println(uow.registeredNewUsers)
+	//fmt.Println(uow.registeredNewUsers)
 }
 
 func (uow *UOW) RegisterNewReservation(object classes.Reservation) {

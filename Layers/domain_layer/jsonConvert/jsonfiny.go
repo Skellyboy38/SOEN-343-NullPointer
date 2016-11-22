@@ -2,7 +2,6 @@ package jsonConvert
 
 import (
 	"encoding/json"
-	"fmt"
 	"time"
 
 	"github.com/Skellyboy38/SOEN-343-NullPointer/Layers/domain_layer/classes"
@@ -27,7 +26,6 @@ type JsonWaitingReservation struct {
 func ReservationsJson(reservations []classes.Reservation) ([]byte, error) {
 	formatedReservations := []JsonReservation{}
 	for _, i := range reservations {
-		fmt.Printf("id: %d  room: %d startTime %s endTime %s\n", i.ReservationId, i.Room, i.StartTime, i.EndTime)
 		formatedReservation := JsonReservation{i.ReservationId,
 			i.User.StudentId,
 			i.Room,
@@ -41,7 +39,6 @@ func ReservationsJson(reservations []classes.Reservation) ([]byte, error) {
 func WaitListReservationsJson(waitList []classes.WaitlistReservation) ([]byte, error) {
 	formatedWaitList := []JsonWaitingReservation{}
 	for _, i := range waitList {
-		fmt.Println("converting student id to json ",i.User.StudentId)
 		formatedWaitingReservation := JsonWaitingReservation{i.WaitlistId,
 			i.User.StudentId,
 			i.Room,

@@ -121,7 +121,6 @@ func (r *ReservationTDG) Create(roomId, studentId int, startTime, endTime time.T
 	if err != nil {
 		fmt.Printf("Cannot get last inserted id : %v", err)
 		return -1, err
-
 	}
 
 	return int(reservationId), nil

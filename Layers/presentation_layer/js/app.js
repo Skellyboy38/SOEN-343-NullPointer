@@ -111,6 +111,16 @@ function getReservationsUser(roomNumber, userID) {
     });
 }
 
+function getDaysForRestOfMonth(day, month, year) {
+    var endDay = daysInMonth(parseInt(month), parseInt(year));
+    var days = [];
+    days.push(day);
+    for(var i = parseInt(day); i <= endDay; i += 7) {
+        days.push(formatSingleIntegerForReservations(i));
+    }
+    return days;
+}
+
 function createReservation() {
     var span = $("#message");
     span.html("");
@@ -119,6 +129,7 @@ function createReservation() {
     var year = $("#year").val();
     var month = $("#month").val();
     var day = $("#day").val();
+    var repeat = $("#repeat_reservation").val();
 
 	var start = $("#start_time").val();
 	var end = $("#end_time").val();
@@ -130,23 +141,48 @@ function createReservation() {
     var end_time = formatSingleIntegerForReservations(end);
     var day_time = formatSingleIntegerForReservations(day);
 
-    var startDate = String(year) + "-" + String(month) + "-" + day_time + " " + start_time + ":00:00";
-    var endDate = String(year) + "-" + String(month) + "-" + day_time + " " + end_time + ":00:00";
+    if(repeat == 1) {
+        var days = getDaysForRestOfMonth(day_time, month, year);
+        days.forEach(function(day) {
+            var startDate = String(year) + "-" + String(month) + "-" + day + " " + start_time + ":00:00";
+            var endDate = String(year) + "-" + String(month) + "-" + day + " " + end_time + ":00:00";
 
-    if(!verifyTimeConflicts(room, startDate, endDate)) {
+            if(!verifyTimeConflicts(room, startDate, endDate)) {
+                pushReservation(userID, room, startDate, endDate);
+                span.html("Reservation created.");
+            }
+            else { // Add the person to a wait list
+                $.ajax({
+                    type: 'POST',
+                    contentType: "application/x-www-form-urlencoded",
+                    async: false,
+                    url: '/addToWaitList',
+                    data: {userID: userID, dataRoom: room, startTime: startDate, endTime: endDate},
+                });
+                span.html("Time conflict. Added to wait list.");
+            }
+        });
+        location.reload();
+    }
+    else {
+        var startDate = String(year) + "-" + String(month) + "-" + day_time + " " + start_time + ":00:00";
+        var endDate = String(year) + "-" + String(month) + "-" + day_time + " " + end_time + ":00:00";
+
+        if(!verifyTimeConflicts(room, startDate, endDate)) {
         pushReservation(userID, room, startDate, endDate);
         location.reload();
         span.html("Reservation created.");
-    }
-    else { // Add the person to a wait list
-        $.ajax({
-            type: 'POST',
-            contentType: "application/x-www-form-urlencoded",
-            async: false,
-            url: '/addToWaitList',
-            data: {userID: userID, dataRoom: room, startTime: startDate, endTime: endDate},
-        });
-        span.html("Time conflict. Added to wait list.");
+        }
+        else { // Add the person to a wait list
+            $.ajax({
+                type: 'POST',
+                contentType: "application/x-www-form-urlencoded",
+                async: false,
+                url: '/addToWaitList',
+                data: {userID: userID, dataRoom: room, startTime: startDate, endTime: endDate},
+            });
+            span.html("Time conflict. Added to wait list.");
+        }
     }
 }
 
