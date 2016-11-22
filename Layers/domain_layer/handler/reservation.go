@@ -57,6 +57,7 @@ func GetReservationsByUserID(rw http.ResponseWriter, req *http.Request) {
 		fmt.Println(err)
 	}
 	rw.Header().Set("Content-Type", "application/json")
+	rw.WriteHeader(http.StatusOK)
 	rw.Write(jsonReservations)
 }
 

@@ -202,9 +202,23 @@ func (reservationMapper *ReservationMapper) InMemoryByReservationId(id int) bool
 
 func (reservationMapper *ReservationMapper) Delete(id int) error {
 	reservation := reservationMapper.reservations[id]
-	delete(reservationMapper.reservationsByRoomId, reservation.Room)
-	delete(reservationMapper.reservationsByUserId, reservation.User.StudentId)
+
+	for i, e := range reservationMapper.reservationsByRoomId[reservation.Room] {
+		if e.ReservationId == id {
+			reservationMapper.reservationsByRoomId[reservation.Room] = append(reservationMapper.reservationsByRoomId[reservation.Room][:i],
+				reservationMapper.reservationsByRoomId[reservation.Room][i+1:]...)
+		}
+	}
+
+	for i, e := range reservationMapper.reservationsByUserId[reservation.User.StudentId] {
+		if e.ReservationId == id {
+			reservationMapper.reservationsByUserId[reservation.User.StudentId] = append(reservationMapper.reservationsByUserId[reservation.User.StudentId][:i],
+				reservationMapper.reservationsByUserId[reservation.User.StudentId][i+1:]...)
+		}
+	}
+
 	delete(reservationMapper.reservations, id)
+
 	UOWSingleTon.RegisterDeleteReservation(id)
 	err := UOWSingleTon.Commit()
 	if err != nil {

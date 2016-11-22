@@ -73,8 +73,6 @@ func (uow *UOW) RegisterDeleteWaitingReservation(id int) {
 }
 
 func (uow *UOW) Commit() error {
-	fmt.Println("GOT TO COMMIT")
-	fmt.Println(uow.registeredNewUsers)
 
 	processedRegisteredNewUsers := reverseUsers(reduceUserQueue(reverseUsers(uow.registeredNewUsers)))
 	processedRegisteredDirtyUsers := reverseUsers(reduceUserQueue(reverseUsers(uow.registeredDirtyUsers)))
@@ -90,10 +88,7 @@ func (uow *UOW) Commit() error {
 	//reservations
 	processedRegisteredNewReservations := reverseReservations(reduceReservationQueue(reverseReservations(uow.registeredNewReservations)))
 	processedRegisteredDirtyReservations := reverseReservations(reduceReservationQueue(reverseReservations(uow.registeredDirtyReservations)))
-	processedRegisteredDeletedReservations := reverseIntArray(
-		reduceIntQueue(
-			reverseIntArray(
-				uow.registeredDeletedReservations)))
+	processedRegisteredDeletedReservations := uow.registeredDeletedReservations
 
 	if err := uow.ReservationMapper.SaveDeleted(processedRegisteredDeletedReservations); err != nil {
 		fmt.Println(err)

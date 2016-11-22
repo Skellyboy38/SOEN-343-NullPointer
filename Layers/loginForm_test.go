@@ -2,7 +2,6 @@ package main
 
 import (
 	"bytes"
-	"log"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -15,10 +14,10 @@ import (
 
 func TestLoginForm(t *testing.T) {
 
-	err := startDb()
-	if err != nil {
-		log.Fatal(err)
-	}
+	// err := startDb()
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
 
 	mappers.Init()
 	mappers.InitUOW()
