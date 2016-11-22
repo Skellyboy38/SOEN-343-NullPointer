@@ -54,8 +54,8 @@ func (r *WaitlistReservationTDG) Delete(waitListreservationIds []int) error {
 	return nil
 }
 
-func (r *WaitlistReservationTDG) ReadByUser(roomId, userId int) ([]int, []int, []int, []time.Time, []time.Time, error) {
-	rows, err := DB.Query("SELECT * FROM waitlistMaster WHERE roomId=$1 and studentId=$2 ;", roomId, userId)
+func (r *WaitlistReservationTDG) ReadByUser(userId int) ([]int, []int, []int, []time.Time, []time.Time, error) {
+	rows, err := DB.Query("SELECT * FROM waitlistMaster WHERE studentId=$1 ;", userId)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -67,6 +67,7 @@ func (r *WaitlistReservationTDG) ReadByUser(roomId, userId int) ([]int, []int, [
 
 	var waitListreservationId int
 	var studentId int
+	var roomId int;
 	var startTime time.Time
 	var endTime time.Time
 

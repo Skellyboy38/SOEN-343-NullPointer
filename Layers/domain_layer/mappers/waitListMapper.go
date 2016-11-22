@@ -81,6 +81,27 @@ func (waitListMapper *WaitListMapper) GetByRoomId(roomId int) ([]classes.Waitlis
 	return waitingReservations, nil
 }
 
+func (waitListMapper *WaitListMapper) GetByUserId(userId int) ([]classes.WaitlistReservation, error) {
+		reservationIds, roomIds, studentIds, startTimes, endTimes, err := waitListMapper.waitListTDG.ReadByUser(userId)
+		if err != nil {
+			return []classes.WaitlistReservation{}, err
+		}
+		waitlist := []classes.WaitlistReservation{}
+
+		for i, _ := range roomIds {
+			student, err := MapperBundle.UserMapper.GetById(studentIds[i])
+			if err != nil {
+				return []classes.WaitlistReservation{}, err
+			}
+			currentReservation := classes.WaitlistReservation{reservationIds[i], roomIds[i], student, startTimes[i], endTimes[i]}
+
+			waitlist = append(waitlist, currentReservation)
+		}
+		waitListMapper.waitList.add(waitlist)
+
+		return waitlist, nil
+}
+
 func (waitListMapper *WaitListMapper) Delete(waitingReservationId int) error {
 	//waitingreservation := waitListMapper.waitList[waitingReservationId]
 	//delete(waitListMapper.reservationsByRoomId, reservation.Room)
