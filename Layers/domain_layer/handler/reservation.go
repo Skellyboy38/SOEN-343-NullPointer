@@ -150,7 +150,7 @@ func GetReservationsOthers(rw http.ResponseWriter, req *http.Request) {
 	req.ParseForm()
 
 	roomID, err := strconv.Atoi(req.FormValue("dataRoom"))
-	userID, err := strconv.Atoi(req.FormValue("UserID"))
+	userID, err := strconv.Atoi(req.FormValue("userID"))
 	reservationsMapper := mappers.MapperBundle.ReservationMapper
 	reservations, err := reservationsMapper.GetByRoomId(roomID)
 

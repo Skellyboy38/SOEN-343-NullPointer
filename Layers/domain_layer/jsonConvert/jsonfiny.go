@@ -17,7 +17,7 @@ type JsonReservation struct {
 }
 
 type JsonWaitingReservation struct {
-	WaitlistID int       `json:"waitlistID"`
+	WaitlistID int       `json:"reservationID"`
 	StudentId  int       `json:"studentID"`
 	RoomNumber int       `json:"roomNumber"`
 	StartTime  time.Time `json:"startTime"`
@@ -41,7 +41,7 @@ func ReservationsJson(reservations []classes.Reservation) ([]byte, error) {
 func WaitListReservationsJson(waitList []classes.WaitlistReservation) ([]byte, error) {
 	formatedWaitList := []JsonWaitingReservation{}
 	for _, i := range waitList {
-		fmt.Printf("id: %d  room: %d startTime %s endTime %s\n", i.WaitlistId, i.Room, i.StartTime, i.EndTime)
+		fmt.Println("converting student id to json ",i.User.StudentId)
 		formatedWaitingReservation := JsonWaitingReservation{i.WaitlistId,
 			i.User.StudentId,
 			i.Room,

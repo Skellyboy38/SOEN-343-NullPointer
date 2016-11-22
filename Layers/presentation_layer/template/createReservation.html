@@ -66,9 +66,19 @@
 						<label for="end">End Time</label>
 					</div>
 				</div>
+				<div class="row">
+					<div class="input-field col s12">
+						<select id="repeat_reservation">
+							<option value="0">No</option>
+							<option value="1">Yes</option>
+						</select>
+						<label for="repeat">Repeat reservation</label>
+					</div>
+				</div>
 				<button id="createBtn" class="Waves-effect waves-light btn" onclick="createReservation()">
 					Submit
   				</button>
+  				<span id="message"></span>
 			</div>
 	</div>
 </div>

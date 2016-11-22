@@ -55,5 +55,5 @@ func LoginForm(rw http.ResponseWriter, req *http.Request) {
 	cookie := http.Cookie{"studentId", studentIdCookie, "/", "localhost", expire, expire.Format(time.UnixDate), 86000, false, false, studentIdAndName, []string{studentIdAndName}}
 	req.AddCookie(&cookie)
 	http.SetCookie(rw, &cookie)
-	http.Redirect(rw, req, "/home", 303)
+	http.Redirect(rw, req, "/home", 307)
 }
