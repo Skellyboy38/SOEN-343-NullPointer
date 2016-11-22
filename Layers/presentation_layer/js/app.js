@@ -30,6 +30,10 @@ function buildCalendar(roomNumber, el) {
         roomReservationsNonUser = deserializeReservation(data);
     });
 
+    getWaitlistUser(studentId).success(function(data){
+        renderWaitlist(data);
+    });
+
     if(el != null){
         $(".tab").attr("id", "");
         $(el).attr("id", "active");
@@ -173,7 +177,6 @@ function createReservation() {
                 span.html("Time conflict. Added to wait list.");
             }
         });
-        location.reload();
     }
     else {
         var startDate = String(year) + "-" + String(month) + "-" + day_time + " " + start_time + ":00:00";
@@ -184,8 +187,7 @@ function createReservation() {
                 span.html("You have exceeded your number of reservations.");
                 return;
             }            
-            pushReservation(userID, room, startDate, endDate);
-            location.reload();
+            pushReservation(userID, room, startDate, endDate);           
             span.html("Reservation created.");
         }
         else { // Add the person to a wait list
@@ -199,6 +201,7 @@ function createReservation() {
             span.html("Time conflict. Added to wait list.");
         }
     }
+    location.reload();
 }
 
 function formatSingleIntegerForReservations(toFormat) {
@@ -494,6 +497,16 @@ function getAllWaitingListEntriesByRoom(room) {
     });
 }
 
+function getWaitlistUser(userID) {
+    return $.ajax({
+        type: 'POST',
+        contentType: "application/x-www-form-urlencoded",
+        async: false, 
+        url: '/getWaitListEntriesByUserId',
+        data: {userID: userID},
+    });
+}
+
 function deserializeReservation(reservations){
     if(reservations != undefined && reservations.length > 0){
         var result = [];
@@ -510,6 +523,7 @@ function deserializeReservation(reservations){
 
 function changeRoom(roomNumber, el){
     $(".reservations-table").empty();
+    $(".waitlist-table").empty();
     buildCalendar(roomNumber, el);
 }
 

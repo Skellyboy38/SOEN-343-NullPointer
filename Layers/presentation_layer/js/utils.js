@@ -133,7 +133,7 @@ function renderReservationHeader() {
     var header = $("<div></div>", {
         class: "row"
     });
-    header.addClass("row reservations-header");
+    header.addClass("row table-header");
     var roomNumberCell = $("<div></div>", {
         class: "cell",
         text: "Room Number"
@@ -154,5 +154,80 @@ function renderReservationHeader() {
     startTimeCell.appendTo(header);
     endTimeCell.appendTo(header);
     actionsCell.appendTo(header);
+    return header;
+}
+
+function renderWaitlist(waitlist) {
+    numberOfReservation = 0;
+    var waitListHTML = $(".waitlist-table");
+    var waitlistHeaderHTML = renderWaitlistHeader();
+    waitlistHeaderHTML.appendTo(waitListHTML);
+    if (waitlist.length === 0) {
+        var row = $("<div></div>", {
+            class: "row",
+            text: "No reservations on the waitlist."
+        })
+        row.appendTo(waitListHTML);
+    } else {
+        waitlist.forEach(function (waitlistItem) {
+            //incrementNumberOfReservations();
+            var row = renderWaitlistRow(waitlistItem);
+            row.appendTo(waitListHTML);
+        });
+    }
+
+    function renderWaitlistRow(waitlistItem) {
+
+        var start_time = waitlistItem.startTime;
+        start_time = start_time.substr(0,10) + ' ' + start_time.substr(10 + 1);
+        start_time = start_time.substr(0,19); 
+
+        var end_time = waitlistItem.endTime;
+        end_time = end_time.substr(0,10) + ' ' + end_time.substr(10 + 1);
+        end_time = end_time.substr(0,19); 
+
+        var rowHTML = $("<div></div>", {
+            class: "row"
+        });
+        var roomNumberCell = $("<div></div>", {
+            text: waitlistItem.roomNumber,
+            class: "cell"
+        });
+        roomNumberCell.appendTo(rowHTML);
+        var startTimeCell = $("<div></div>", {
+            text: start_time,
+            class: "cell"
+        });
+        startTimeCell.appendTo(rowHTML);
+        var endTimeCell = $("<div></div>", {
+            text: end_time,
+            class: "cell"
+        });
+        endTimeCell.appendTo(rowHTML);
+        return rowHTML;
+    }
+}
+
+function renderWaitlistHeader() {
+    var header = $("<div></div>", {
+        class: "row"
+    });
+    header.addClass("row table-header");
+    var roomNumberCell = $("<div></div>", {
+        class: "cell",
+        text: "Room Number"
+    });
+    var startTimeCell = $("<div></div>", {
+        class: "cell",
+        text: "Start Time"
+    });
+    var endTimeCell = $("<div></div>", {
+        class: "cell",
+        text: "End Time"
+    });
+    roomNumberCell.appendTo(header);
+    startTimeCell.appendTo(header);
+    endTimeCell.appendTo(header);
+
     return header;
 }
