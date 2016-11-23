@@ -72,58 +72,5 @@ func BenchmarkReservation(b *testing.B) {
                 b.Errorf("expected status %s; got %d", http.StatusOK, userRecorder.Code)
             }
         }
-
-        data = url.Values{}
-        data.Set("reservationID", "0")
-
-        deleteRequest, err := http.NewRequest(
-            http.MethodPost,
-            "http://localhost:9000/deleteReservation",
-            bytes.NewBufferString(data.Encode()),
-        )
-
-        deleteRequest.Header.Add("Content-Type", "application/x-www-form-urlencoded")
-
-        if err != nil {
-            b.Fatalf("could not create request %v", err)
-        }
-
-        deleteRecorder := httptest.NewRecorder()
-
-        handler.DeleteReservation(deleteRecorder, deleteRequest)
-
-        if !strings.Contains(deleteRecorder.Body.String(), "Success") {
-            b.Errorf("delete did not occure got :%s", deleteRecorder.Body.String())
-            if deleteRecorder.Code != http.StatusOK {
-                b.Errorf("expected status %s; got %d", http.StatusOK, deleteRecorder.Code)
-            }
-        }
-
-        data = url.Values{}
-        data.Set("dataRoom", "1")
-        data.Add("userID", "1111111")
-
-        reqByUser, err = http.NewRequest(
-            http.MethodPost,
-            "http://localhost:9000/reservationsByUser",
-            bytes.NewBufferString(data.Encode()),
-        )
-
-        reqByUser.Header.Add("Content-Type", "application/x-www-form-urlencoded")
-
-        if err != nil {
-            b.Fatalf("could not create request %v", err)
-        }
-
-        userRecorder = httptest.NewRecorder()
-
-        handler.GetReservationsByUserID(userRecorder, reqByUser)
-
-        if strings.Contains(userRecorder.Body.String(), "2016-12-22T12:00:00Z") {
-            b.Errorf("was not delete got: %v ", userRecorder.Body.String())
-            if userRecorder.Code != http.StatusOK {
-                b.Errorf("expected status %s; got %d", http.StatusOK, userRecorder.Code)
-            }
-        }
     }
 }
