@@ -5,7 +5,13 @@ $(document).ready(function () {
     populateDays(1, 2016);
     printTodayDate(); // Displays current time and date
     buildCalendar(1); // Default room is 1
+    displayUsername();
 });
+
+function displayUsername() {
+    var name = getCookie("studentId");
+    $("#username").text(name);
+}
 
 function logout() {
     window.location.replace("/login");

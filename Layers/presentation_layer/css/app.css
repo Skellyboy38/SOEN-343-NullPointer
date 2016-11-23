@@ -16,7 +16,9 @@ body{
 }
 
 #scheduler{
-	min-width: 1000px
+	min-width: 1001px;
+	position:relative;
+	left:23px;
 }
 
 #roomTabs{

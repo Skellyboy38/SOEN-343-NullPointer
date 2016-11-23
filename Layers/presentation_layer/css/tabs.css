@@ -46,12 +46,8 @@ p {
 
 }
 
-.roomTabs {
-  display: inline-block;
+#roomTabs {
   position: relative;
-  //margin: 0 auto;
-  padding: 0;
-  margin: 0;
 }
 
 div:focus {
