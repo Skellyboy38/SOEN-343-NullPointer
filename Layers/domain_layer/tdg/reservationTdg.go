@@ -104,13 +104,12 @@ func (r *ReservationTDG) ReadByUser(roomId, userId int) ([]int, []int, []int, []
 
 func (r *ReservationTDG) Create(roomId, studentId int, startTime, endTime time.Time) (int, error) {
 	reservationId := 0
-	res, err := DB.Query("INSERT INTO reservation (roomId, studentId, startTime, endTime) VALUES ($1,$2,$3,$4) RETURNING reservationId;",
+	err := DB.QueryRow("INSERT INTO reservation (roomId, studentId, startTime, endTime) VALUES ($1,$2,$3,$4) RETURNING reservationId;",
 		roomId,
 		studentId,
 		startTime.Format("2006-01-02 15:04:05"),
-		endTime.Format("2006-01-02 15:04:05"))
+		endTime.Format("2006-01-02 15:04:05")).Scan(&reservationId)
 
-	res.Scan(&reservationId)
 	if err != nil {
 		fmt.Printf(startTime.Format("2006-01-02 15:04:05"))
 		fmt.Printf(endTime.Format("2006-01-02 15:04:05"))

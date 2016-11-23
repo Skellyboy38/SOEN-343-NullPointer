@@ -160,11 +160,23 @@ func (reservationMapper *ReservationMapper) GetByRoomId(roomId int) ([]classes.R
 }
 
 func (bucketTable reservationByRoomIdBucketTable) add(id int, reservations []classes.Reservation) {
-	bucketTable[id] = append(bucketTable[id], reservations...)
+	for _, e := range reservations {
+		if _, ok := bucketTable[id]; !ok {
+			bucketTable[id] = []classes.Reservation{e}
+		} else {
+			bucketTable[id] = append(bucketTable[id], e)
+		}
+	}
 }
 
 func (bucketTable reservationByUserIdBucketTable) add(id int, reservations []classes.Reservation) {
-	bucketTable[id] = append(bucketTable[id], reservations...)
+	for _, e := range reservations {
+		if _, ok := bucketTable[id]; !ok {
+			bucketTable[id] = []classes.Reservation{e}
+		} else {
+			bucketTable[id] = append(bucketTable[id], e)
+		}
+	}
 }
 
 func (reservationMap reservationIdentityMap) add(reservations []classes.Reservation) {
@@ -229,6 +241,9 @@ func (reservationMapper *ReservationMapper) Delete(id int) error {
 }
 
 func (reservationMapper *ReservationMapper) SaveDeleted(reservationArray []int) error {
+	if len(reservationArray) == 0 {
+		return nil
+	}
 	if err := reservationMapper.reservationTDG.Delete(reservationArray); err != nil {
 		fmt.Println(err)
 		return err
@@ -237,22 +252,30 @@ func (reservationMapper *ReservationMapper) SaveDeleted(reservationArray []int) 
 }
 
 func (reservationMapper *ReservationMapper) SaveNew(reservationArray []classes.Reservation) error {
-	for _, r := range reservationArray {
+	if len(reservationArray) == 0 {
+		return nil
+	}
+	for i, r := range reservationArray {
 		reservationid, err := reservationMapper.reservationTDG.Create(r.Room, r.User.StudentId, r.StartTime, r.EndTime)
 		if err != nil {
 			fmt.Printf(" saveNew has a problem %v : \n", err)
 			return err
 			continue
 		}
-		r.ReservationId = reservationid
-		reservationMapper.reservationsByRoomId.add(r.Room, []classes.Reservation{r})
-		reservationMapper.reservationsByUserId.add(r.User.StudentId, []classes.Reservation{r})
+		reservationArray[i].ReservationId = reservationid
 	}
+
+	reservationMapper.reservationsByRoomId.add(reservationArray[0].Room, reservationArray)
+	reservationMapper.reservationsByUserId.add(reservationArray[0].User.StudentId, reservationArray)
 	reservationMapper.reservations.add(reservationArray)
+
 	return nil
 }
 
 func (reservationMapper *ReservationMapper) SaveDirty(reservationArray []classes.Reservation) error {
+	if len(reservationArray) == 0 {
+		return nil
+	}
 	reservationIds := []int{}
 	startTimes := []time.Time{}
 	endTimes := []time.Time{}
